@@ -29,13 +29,15 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
-  public static final class DriveConstants {
+  public static class DriveConstants {
     public static final int frontLeftID = 0;//placeholder
     public static final int backLeftID = 0;//placeholder
     public static final int frontRightID = 0;//placeholder
     public static final int backRightID = 0;//placeholder
 
     public static final double autoDrivePercent = 0.0;//placeholder
+
+        public static final double TRACK_WIDTH = 0.0; // placeholder
 }
 
 }
