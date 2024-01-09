@@ -26,7 +26,6 @@ public class DiffDrive extends Command{
 
     @Override
     public void execute() {
-        drivesub.setArcadeDriveControls(xPercent.getAsDouble(), yPercent.getAsDouble());
     }
 
     @Override
