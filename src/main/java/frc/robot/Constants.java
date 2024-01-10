@@ -16,7 +16,16 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
   public static class DriveConstants {
     public static final double TRACK_WIDTH = 0.0;
+  }
+
+  public static class VisionConstants { // ALL PLACEHOLDERS
+    public static final String CAMERA_NAME = "";
+    public static final double CAMERA_HEIGHT_METERS = 0.7;
+    public static final double TARGET_HEIGHT_METERS = 0.8; // changes per goal
+    public static final double CAMERA_PITCH_RADIANS = 0; // difference betweeen horizontal and camera angle
+    public static final double IDEAL_GOAL_RANGE_METERS = 1;
   }
 }
