@@ -50,6 +50,8 @@ public final class Constants {
 
     public static final double GEAR_RATIO = 10.0;
 
+    public static final double GEAR_RATIO = 10.0;
+
     public static final double autoDrivePercent = 0.0;//placeholder
 
     public static final double WHEEL_RADIUS = 0.0;// placeholder

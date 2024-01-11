@@ -4,10 +4,15 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+<<<<<<< HEAD
+=======
+import edu.wpi.first.math.geometry.Pose2d;
+>>>>>>> 9bb011d (The advatange kit stuff has been added, probably doesn't work)
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
@@ -58,8 +63,21 @@ public class Drive extends SubsystemBase {
   public void stop() {
     io.setVoltage(0.0, 0.0);
   }
+<<<<<<< HEAD
   public Rotation2d getGyroRotation2d () {
     return inputs.gyroYaw;
+=======
+
+  /** Returns the current odometry pose in meters. */
+  @AutoLogOutput(key = "Odometry/Robot")
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
+  }
+
+  /** Resets the current odometry pose. */
+  public void setPose(Pose2d pose) {
+    odometry.resetPosition(inputs.gyroYaw, getLeftPositionMeters(), getRightPositionMeters(), pose);
+>>>>>>> 9bb011d (The advatange kit stuff has been added, probably doesn't work)
   }
 
   /** Returns the position of the left wheels in meters. */
