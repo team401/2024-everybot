@@ -14,8 +14,12 @@ public class Vision {
     public void periodic () {
         var result = camera.getResult();
 
+        // TODO: add autolog outputs
         if(result.hasTargets()) {
-            // change rotationSpeed (send to Drive)
+            var imageCaptureTime = result.getTimestampSeconds();
+            var camToTargetTransform3d = result.getBestTarget().getBestCameraToTarget();
+            // cam pose based on target pose.transformBy(camToTargetTransform3d)
+            
         }
     }
 }
