@@ -45,6 +45,8 @@ public final class Constants {
     public static final double TARGET_HEIGHT_METERS = 0.8; // changes per goal
     public static final double CAMERA_PITCH_RADIANS = 0; // difference betweeen horizontal and camera angle
     public static final double IDEAL_GOAL_RANGE_METERS = 1;
+    public static final int RESOLUTION_WIDTH = 0;
+    public static final int RESOLUTION_HEIGHT = 0;
   }
 
 }
