@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -26,5 +27,10 @@ public class Navigation {
 
     public void updateNav (Rotation2d gyro, double leftDistanceMeters, double rightDistanceMeters) {
         poseEstimator.update(gyro, leftDistanceMeters, rightDistanceMeters);
+    }
+
+    public void updateNavVision (Pose3d visionMeasurement, double timestamp) {
+        Pose2d visionMeasurePose2d = visionMeasurement.toPose2d();
+        poseEstimator.addVisionMeasurement(visionMeasurePose2d, timestamp);
     }
 }
