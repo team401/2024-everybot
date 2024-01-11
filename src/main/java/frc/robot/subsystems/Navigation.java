@@ -8,11 +8,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
+import frc.robot.subsystems.vision.Vision;
 
 public class Navigation {
     private DifferentialDriveKinematics kinematics;
     private DifferentialDrivePoseEstimator poseEstimator;
-    public Navigation () {
+    private Vision vision;
+
+    public Navigation (Vision vision) { // TODO: maybe initialize vision in Navigation unless its needed elsewhere
         kinematics = new DifferentialDriveKinematics(Constants.DriveConstants.TRACK_WIDTH);
         poseEstimator = new DifferentialDrivePoseEstimator(
             kinematics,
@@ -23,14 +26,19 @@ public class Navigation {
             VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)), 
             VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(5))
         );
+        this.vision = vision;
     }
 
     public void updateNav (Rotation2d gyro, double leftDistanceMeters, double rightDistanceMeters) {
         poseEstimator.update(gyro, leftDistanceMeters, rightDistanceMeters);
     }
 
-    public void updateNavVision (Pose3d visionMeasurement, double timestamp) {
-        Pose2d visionMeasurePose2d = visionMeasurement.toPose2d();
-        poseEstimator.addVisionMeasurement(visionMeasurePose2d, timestamp);
+    public void updateNavVision () {
+        var result = vision.getResult();
+        if (result.hasTargets()) {
+            var cameraTimestamp = result.getTimestampSeconds();
+            Pose2d visionMeasurePose2d = new Pose2d(); // placeholder until add targets
+            poseEstimator.addVisionMeasurement(visionMeasurePose2d, cameraTimestamp);
+        }
     }
 }

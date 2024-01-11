@@ -1,25 +1,20 @@
 package frc.robot.subsystems.vision;
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.RobotState;
+import frc.robot.Constants;
 
 public class Vision {
-    public CameraIO camera;
+    public PhotonCamera camera;
+
     public Vision () {
         if(RobotBase.isReal()) {
-            camera = new CameraIOReal()
+            camera = new PhotonCamera(Constants.VisionConstants.CAMERA_NAME);
         } // else in sim
     }
 
-    public void periodic () {
-        var result = camera.getResult();
-
-        // TODO: add autolog outputs
-        if(result.hasTargets()) {
-            var imageCaptureTime = result.getTimestampSeconds();
-            var camToTargetTransform3d = result.getBestTarget().getBestCameraToTarget();
-            // cam pose based on target pose.transformBy(camToTargetTransform3d)
-            
-        }
+    public PhotonPipelineResult getResult () {
+        return camera.getLatestResult();
     }
 }
