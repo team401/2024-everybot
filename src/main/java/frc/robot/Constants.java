@@ -18,6 +18,10 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public final class Constants {
 
+  public static final Mode mode = Mode.SIM;
+
+  public final static int pigeonID = 0; //placeholder
+
   public static enum Mode {
     /** Running on a real robot. */
     REAL,
@@ -43,6 +47,8 @@ public final class Constants {
     public static final int frontRightID = 0;//placeholder
     public static final int backRightID = 0;//placeholder
 
+    public static final double GEAR_RATIO = 10.0;
+
     public static final double autoDrivePercent = 0.0;//placeholder
   }
 
@@ -64,5 +70,13 @@ public final class Constants {
     public static final Rotation3d BOT_TO_CAMERA_ROT = new Rotation3d(0, Math.toRadians(-15), 0);
     public static final boolean SIM_FIELD_ENABLED = false;
   }
+    public static final double TRACK_WIDTH = 0.0; // placeholder
 
+    public static final double WHEEL_RADIUS = 0.0;// placeholder
+
+    public static final double kS = 0.0;// placeholder
+    public static final double kP = 0.0;// placeholder
+    public static final double kD = 0.0;// placeholder
+    public static final double kV = 0.0;// placeholder
 }
+

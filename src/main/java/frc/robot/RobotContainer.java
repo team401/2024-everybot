@@ -13,9 +13,18 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.FeedForward;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.DriveIO;
+import frc.robot.subsystems.drive.DriveIOSim;
+import frc.robot.subsystems.drive.DriveIOTalonFX;
 
 public class RobotContainer {
   //init drive...
@@ -29,12 +38,48 @@ public class RobotContainer {
 
   // init navigation
   private final Navigation nav = new Navigation(leftDistanceSupplier, rightDistanceSupplier, gyroSupplier, simulatedPoseSupplier);
+  // The robot's subsystems and commands are defined here...
+  private final Drive drive;
 
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+  //private final LoggedDashboardChooser<Command> autoChooser;
+
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    switch (Constants.mode) {
+      case REAL:
+        // Real robot, instantiate hardware IO implementations
+        drive =
+            new Drive(new DriveIOTalonFX()); // Spark Max/Spark Flex + brushed, no encoders
+        // drive = new Drive(new DriveIOSparkMax()); // Spark Max/Spark Flex + NEO/Vortex
+        // drive = new Drive(new DriveIOTalonSRX()); // Talon SRX + brushed, no encoders
+        // drive = new Drive(new DriveIOTalonFX()); // Talon FX (Falon 500/Kraken X60)
+        break;
+
+      case SIM:
+        // Sim robot, instantiate physics sim IO implementations
+        drive = new Drive(new DriveIOSim());
+        break;
+
+      default:
+        // Replayed robot, disable IO implementations
+        drive = new Drive(new DriveIO() {});
+        break;
+    }
+
+    // Set up auto routines
+
+    // Set up feedforward characterization
+    // //autoChooser.addOption(
+    //     "Drive FF Characterization",
+    //     new FeedForward(
+    //         drive, (volts) -> drive.driveVolts(volts, volts), drive::getCharacterizationVelocity));
+
+    // Configure the button bindings
+    //configureButtonBindings();
     // Configure the trigger bindings
     configureBindings();
   }
