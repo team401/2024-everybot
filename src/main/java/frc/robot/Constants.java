@@ -13,12 +13,30 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static enum Mode {
+    /** Running on a real robot. */
+    REAL,
+
+    /** Running a physics simulator. */
+    SIM,
+
+    /** Replaying from a log file. */
+    REPLAY
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
 
   public static class DriveConstants {
     public static final double TRACK_WIDTH = 0.0;
+    public static final int frontLeftID = 0;//placeholder
+    public static final int backLeftID = 0;//placeholder
+    public static final int frontRightID = 0;//placeholder
+    public static final int backRightID = 0;//placeholder
+
+    public static final double autoDrivePercent = 0.0;//placeholder
   }
 
   public static class VisionConstants { // ALL PLACEHOLDERS
@@ -28,4 +46,5 @@ public final class Constants {
     public static final double CAMERA_PITCH_RADIANS = 0; // difference betweeen horizontal and camera angle
     public static final double IDEAL_GOAL_RANGE_METERS = 1;
   }
+
 }
