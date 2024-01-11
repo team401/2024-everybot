@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.DriveSim;
 
 public class Drive extends SubsystemBase {
     private DifferentialDriveKinematics kinematics;
@@ -16,7 +16,7 @@ public class Drive extends SubsystemBase {
     private DifferentialDriveOdometry odometry;
 
     public Drive (DriveIO io) {
-        kinematics = new DifferentialDriveKinematics(Constants.DriveConstants.TRACK_WIDTH);
+        kinematics = new DifferentialDriveKinematics(DriveSim.DriveConstants.TRACK_WIDTH);
         odometry = new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
     }
 
