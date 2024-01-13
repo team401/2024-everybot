@@ -18,5 +18,8 @@ public final class Constants {
   }
   public static class DriveConstants {
     public static final double TRACK_WIDTH = 0.0;
+    public static final double driveJoystickDeadbandPercent = 0;
+    public static double maxDriveSpeed;
+    public static double maxTurnRate;
   }
 }
