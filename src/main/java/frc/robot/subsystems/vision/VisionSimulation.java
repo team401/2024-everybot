@@ -17,14 +17,11 @@ import frc.robot.Constants;
 
 public class VisionSimulation {
     private VisionSystemSim sim;
-    private TargetModel targetModel;
     private AprilTagFieldLayout tagLayout;
-    private SimCameraProperties properties;
 
     public VisionSimulation (PhotonCameraSim simulatedCamera) {
         // create simulated field
         sim = new VisionSystemSim(Constants.VisionConstants.CAMERA_NAME);
-        targetModel = TargetModel.kAprilTag36h11;
         try {
             tagLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
         } catch (IOException e) {
