@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -44,6 +49,7 @@ public final class Constants {
     public static final double CAMERA_HEIGHT_METERS = 0.7;
     public static final double TARGET_HEIGHT_METERS = 0.8; // changes per goal
     public static final double CAMERA_PITCH_RADIANS = 0; // difference betweeen horizontal and camera angle
+    public static final int CAMERA_FPS = 20;
     public static final double IDEAL_GOAL_RANGE_METERS = 1;
     public static final int RESOLUTION_WIDTH = 0;
     public static final int RESOLUTION_HEIGHT = 0;
