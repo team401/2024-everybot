@@ -9,6 +9,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -30,9 +31,12 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
-
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+  }
+
+  public static class BotConstants {
+    public static Mode botMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
   }
 
   public static class DriveConstants {
