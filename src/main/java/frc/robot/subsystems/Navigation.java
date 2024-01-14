@@ -1,33 +1,28 @@
 package frc.robot.subsystems;
 
-import java.io.IOException;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
 
-public class Navigation {
+public class Navigation extends SubsystemBase {
     private DifferentialDriveKinematics kinematics;
     private DifferentialDrivePoseEstimator poseEstimator;
-    private PhotonPoseEstimator cameraPoseEstimator;
-    private Vision vision;
-    private AprilTagFieldLayout layout;
+    private VisionIO vision;
+    private DoubleSupplier leftDistance;
+    private DoubleSupplier rightDistance;
+    private Supplier<Rotation2d> gyro;
 
-    public Navigation () {  // REAL ROBOT
-        vision = new Vision();
+    public Navigation (VisionIO vision, DoubleSupplier leftDistance, DoubleSupplier rightDistance, Supplier<Rotation2d> gyro) {  // REAL ROBOT
+        this.vision = vision;
         kinematics = new DifferentialDriveKinematics(Constants.DriveConstants.TRACK_WIDTH);
         poseEstimator = new DifferentialDrivePoseEstimator(
             kinematics,
@@ -38,25 +33,36 @@ public class Navigation {
             VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)), 
             VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(5))
         );
-        try {
-            layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-        Transform3d robotToCamera = new Transform3d(Constants.VisionConstants.BOT_TO_CAM_TRL, Constants.VisionConstants.BOT_TO_CAMERA_ROT);
-        cameraPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, vision.getCamera(), robotToCamera);
 
-        // TODO: Add simulated navigation (already built vision simulation)
+       // set suppliers
+       this.leftDistance = leftDistance;
+       this.rightDistance = rightDistance;
+       this.gyro = gyro;
     }
 
-    public void updateNav (Rotation2d gyro, double leftDistanceMeters, double rightDistanceMeters) {
+    public void updateOdometry (Rotation2d gyro, double leftDistanceMeters, double rightDistanceMeters) {
         poseEstimator.update(gyro, leftDistanceMeters, rightDistanceMeters);
-        cameraPoseEstimator.setReferencePose(poseEstimator.getEstimatedPosition());
-        updateNavVision();
     }
 
     public void updateNavVision () {
-        EstimatedRobotPose estimatedVisionPose = cameraPoseEstimator.update().orElseThrow();
-        poseEstimator.addVisionMeasurement(estimatedVisionPose.estimatedPose.toPose2d(), estimatedVisionPose.timestampSeconds);
+       vision.getEstimatedPosition().ifPresentOrElse(
+            est -> {
+                poseEstimator.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds);
+            }, () -> {
+                // do nothing ( no measurement )
+            });
+    }
+
+    @Override
+    public void periodic () {
+        updateOdometry(
+            gyro.get(), 
+            leftDistance.getAsDouble(), 
+            rightDistance.getAsDouble()
+        );
+        vision.update(poseEstimator.getEstimatedPosition());
+        if(Constants.BotConstants.botMode == Constants.Mode.REAL) {
+            updateNavVision(); // photon lib says sim camera cannot use photon pose estimator
+        }
     }
 }
