@@ -12,6 +12,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOReal;
+import frc.robot.subsystems.vision.VisionIOSimulation;
 
 public class Navigation extends SubsystemBase {
     private DifferentialDriveKinematics kinematics;
@@ -21,8 +23,18 @@ public class Navigation extends SubsystemBase {
     private DoubleSupplier rightDistance;
     private Supplier<Rotation2d> gyro;
 
-    public Navigation (VisionIO vision, DoubleSupplier leftDistance, DoubleSupplier rightDistance, Supplier<Rotation2d> gyro) {  // REAL ROBOT
-        this.vision = vision;
+    public Navigation (DoubleSupplier leftDistance, DoubleSupplier rightDistance, Supplier<Rotation2d> gyro) {  // REAL ROBOT
+        switch(Constants.BotConstants.botMode) {
+            case REAL:
+                vision = new VisionIOReal();
+                break;
+            case SIM:
+                vision = new VisionIOSimulation();
+                break;
+            case REPLAY:
+                vision = new VisionIOSimulation(); // ?
+                break;
+        }
         kinematics = new DifferentialDriveKinematics(Constants.DriveConstants.TRACK_WIDTH);
         poseEstimator = new DifferentialDrivePoseEstimator(
             kinematics,
