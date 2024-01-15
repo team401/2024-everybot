@@ -39,18 +39,6 @@ public class VisionIOReal implements VisionIO {
         PhotonPipelineResult result = camera.getLatestResult();
         inputs.timestampSeconds = result.getTimestampSeconds();
 
-        // from mechanical advantage 2022 robot code vision io
-        ArrayList<Double> cornerXList = new ArrayList<>();
-        ArrayList<Double> cornerYList = new ArrayList<>();
-        for(PhotonTrackedTarget target: result.getTargets()) {
-            for(TargetCorner corner : target.getDetectedCorners()) {
-                cornerXList.add(corner.x);
-                cornerYList.add(corner.y);
-            }
-        }
-        inputs.cornerXArr = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
-        inputs.cornerYArr = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
-
         cameraPoseEstimator.update().ifPresentOrElse(
             est -> {
                 inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
