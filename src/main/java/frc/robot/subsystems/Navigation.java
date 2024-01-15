@@ -31,17 +31,21 @@ public class Navigation extends SubsystemBase {
     private DoubleSupplier leftDistance;
     private DoubleSupplier rightDistance;
     private Supplier<Rotation2d> gyro;
+    private Supplier<Pose2d> simulatedPose;
 
-    public Navigation (DoubleSupplier leftDistance, DoubleSupplier rightDistance, Supplier<Rotation2d> gyro) {  // REAL ROBOT
+    public Navigation (DoubleSupplier leftDistance, DoubleSupplier rightDistance, Supplier<Rotation2d> gyro, Supplier<Pose2d> simulatedPose) {  // REAL ROBOT
         switch(Constants.BotConstants.botMode) {
             case REAL:
                 vision = new VisionIOReal();
+                this.simulatedPose = null;
                 break;
             case SIM:
                 vision = new VisionIOSimulation();
+                this.simulatedPose = simulatedPose;
                 break;
             case REPLAY:
                 vision = new VisionIOSimulation(); // ?
+                this.simulatedPose = simulatedPose;
                 break;
         }
         kinematics = new DifferentialDriveKinematics(Constants.DriveConstants.TRACK_WIDTH);
@@ -80,9 +84,11 @@ public class Navigation extends SubsystemBase {
         );
         vision.updateInputs(inputs);
         Logger.processInputs("Vision", inputs);
-        vision.updatePose(poseEstimator.getEstimatedPosition());
         if(Constants.BotConstants.botMode == Constants.Mode.REAL) {
-            updateNavVision(); // photon lib says sim camera cannot use photon pose estimator
+            vision.updatePose(poseEstimator.getEstimatedPosition());
+        } else {
+            vision.updatePose(simulatedPose.get()); // calls supplier ( init in robot container as accessing drive io sim pose input?)
         }
+        updateNavVision();
     }
 }
