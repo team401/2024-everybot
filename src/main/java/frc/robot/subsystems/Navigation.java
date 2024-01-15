@@ -57,12 +57,10 @@ public class Navigation extends SubsystemBase {
     }
 
     public void updateNavVision () {
-       vision.getEstimatedPosition().ifPresentOrElse(
-            est -> {
-                poseEstimator.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds);
-            }, () -> {
-                // do nothing ( no measurement )
-            });
+        var estimatedPosition = vision.getEstimatedPosition();
+        if(estimatedPosition != null) {
+            poseEstimator.addVisionMeasurement(estimatedPosition.estimatedPose.toPose2d(), estimatedPosition.timestampSeconds);
+        }
     }
 
     @Override

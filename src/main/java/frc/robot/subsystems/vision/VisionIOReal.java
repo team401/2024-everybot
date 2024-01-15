@@ -45,11 +45,11 @@ public class VisionIOReal implements VisionIO {
         return camera;
     }
 
-    public Optional<EstimatedRobotPose> getEstimatedPosition () {
+    public EstimatedRobotPose getEstimatedPosition () {
         var estimatedPose = cameraPoseEstimator.update();
         double latestTimestamp = camera.getLatestResult().getTimestampSeconds();
         boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
         if(newResult) lastEstTimestamp = latestTimestamp;
-        return estimatedPose;
+        return estimatedPose.orElse(null);
     }
 }

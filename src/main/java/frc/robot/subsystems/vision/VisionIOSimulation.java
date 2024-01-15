@@ -65,7 +65,7 @@ public class VisionIOSimulation implements VisionIO{
         return sim.getDebugField();
     }
 
-    public Optional<EstimatedRobotPose> getEstimatedPosition () {
+    public EstimatedRobotPose getEstimatedPosition () {
         var estimate = cameraPoseEstimator.update();
         double latestTimestamp = camera.getLatestResult().getTimestampSeconds();
         boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
@@ -80,6 +80,6 @@ public class VisionIOSimulation implements VisionIO{
             }
         );
         if(newResult) lastEstTimestamp = latestTimestamp;
-        return estimate;
+        return estimate.orElse(null);
     }
 }
