@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.RobotBase;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -13,10 +17,51 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static enum Mode {
+    /** Running on a real robot. */
+    REAL,
+
+    /** Running a physics simulator. */
+    SIM,
+
+    /** Replaying from a log file. */
+    REPLAY
+  }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class BotConstants {
+    public static Mode botMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
+  }
+
   public static class DriveConstants {
     public static final double TRACK_WIDTH = 0.0;
+    public static final int frontLeftID = 0;//placeholder
+    public static final int backLeftID = 0;//placeholder
+    public static final int frontRightID = 0;//placeholder
+    public static final int backRightID = 0;//placeholder
+
+    public static final double autoDrivePercent = 0.0;//placeholder
   }
+
+  public static class VisionConstants { // ALL PLACEHOLDERS
+    public static final String CAMERA_NAME = "";
+    public static final double CAMERA_HEIGHT_METERS = 0.7;
+    public static final double TARGET_HEIGHT_METERS = 0.8; // changes per goal
+    public static final double CAMERA_PITCH_RADIANS = 0; // difference betweeen horizontal and camera angle
+    public static final int CAMERA_FPS = 20;
+    public static final double IDEAL_GOAL_RANGE_METERS = 1;
+
+    // simulation
+    public static final int RESOLUTION_WIDTH = 0;
+    public static final int RESOLUTION_HEIGHT = 0;
+    public static final double CAM_DIAG_FOV = 0.0;
+    public static final double MAX_LED_RANGE = 0.0;
+    public static final double MIN_TARGET_AREA = 0.0;
+    public static final Translation3d BOT_TO_CAM_TRL = new Translation3d(0.1, 0, 0.5); // 0.1 from robot pose forward, 0.5 meters up from robot pose
+    public static final Rotation3d BOT_TO_CAMERA_ROT = new Rotation3d(0, Math.toRadians(-15), 0);
+  }
+
 }
