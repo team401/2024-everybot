@@ -88,7 +88,9 @@ public class VisionIOSimulation implements VisionIO{
                 inputs.estimatedVisionPose = null;
             }
         );
-        if(newResult) lastEstTimestamp = latestTimestamp;
+        if(newResult) {
+            lastEstTimestamp = latestTimestamp;
+        }
     }
 
     public void updatePose (Pose2d simRobotPoseMeters) {

@@ -4,6 +4,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.math.VecBuilder;
@@ -78,6 +79,7 @@ public class Navigation extends SubsystemBase {
             rightDistance.getAsDouble()
         );
         vision.updateInputs(inputs);
+        Logger.processInputs("Vision", inputs);
         vision.updatePose(poseEstimator.getEstimatedPosition());
         if(Constants.BotConstants.botMode == Constants.Mode.REAL) {
             updateNavVision(); // photon lib says sim camera cannot use photon pose estimator
