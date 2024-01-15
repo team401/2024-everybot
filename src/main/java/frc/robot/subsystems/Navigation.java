@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.photonvision.EstimatedRobotPose;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,13 +15,18 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOInputsAutoLogged;
 import frc.robot.subsystems.vision.VisionIOReal;
 import frc.robot.subsystems.vision.VisionIOSimulation;
 
 public class Navigation extends SubsystemBase {
     private DifferentialDriveKinematics kinematics;
+    @AutoLogOutput
     private DifferentialDrivePoseEstimator poseEstimator;
+    @AutoLogOutput
+    private EstimatedRobotPose estimatedVisionPosition;
     private VisionIO vision;
+    private VisionIOInputsAutoLogged inputs = new VisionIOInputsAutoLogged();
     private DoubleSupplier leftDistance;
     private DoubleSupplier rightDistance;
     private Supplier<Rotation2d> gyro;
@@ -57,9 +65,8 @@ public class Navigation extends SubsystemBase {
     }
 
     public void updateNavVision () {
-        var estimatedPosition = vision.getEstimatedPosition();
-        if(estimatedPosition != null) {
-            poseEstimator.addVisionMeasurement(estimatedPosition.estimatedPose.toPose2d(), estimatedPosition.timestampSeconds);
+        if(inputs.estimatedVisionPose != null) {
+            poseEstimator.addVisionMeasurement(inputs.estimatedVisionPose, inputs.timestampSeconds);
         }
     }
 
@@ -70,7 +77,8 @@ public class Navigation extends SubsystemBase {
             leftDistance.getAsDouble(), 
             rightDistance.getAsDouble()
         );
-        vision.update(poseEstimator.getEstimatedPosition());
+        vision.updateInputs(inputs);
+        vision.updatePose(poseEstimator.getEstimatedPosition());
         if(Constants.BotConstants.botMode == Constants.Mode.REAL) {
             updateNavVision(); // photon lib says sim camera cannot use photon pose estimator
         }

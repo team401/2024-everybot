@@ -1,7 +1,7 @@
 package frc.robot.subsystems.vision;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.ArrayList;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -10,6 +10,9 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -54,32 +57,45 @@ public class VisionIOSimulation implements VisionIO{
         cameraPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, robotToCamera);
     }
 
-    public void update (Pose2d simRobotPoseMeters) {
-        sim.update(simRobotPoseMeters);
-    }
+    public void updateInputs (VisionIOInputs inputs) {
+        PhotonPipelineResult result = camera.getLatestResult();
+        inputs.timestampSeconds = result.getTimestampSeconds();
 
-    public PhotonCamera getCamera() {
-        return simulatedCamera.getCamera();
-    }
-    public Field2d getField() {
-        return sim.getDebugField();
-    }
+        // from mechanical advantage 2022 robot code vision io
+        ArrayList<Double> cornerXList = new ArrayList<>();
+        ArrayList<Double> cornerYList = new ArrayList<>();
+        for(PhotonTrackedTarget target: result.getTargets()) {
+            for(TargetCorner corner : target.getDetectedCorners()) {
+                cornerXList.add(corner.x);
+                cornerYList.add(corner.y);
+            }
+        }
+        inputs.cornerXArr = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
+        inputs.cornerYArr = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
 
-    public EstimatedRobotPose getEstimatedPosition () {
         var estimate = cameraPoseEstimator.update();
         double latestTimestamp = camera.getLatestResult().getTimestampSeconds();
         boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
         estimate.ifPresentOrElse(
             est -> {
                 getField().getObject("VisionEstimation").setPose(est.estimatedPose.toPose2d());
+                inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
             },
             () -> {
                 if(newResult) {
                     getField().getObject("VisionEstimation").setPoses();
                 }
+                inputs.estimatedVisionPose = null;
             }
         );
         if(newResult) lastEstTimestamp = latestTimestamp;
-        return estimate.orElse(null);
+    }
+
+    public void updatePose (Pose2d simRobotPoseMeters) {
+        sim.update(simRobotPoseMeters);
+    }
+
+    public Field2d getField() {
+        return sim.getDebugField();
     }
 }

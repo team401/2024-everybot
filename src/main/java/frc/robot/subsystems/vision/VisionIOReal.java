@@ -4,9 +4,11 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.TargetCorner;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.ArrayList;
 
 import org.photonvision.EstimatedRobotPose;
 
@@ -33,23 +35,31 @@ public class VisionIOReal implements VisionIO {
         cameraPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, robotToCamera);
     }
 
-    public PhotonPipelineResult getResult () {
-        return camera.getLatestResult();
+    public void updateInputs (VisionIOInputs inputs) {
+        PhotonPipelineResult result = camera.getLatestResult();
+        inputs.timestampSeconds = result.getTimestampSeconds();
+
+        // from mechanical advantage 2022 robot code vision io
+        ArrayList<Double> cornerXList = new ArrayList<>();
+        ArrayList<Double> cornerYList = new ArrayList<>();
+        for(PhotonTrackedTarget target: result.getTargets()) {
+            for(TargetCorner corner : target.getDetectedCorners()) {
+                cornerXList.add(corner.x);
+                cornerYList.add(corner.y);
+            }
+        }
+        inputs.cornerXArr = cornerXList.stream().mapToDouble(Double::doubleValue).toArray();
+        inputs.cornerYArr = cornerYList.stream().mapToDouble(Double::doubleValue).toArray();
+
+        cameraPoseEstimator.update().ifPresentOrElse(
+            est -> {
+                inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
+            }, () -> {
+                inputs.estimatedVisionPose = null;
+            });
     }
 
-    public void update (Pose2d drivetrainPoseMeters) {
+    public void updatePose (Pose2d drivetrainPoseMeters) {
         cameraPoseEstimator.setReferencePose(drivetrainPoseMeters);
-    }
-
-    public PhotonCamera getCamera() {
-        return camera;
-    }
-
-    public EstimatedRobotPose getEstimatedPosition () {
-        var estimatedPose = cameraPoseEstimator.update();
-        double latestTimestamp = camera.getLatestResult().getTimestampSeconds();
-        boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
-        if(newResult) lastEstTimestamp = latestTimestamp;
-        return estimatedPose.orElse(null);
     }
 }

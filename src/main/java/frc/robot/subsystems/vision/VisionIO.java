@@ -1,20 +1,20 @@
 package frc.robot.subsystems.vision;
 
-import java.util.Optional;
-
 import org.littletonrobotics.junction.AutoLog;
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
 public interface VisionIO {
-    public default PhotonCamera getCamera () { return new PhotonCamera(""); }
 
-    public default void update (Pose2d simRobotPoseMeters) {}
+    @AutoLog
+    public static class VisionIOInputs {
+        public double timestampSeconds = 0.0;
+        public double[] cornerXArr = new double[] {};
+        public double[] cornerYArr = new double[] {};
+        public Pose2d estimatedVisionPose = new Pose2d();
+    }
 
-    public default PhotonPipelineResult getResult () { return new PhotonPipelineResult(); };
+    public default void updateInputs (VisionIOInputs inputs) {}
 
-    public default EstimatedRobotPose getEstimatedPosition () { return new EstimatedRobotPose(null, 0, null, null); }
+    public default void updatePose (Pose2d simRobotPoseMeters) {}
 }
