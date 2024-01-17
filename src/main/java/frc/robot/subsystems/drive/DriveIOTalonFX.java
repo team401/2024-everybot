@@ -33,7 +33,7 @@ public class DriveIOTalonFX implements DriveIO{
     private final StatusSignal<Double> rightLeaderCurrent = driveMotorFrontRight.getStatorCurrent();
     private final StatusSignal<Double> rightFollowerCurrent = driveMotorBackRight.getStatorCurrent();
 
-    private final Pigeon2 pigeon = new Pigeon2(Constants.pigeonID);
+    private final Pigeon2 pigeon = new Pigeon2(Constants.DriveConstants.pigeonID);
     private final StatusSignal<Double> yaw = pigeon.getYaw();
 
 

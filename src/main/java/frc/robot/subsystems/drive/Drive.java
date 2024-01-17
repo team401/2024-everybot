@@ -4,19 +4,10 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.DriveConstants;
 
 public class Drive extends SubsystemBase {
 
@@ -26,33 +17,18 @@ public class Drive extends SubsystemBase {
 
     private final DriveIO io;
     private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
-    private DifferentialDriveOdometry odometry =
-      new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
-    private DifferentialDriveKinematics kinematics =
-      new DifferentialDriveKinematics(Constants.DriveConstants.TRACK_WIDTH);
     private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV);
 
     public Drive(DriveIO io) {
         this.io = io;
         //(DriveConstants.frontLeftID, DriveConstants.frontRightID, DriveConstants.backLeftID, DriveConstants.backRightID);
 
-        kinematics = new DifferentialDriveKinematics(Constants.DriveConstants.TRACK_WIDTH);
-        odometry = new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
     }
 
     @Override
     public void periodic(){
         io.updateInputs(inputs);
         Logger.processInputs("Drive", inputs);
-
-        // Update odometry  
-        odometry.update(inputs.gyroYaw, getLeftPositionMeters(), getRightPositionMeters());
-    }
-
-    public void arcadeDrive (double xSpeed, double rotation) {
-        var speeds = kinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, rotation));
-        // TODO: Add feedforward and PID Controller before settting voltages or add in IO class
-        // io.setVoltage (speeds.right * 12.0, speeds.left * 12.0)
     }
 
       /** Run open loop at the specified voltage. */
@@ -83,16 +59,8 @@ public class Drive extends SubsystemBase {
   public void stop() {
     io.setVoltage(0.0, 0.0);
   }
-
-  /** Returns the current odometry pose in meters. */
-  @AutoLogOutput(key = "Odometry/Robot")
-  public Pose2d getPose() {
-    return odometry.getPoseMeters();
-  }
-
-  /** Resets the current odometry pose. */
-  public void setPose(Pose2d pose) {
-    odometry.resetPosition(inputs.gyroYaw, getLeftPositionMeters(), getRightPositionMeters(), pose);
+  public Rotation2d getGyroRotation2d () {
+    return inputs.gyroYaw;
   }
 
   /** Returns the position of the left wheels in meters. */
