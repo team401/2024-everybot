@@ -1,6 +1,7 @@
 package frc.robot.subsystems.vision;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import org.photonvision.EstimatedRobotPose;
@@ -79,6 +80,10 @@ public class VisionIOSimulation implements VisionIO{
         if(newResult) {
             lastEstTimestamp = latestTimestamp;
         }
+    }
+
+    public Field2d getField () {
+        return sim.getDebugField();
     }
 
     public void updatePose (Pose2d simRobotPoseMeters) {
