@@ -10,6 +10,7 @@ public interface VisionIO {
     public static class VisionIOInputs {
         public double timestampSeconds = 0.0;
         public Pose2d estimatedVisionPose = new Pose2d();
+        public double rotationToClosestTarget = 0.0;
     }
 
     public default void updateInputs (VisionIOInputs inputs) {}

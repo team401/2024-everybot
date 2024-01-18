@@ -75,6 +75,10 @@ public class Navigation extends SubsystemBase {
         }
     }
 
+    public double aimAtTarget () {
+        return inputs.rotationToClosestTarget; // updates in periodic already
+    }
+
     @Override
     public void periodic () {
         updateOdometry(

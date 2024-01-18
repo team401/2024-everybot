@@ -45,6 +45,12 @@ public class VisionIOReal implements VisionIO {
             }, () -> {
                 inputs.estimatedVisionPose = null;
             });
+        
+        if(result.hasTargets()) {
+            inputs.rotationToClosestTarget = result.getBestTarget().getYaw();
+        } else {
+            inputs.rotationToClosestTarget = 0.0; // dont move
+        }
     }
 
     public void updatePose (Pose2d drivetrainPoseMeters) {
