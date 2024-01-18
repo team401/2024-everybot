@@ -62,6 +62,7 @@ public final class Constants {
     public static final double MIN_TARGET_AREA = 0.0;
     public static final Translation3d BOT_TO_CAM_TRL = new Translation3d(0.1, 0, 0.5); // 0.1 from robot pose forward, 0.5 meters up from robot pose
     public static final Rotation3d BOT_TO_CAMERA_ROT = new Rotation3d(0, Math.toRadians(-15), 0);
+    public static final boolean SIM_FIELD_ENABLED = false;
   }
 
 }

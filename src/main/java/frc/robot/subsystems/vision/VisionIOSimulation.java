@@ -85,7 +85,7 @@ public class VisionIOSimulation implements VisionIO{
         sim.update(simRobotPoseMeters);
     }
 
-    public Field2d getField() {
-        return sim.getDebugField();
+    public void set3dFieldSimActive (boolean enabled) {
+        simulatedCamera.enableDrawWireframe(enabled);
     }
 }
