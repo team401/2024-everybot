@@ -41,6 +41,7 @@ public class Navigation extends SubsystemBase {
                 break;
             case SIM:
                 vision = new VisionIOSimulation();
+                vision.set3dFieldSim(Constants.VisionConstants.SIM_FIELD_ENABLED);
                 this.simulatedPose = simulatedPose;
                 break;
             case REPLAY:
