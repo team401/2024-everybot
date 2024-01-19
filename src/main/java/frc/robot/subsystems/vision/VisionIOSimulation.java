@@ -1,6 +1,7 @@
 package frc.robot.subsystems.vision;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import org.photonvision.EstimatedRobotPose;
@@ -81,11 +82,15 @@ public class VisionIOSimulation implements VisionIO{
         }
     }
 
+    public Field2d getField () {
+        return sim.getDebugField();
+    }
+
     public void updatePose (Pose2d simRobotPoseMeters) {
         sim.update(simRobotPoseMeters);
     }
 
-    public Field2d getField() {
-        return sim.getDebugField();
+    public void set3dFieldSimActive (boolean enabled) {
+        simulatedCamera.enableDrawWireframe(enabled);
     }
 }

@@ -16,4 +16,6 @@ public interface VisionIO {
     public default void updateInputs (VisionIOInputs inputs) {}
 
     public default void updatePose (Pose2d simRobotPoseMeters) {}
+
+    public default void set3dFieldSim (boolean enabled) {}
 }
