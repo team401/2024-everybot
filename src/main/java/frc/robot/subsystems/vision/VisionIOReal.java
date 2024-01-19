@@ -4,13 +4,8 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
-import org.photonvision.targeting.TargetCorner;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
-import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -22,7 +17,6 @@ public class VisionIOReal implements VisionIO {
     public PhotonCamera camera;
     private PhotonPoseEstimator cameraPoseEstimator;
     private AprilTagFieldLayout layout;
-    private double lastEstTimestamp = 0;
 
     public VisionIOReal () {
         camera = new PhotonCamera(Constants.VisionConstants.CAMERA_NAME);
