@@ -12,6 +12,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Constants;
 
 public class DriveIOTalonFX implements DriveIO{
@@ -35,7 +36,6 @@ public class DriveIOTalonFX implements DriveIO{
 
     private final Pigeon2 pigeon = new Pigeon2(Constants.DriveConstants.pigeonID);
     private final StatusSignal<Double> yaw = pigeon.getYaw();
-
 
     public DriveIOTalonFX() {
     var config = new TalonFXConfiguration();

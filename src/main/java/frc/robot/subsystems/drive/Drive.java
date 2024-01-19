@@ -14,7 +14,7 @@ public class Drive extends SubsystemBase {
 
     private final DriveIO io;
     private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
-    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV);
+    private final SimpleMotorFeedforward driveff = new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV);
 
     public Drive(DriveIO io) {
         this.io = io;
@@ -42,8 +42,8 @@ public class Drive extends SubsystemBase {
     io.setVelocity(
         leftRadPerSec,
         rightRadPerSec,
-        feedforward.calculate(leftRadPerSec),
-        feedforward.calculate(rightRadPerSec));
+        driveff.calculate(leftRadPerSec),
+        driveff.calculate(rightRadPerSec));
   }
 
   /** Run open loop based on stick positions. */
@@ -89,7 +89,8 @@ public class Drive extends SubsystemBase {
     return (inputs.leftVelocityRadPerSec + inputs.rightVelocityRadPerSec) / 2.0;
   }
 
-  public Pose2d getSimulatedPose() {
-    return inputs.simulatedPose;
+  public void setDiffDriveControls(double forward, double rotation){
+    io.setVoltage(forward, rotation); //idk if this is right
   }
+
 }
