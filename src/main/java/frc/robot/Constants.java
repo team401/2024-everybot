@@ -78,6 +78,10 @@ public final class Constants {
     public static final Rotation3d BOT_TO_CAMERA_ROT = new Rotation3d(0, Math.toRadians(-15), 0);
     public static final boolean SIM_FIELD_ENABLED = false;
   }
-  
+
+  public static class SimConstants{
+    public static final double KP = 0.2;
+    public static final double KD = 0.0;
+  }
 }
 
