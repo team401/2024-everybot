@@ -103,6 +103,8 @@ public class DriveIOTalonFX implements DriveIO{
         };
 
     inputs.gyroYaw = Rotation2d.fromDegrees(yaw.getValueAsDouble());
+
+    inputs.simulatedPose = null;
   }
 
   @Override

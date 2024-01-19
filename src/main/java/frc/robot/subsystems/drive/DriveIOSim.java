@@ -55,6 +55,8 @@ public class DriveIOSim implements DriveIO{
     inputs.rightCurrentAmps = new double[] {sim.getRightCurrentDrawAmps()};
 
     inputs.gyroYaw = sim.getHeading();
+
+    inputs.simulatedPose = sim.getPose();
   }
 
   @Override

@@ -91,4 +91,8 @@ public class Drive extends SubsystemBase {
   public double getCharacterizationVelocity() {
     return (inputs.leftVelocityRadPerSec + inputs.rightVelocityRadPerSec) / 2.0;
   }
+
+  public Pose2d getSimulatedPose() {
+    return inputs.simulatedPose;
+  }
 }

@@ -2,6 +2,7 @@ package frc.robot.subsystems.drive;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public interface DriveIO {
@@ -19,6 +20,8 @@ public interface DriveIO {
         public double[] rightCurrentAmps = new double[] {};
 
         public Rotation2d gyroYaw = new Rotation2d();
+
+        public Pose2d simulatedPose = new Pose2d(); // only update in sim
     }
 
     /** Updates the set of loggable inputs. */
