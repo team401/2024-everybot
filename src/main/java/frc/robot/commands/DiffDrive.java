@@ -1,12 +1,10 @@
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
+import java.util.function.DoubleSupplier;
 
-public class DiffDrive extends Command{
-
+public class DiffDrive extends Command {
 
     private final Drive drivesub;
     private final DoubleSupplier xPercent;
@@ -16,13 +14,12 @@ public class DiffDrive extends Command{
         drivesub = d;
         xPercent = xPcent;
         yPercent = yPcent;
-  
+
         addRequirements(drivesub);
     }
 
     @Override
-    public void initialize() {
-    }
+    public void initialize() {}
 
     @Override
     public void execute() {
@@ -30,8 +27,5 @@ public class DiffDrive extends Command{
     }
 
     @Override
-    public void end(boolean interrupted){
-    }
-
-
+    public void end(boolean interrupted) {}
 }

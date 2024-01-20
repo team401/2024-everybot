@@ -4,120 +4,114 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.subsystems.Navigation;
-
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.subsystems.Navigation;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIO;
 import frc.robot.subsystems.drive.DriveIOSim;
 import frc.robot.subsystems.drive.DriveIOTalonFX;
-
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-
 public class RobotContainer {
-  //init drive...
+    // init drive...
 
-  // make suppliers for navigation
-  // TODO: replace empty returns by integrating with relevant drive subsystem methods ( waiting on drive class )
-  private DoubleSupplier leftDistanceSupplier = () -> { return 0.0; };
-  private DoubleSupplier rightDistanceSupplier = () -> { return 0.0; };
-  private Supplier<Rotation2d> gyroSupplier = () -> { return new Rotation2d(); };
-  private Supplier<Pose2d> simulatedPoseSupplier = () -> { return new Pose2d(); };
+    // make suppliers for navigation
+    // TODO: replace empty returns by integrating with relevant drive subsystem methods ( waiting on
+    // drive class )
+    private DoubleSupplier leftDistanceSupplier =
+            () -> {
+                return 0.0;
+            };
+    private DoubleSupplier rightDistanceSupplier =
+            () -> {
+                return 0.0;
+            };
+    private Supplier<Rotation2d> gyroSupplier =
+            () -> {
+                return new Rotation2d();
+            };
+    private Supplier<Pose2d> simulatedPoseSupplier =
+            () -> {
+                return new Pose2d();
+            };
 
-  // init navigation
-  private final Navigation nav = new Navigation(leftDistanceSupplier, rightDistanceSupplier, gyroSupplier, simulatedPoseSupplier);
-  // The robot's subsystems and commands are defined here...
-  private final Drive drive;
+    // init navigation
+    private final Navigation nav =
+            new Navigation(
+                    leftDistanceSupplier,
+                    rightDistanceSupplier,
+                    gyroSupplier,
+                    simulatedPoseSupplier);
+    // The robot's subsystems and commands are defined here...
+    private final Drive drive;
 
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+    private final CommandXboxController m_driverController =
+            new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  //private final LoggedDashboardChooser<Command> autoChooser;
+    // private final LoggedDashboardChooser<Command> autoChooser;
 
+    /** The container for the robot. Contains subsystems, OI devices, and commands. */
+    public RobotContainer() {
+        switch (Constants.BotConstants.botMode) {
+            case REAL:
+                // Real robot, instantiate hardware IO implementations
+                drive = new Drive(new DriveIOTalonFX()); // Spark Max/Spark Flex + brushed, no
+                // encoders
+                // drive = new Drive(new DriveIOSparkMax()); // Spark Max/Spark Flex + NEO/Vortex
+                // drive = new Drive(new DriveIOTalonSRX()); // Talon SRX + brushed, no encoders
+                // drive = new Drive(new DriveIOTalonFX()); // Talon FX (Falon 500/Kraken X60)
+                break;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    switch (Constants.BotConstants.botMode) {
-      case REAL:
-        // Real robot, instantiate hardware IO implementations
-        drive =
-            new Drive(new DriveIOTalonFX()); // Spark Max/Spark Flex + brushed, no encoders
-        // drive = new Drive(new DriveIOSparkMax()); // Spark Max/Spark Flex + NEO/Vortex
-        // drive = new Drive(new DriveIOTalonSRX()); // Talon SRX + brushed, no encoders
-        // drive = new Drive(new DriveIOTalonFX()); // Talon FX (Falon 500/Kraken X60)
-        break;
+            case SIM:
+                // Sim robot, instantiate physics sim IO implementations
+                drive = new Drive(new DriveIOSim());
+                break;
 
-      case SIM:
-        // Sim robot, instantiate physics sim IO implementations
-        drive = new Drive(new DriveIOSim());
-        break;
+            default:
+                // Replayed robot, disable IO implementations
+                drive = new Drive(new DriveIO() {});
+                break;
+        }
 
-      default:
-        // Replayed robot, disable IO implementations
-        drive = new Drive(new DriveIO() {});
-        break;
+        // Set up auto routines
+
+        // Set up feedforward characterization
+        // //autoChooser.addOption(
+        //     "Drive FF Characterization",
+        //     new FeedForward(
+        //         drive, (volts) -> drive.driveVolts(volts, volts),
+        // drive::getCharacterizationVelocity));
+
+        // Configure the button bindings
+        // configureButtonBindings();
+        // Configure the trigger bindings
+        configureBindings();
     }
 
-    // Set up auto routines
+    /**
+     * Use this method to define your trigger->command mappings. Triggers can be created via the
+     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+     * predicate, or via the named factories in {@link
+     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+     * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+     * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+     * joysticks}.
+     */
+    private void configureBindings() {}
 
-    // Set up feedforward characterization
-    // //autoChooser.addOption(
-    //     "Drive FF Characterization",
-    //     new FeedForward(
-    //         drive, (volts) -> drive.driveVolts(volts, volts), drive::getCharacterizationVelocity));
-
-    // Configure the button bindings
-    //configureButtonBindings();
-    // Configure the trigger bindings
-    configureBindings();
-  }
-
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-
-  }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return new Command() {
-
-    };
-  }
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+        // An example command will be run in autonomous
+        return new Command() {};
+    }
 }
