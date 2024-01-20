@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 2,
+      "y": 2
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,67 +14,67 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right 1pc OUT"
+            "pathName": "Center Left OUT"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Right 1pc IN"
+            "pathName": "Center Left IN"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Center 1pc OUT"
+            "pathName": "Center Center OUT"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Center 1pc IN"
+            "pathName": "Center Center IN"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left 1pc OUT"
+            "pathName": "Center Right OUT"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left 1pc IN"
+            "pathName": "Center Right IN"
           }
         }
       ]
