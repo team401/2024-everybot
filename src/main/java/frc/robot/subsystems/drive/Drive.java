@@ -17,9 +17,6 @@ public class Drive extends SubsystemBase {
 
     public Drive(DriveIO io) {
         this.io = io;
-        // (DriveConstants.frontLeftID, DriveConstants.frontRightID, DriveConstants.backLeftID,
-        // DriveConstants.backRightID);
-
     }
 
     @Override

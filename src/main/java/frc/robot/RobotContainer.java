@@ -6,10 +6,14 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.DiffDrive;
 import frc.robot.subsystems.Navigation;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIO;
@@ -21,16 +25,17 @@ import java.util.function.Supplier;
 public class RobotContainer {
     // init drive...
 
+    private final Drive drive = new Drive(null);
     // make suppliers for navigation
     // TODO: replace empty returns by integrating with relevant drive subsystem methods ( waiting on
     // drive class )
     private DoubleSupplier leftDistanceSupplier =
             () -> {
-                return 0.0;
+                return drive.getLeftPositionMeters();
             };
     private DoubleSupplier rightDistanceSupplier =
             () -> {
-                return 0.0;
+                return drive.getRightPositionMeters();
             };
     private Supplier<Rotation2d> gyroSupplier =
             () -> {
@@ -49,11 +54,14 @@ public class RobotContainer {
                     gyroSupplier,
                     simulatedPoseSupplier);
     // The robot's subsystems and commands are defined here...
-    private final Drive drive;
 
-    private final CommandXboxController m_driverController =
+
+    private final CommandXboxController driverController =
             new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+    private Joystick leftJoystick = new Joystick(0);
+    private Joystick rightJoystick = new Joystick(1);
+        
     // private final LoggedDashboardChooser<Command> autoChooser;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -91,6 +99,13 @@ public class RobotContainer {
         // Configure the button bindings
         // configureButtonBindings();
         // Configure the trigger bindings
+
+        drive.setDefaultCommand(new DiffDrive(
+          drive, 
+          () -> -leftJoystick.getRawAxis(1), 
+          () ->rightJoystick.getRawAxis(0)));
+
+
         configureBindings();
     }
 
@@ -103,7 +118,11 @@ public class RobotContainer {
      * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
      */
-    private void configureBindings() {}
+    private void configureBindings() {
+      drive.setDefaultCommand(new DiffDrive(drive,
+                () -> driverController.getLeftY(),
+                () -> driverController.getRightY()));
+    }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

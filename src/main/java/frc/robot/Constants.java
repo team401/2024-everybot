@@ -42,7 +42,7 @@ public final class Constants {
     }
 
     public static class DriveConstants {
-        public static final double TRACK_WIDTH = 0.0;
+        public static final double TRACK_WIDTH = 0.0; // placeholder
         public static final int frontLeftID = 0; // placeholder
         public static final int backLeftID = 0; // placeholder
         public static final int frontRightID = 0; // placeholder
@@ -85,7 +85,7 @@ public final class Constants {
     }
 
     public static class SimConstants {
-        public static final double KP = 0.2;
-        public static final double KD = 0.0;
+        public static final double KP = 0.2; // placeholder
+        public static final double KD = 0.0; // placeholder
     }
 }

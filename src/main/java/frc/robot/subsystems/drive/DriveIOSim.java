@@ -80,7 +80,5 @@ public class DriveIOSim implements DriveIO {
         closedLoop = true;
         leftPID.setSetpoint(leftRadPerSec);
         rightPID.setSetpoint(rightRadPerSec);
-        this.leftFFVolts = leftFFVolts;
-        this.rightFFVolts = rightFFVolts;
     }
 }
