@@ -24,11 +24,10 @@ import java.util.function.Supplier;
 
 public class RobotContainer {
     // init drive...
+    private Drive drive = new Drive(null);
 
-    private final Drive drive = new Drive(null);
+    
     // make suppliers for navigation
-    // TODO: replace empty returns by integrating with relevant drive subsystem methods ( waiting on
-    // drive class )
     private DoubleSupplier leftDistanceSupplier =
             () -> {
                 return drive.getLeftPositionMeters();
@@ -39,11 +38,11 @@ public class RobotContainer {
             };
     private Supplier<Rotation2d> gyroSupplier =
             () -> {
-                return new Rotation2d();
+                return drive.getGyroRotation2d();
             };
     private Supplier<Pose2d> simulatedPoseSupplier =
             () -> {
-                return new Pose2d();
+                return drive.getSimulatedPose();
             };
 
     // init navigation
