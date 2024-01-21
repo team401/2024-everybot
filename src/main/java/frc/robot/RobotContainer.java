@@ -22,9 +22,14 @@ import java.util.function.Supplier;
 
 public class RobotContainer {
     private Drive drive;
+
     // init navigation
     private Navigation nav;
-    // The robot's subsystems and commands are defined here...
+    
+    private DoubleSupplier leftDistanceSupplier;
+    private DoubleSupplier rightDistanceSupplier;
+    private Supplier<Rotation2d> gyroSupplier;
+    private Supplier<Pose2d> simulatedPoseSupplier;
 
     private final CommandXboxController driverController =
             new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -57,19 +62,19 @@ public class RobotContainer {
                 break;
         }
         // make suppliers for navigation
-        DoubleSupplier leftDistanceSupplier =
+        leftDistanceSupplier =
                 () -> {
                     return drive.getLeftPositionMeters();
                 };
-        DoubleSupplier rightDistanceSupplier =
+        rightDistanceSupplier =
                 () -> {
                     return drive.getRightPositionMeters();
                 };
-        Supplier<Rotation2d> gyroSupplier =
+        gyroSupplier =
                 () -> {
                     return drive.getGyroRotation2d();
                 };
-        Supplier<Pose2d> simulatedPoseSupplier =
+        simulatedPoseSupplier =
                 () -> {
                     return drive.getSimulatedPose();
                 };
