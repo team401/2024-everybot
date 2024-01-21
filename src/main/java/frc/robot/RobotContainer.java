@@ -74,11 +74,11 @@ public class RobotContainer {
                     return drive.getSimulatedPose();
                 };
         nav =
-            new Navigation(
-                    leftDistanceSupplier,
-                    rightDistanceSupplier,
-                    gyroSupplier,
-                    simulatedPoseSupplier);
+                new Navigation(
+                        leftDistanceSupplier,
+                        rightDistanceSupplier,
+                        gyroSupplier,
+                        simulatedPoseSupplier);
 
         // Set up auto routines
 
