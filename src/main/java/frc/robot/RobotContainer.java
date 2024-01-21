@@ -21,34 +21,9 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class RobotContainer {
-    // init drive...
-    private Drive drive = new Drive(null);
-
-    // make suppliers for navigation
-    private DoubleSupplier leftDistanceSupplier =
-            () -> {
-                return drive.getLeftPositionMeters();
-            };
-    private DoubleSupplier rightDistanceSupplier =
-            () -> {
-                return drive.getRightPositionMeters();
-            };
-    private Supplier<Rotation2d> gyroSupplier =
-            () -> {
-                return drive.getGyroRotation2d();
-            };
-    private Supplier<Pose2d> simulatedPoseSupplier =
-            () -> {
-                return drive.getSimulatedPose();
-            };
-
+    private Drive drive;
     // init navigation
-    private final Navigation nav =
-            new Navigation(
-                    leftDistanceSupplier,
-                    rightDistanceSupplier,
-                    gyroSupplier,
-                    simulatedPoseSupplier);
+    private Navigation nav;
     // The robot's subsystems and commands are defined here...
 
     private final CommandXboxController driverController =
@@ -81,6 +56,29 @@ public class RobotContainer {
                 drive = new Drive(new DriveIO() {});
                 break;
         }
+        // make suppliers for navigation
+        DoubleSupplier leftDistanceSupplier =
+                () -> {
+                    return drive.getLeftPositionMeters();
+                };
+        DoubleSupplier rightDistanceSupplier =
+                () -> {
+                    return drive.getRightPositionMeters();
+                };
+        Supplier<Rotation2d> gyroSupplier =
+                () -> {
+                    return drive.getGyroRotation2d();
+                };
+        Supplier<Pose2d> simulatedPoseSupplier =
+                () -> {
+                    return drive.getSimulatedPose();
+                };
+        nav =
+            new Navigation(
+                    leftDistanceSupplier,
+                    rightDistanceSupplier,
+                    gyroSupplier,
+                    simulatedPoseSupplier);
 
         // Set up auto routines
 
