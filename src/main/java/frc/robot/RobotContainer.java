@@ -8,9 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DiffDrive;
@@ -26,7 +24,6 @@ public class RobotContainer {
     // init drive...
     private Drive drive = new Drive(null);
 
-    
     // make suppliers for navigation
     private DoubleSupplier leftDistanceSupplier =
             () -> {
@@ -54,13 +51,12 @@ public class RobotContainer {
                     simulatedPoseSupplier);
     // The robot's subsystems and commands are defined here...
 
-
     private final CommandXboxController driverController =
             new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
     private Joystick leftJoystick = new Joystick(0);
     private Joystick rightJoystick = new Joystick(1);
-        
+
     // private final LoggedDashboardChooser<Command> autoChooser;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -99,11 +95,11 @@ public class RobotContainer {
         // configureButtonBindings();
         // Configure the trigger bindings
 
-        drive.setDefaultCommand(new DiffDrive(
-          drive, 
-          () -> -leftJoystick.getRawAxis(1), 
-          () ->rightJoystick.getRawAxis(0)));
-
+        drive.setDefaultCommand(
+                new DiffDrive(
+                        drive,
+                        () -> -leftJoystick.getRawAxis(1),
+                        () -> rightJoystick.getRawAxis(0)));
 
         configureBindings();
     }
@@ -118,9 +114,11 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-      drive.setDefaultCommand(new DiffDrive(drive,
-                () -> driverController.getLeftY(),
-                () -> driverController.getRightY()));
+        drive.setDefaultCommand(
+                new DiffDrive(
+                        drive,
+                        () -> driverController.getLeftY(),
+                        () -> driverController.getRightY()));
     }
 
     /**
