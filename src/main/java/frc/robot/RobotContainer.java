@@ -25,7 +25,7 @@ public class RobotContainer {
 
     // init navigation
     private Navigation nav;
-    
+
     private DoubleSupplier leftDistanceSupplier;
     private DoubleSupplier rightDistanceSupplier;
     private Supplier<Rotation2d> gyroSupplier;
