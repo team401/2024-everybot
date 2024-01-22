@@ -1,9 +1,8 @@
 package frc.robot.subsystems.vision;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface VisionIO {
 
@@ -15,9 +14,9 @@ public interface VisionIO {
         public Transform3d CamToTargetTransform = new Transform3d();
     }
 
-    public default void updateInputs (VisionIOInputs inputs) {}
+    public default void updateInputs(VisionIOInputs inputs) {}
 
-    public default void updatePose (Pose2d simRobotPoseMeters) {}
+    public default void updatePose(Pose2d simRobotPoseMeters) {}
 
-    public default void set3dFieldSim (boolean enabled) {}
+    public default void set3dFieldSim(boolean enabled) {}
 }

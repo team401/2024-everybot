@@ -41,7 +41,7 @@ public class VisionIOReal implements VisionIO {
 
         boolean newResult = Math.abs(result.getTimestampSeconds() - lastEstTimestamp) > 1e-5;
 
-        if(newResult) {
+        if (newResult) {
             inputs.CamToTargetTransform = result.getBestTarget().getBestCameraToTarget();
         }
 

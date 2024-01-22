@@ -7,19 +7,19 @@ import frc.robot.subsystems.drive.Drive;
 public class AimAtTarget extends Command {
     Drive driveSubsystem;
     Navigation navSubsystem;
+
     public AimAtTarget(Drive driveSubsystem, Navigation navSubsystem) {
         this.driveSubsystem = driveSubsystem;
         this.navSubsystem = navSubsystem;
 
         addRequirements(driveSubsystem, navSubsystem);
     }
-    @Override
-    public void initialize() {
 
-    }
+    @Override
+    public void initialize() {}
 
     @Override
     public void execute() {
-        driveSubsystem.arcadeDrive(0, navSubsystem.aimAtTarget());
+        // send navSubsystem.aimAtTarget() -> Pose2d to drive subsystem
     }
 }
