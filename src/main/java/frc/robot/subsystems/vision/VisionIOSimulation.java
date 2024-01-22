@@ -1,15 +1,5 @@
 package frc.robot.subsystems.vision;
 
-import java.io.IOException;
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.simulation.PhotonCameraSim;
-import org.photonvision.simulation.SimCameraProperties;
-import org.photonvision.simulation.VisionSystemSim;
-import org.photonvision.targeting.PhotonPipelineResult;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -67,27 +57,28 @@ public class VisionIOSimulation implements VisionIO {
         double latestTimestamp = result.getTimestampSeconds();
         boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
         estimate.ifPresentOrElse(
-            est -> {
-                if(newResult) {
-                    getField().getObject("VisionEstimation").setPose(est.estimatedPose.toPose2d());
-                    inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
-                } else {
+                est -> {
+                    if (newResult) {
+                        getField()
+                                .getObject("VisionEstimation")
+                                .setPose(est.estimatedPose.toPose2d());
+                        inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
+                    } else {
+                        inputs.estimatedVisionPose = null;
+                    }
+                },
+                () -> {
+                    if (newResult) {
+                        getField().getObject("VisionEstimation").setPoses();
+                    }
                     inputs.estimatedVisionPose = null;
-                }
-            },
-            () -> {
-                if(newResult) {
-                    getField().getObject("VisionEstimation").setPoses();
-                }
-                inputs.estimatedVisionPose = null;
-            }
-        );
-        if(newResult) {
+                });
+        if (newResult) {
             lastEstTimestamp = latestTimestamp;
         }
     }
 
-    public Field2d getField () {
+    public Field2d getField() {
         return sim.getDebugField();
     }
 
