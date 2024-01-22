@@ -1,5 +1,15 @@
 package frc.robot.subsystems.vision;
 
+<<<<<<< HEAD
+=======
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
+
+import java.io.IOException;
+
+>>>>>>> 4f89ddf (add conditional to check if there is new frame to add)
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -33,6 +43,7 @@ public class VisionIOReal implements VisionIO {
 
         boolean newResult = Math.abs(result.getTimestampSeconds() - lastEstTimestamp) > 1e-5;
 
+<<<<<<< HEAD
         cameraPoseEstimator
                 .update()
                 .ifPresentOrElse(
@@ -50,6 +61,25 @@ public class VisionIOReal implements VisionIO {
                         () -> {
                             inputs.estimatedVisionPose = null;
                         });
+=======
+        cameraPoseEstimator.update().ifPresentOrElse(
+            est -> {
+                if(newResult) {
+                    lastEstTimestamp = result.getTimestampSeconds(); // update timestamp since frame has been added
+                    inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
+                } else {
+                    inputs.estimatedVisionPose = null; // out of date (already added to pose estimator)
+                }
+            }, () -> {
+                inputs.estimatedVisionPose = null;
+            });
+        
+        if(result.hasTargets()) {
+            inputs.rotationToClosestTarget = result.getBestTarget().getYaw();
+        } else {
+            inputs.rotationToClosestTarget = 0.0; // dont move
+        }
+>>>>>>> 4f89ddf (add conditional to check if there is new frame to add)
     }
 
     public void updatePose(Pose2d drivetrainPoseMeters) {
