@@ -1,8 +1,5 @@
 package frc.robot.subsystems.vision;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -10,9 +7,6 @@ import org.photonvision.targeting.PhotonPipelineResult;
 
 import java.io.IOException;
 
->>>>>>> 4f89ddf (add conditional to check if there is new frame to add)
-=======
->>>>>>> 5554693 (format code)
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -46,10 +40,6 @@ public class VisionIOReal implements VisionIO {
 
         boolean newResult = Math.abs(result.getTimestampSeconds() - lastEstTimestamp) > 1e-5;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5554693 (format code)
         cameraPoseEstimator
                 .update()
                 .ifPresentOrElse(
@@ -67,8 +57,6 @@ public class VisionIOReal implements VisionIO {
                         () -> {
                             inputs.estimatedVisionPose = null;
                         });
-<<<<<<< HEAD
-=======
         cameraPoseEstimator.update().ifPresentOrElse(
             est -> {
                 if(newResult) {
@@ -86,9 +74,6 @@ public class VisionIOReal implements VisionIO {
         } else {
             inputs.rotationToClosestTarget = 0.0; // dont move
         }
->>>>>>> 4f89ddf (add conditional to check if there is new frame to add)
-=======
->>>>>>> 5554693 (format code)
     }
 
     public void updatePose(Pose2d drivetrainPoseMeters) {
