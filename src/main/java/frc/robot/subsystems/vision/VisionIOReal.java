@@ -1,17 +1,15 @@
 package frc.robot.subsystems.vision;
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.targeting.PhotonPipelineResult;
-
-import java.io.IOException;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.Constants;
+import java.io.IOException;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 public class VisionIOReal implements VisionIO {
     public PhotonCamera camera;
@@ -19,43 +17,50 @@ public class VisionIOReal implements VisionIO {
     private AprilTagFieldLayout layout;
     private double lastEstTimestamp = 0;
 
-    public VisionIOReal () {
+    public VisionIOReal() {
         camera = new PhotonCamera(Constants.VisionConstants.CAMERA_NAME);
         try {
-            layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+            layout =
+                    AprilTagFieldLayout.loadFromResource(
+                            AprilTagFields.k2024Crescendo.m_resourceFile);
         } catch (IOException e) {
             System.out.println(e);
         }
-        Transform3d robotToCamera = new Transform3d(Constants.VisionConstants.BOT_TO_CAM_TRL, Constants.VisionConstants.BOT_TO_CAMERA_ROT);
-        cameraPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, robotToCamera);
+        Transform3d robotToCamera =
+                new Transform3d(
+                        Constants.VisionConstants.BOT_TO_CAM_TRL,
+                        Constants.VisionConstants.BOT_TO_CAMERA_ROT);
+        cameraPoseEstimator =
+                new PhotonPoseEstimator(
+                        layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, robotToCamera);
     }
 
-    public void updateInputs (VisionIOInputs inputs) {
+    public void updateInputs(VisionIOInputs inputs) {
         PhotonPipelineResult result = camera.getLatestResult();
         inputs.timestampSeconds = result.getTimestampSeconds();
 
         boolean newResult = Math.abs(result.getTimestampSeconds() - lastEstTimestamp) > 1e-5;
 
-        cameraPoseEstimator.update().ifPresentOrElse(
-            est -> {
-                if(newResult) {
-                    lastEstTimestamp = result.getTimestampSeconds(); // update timestamp since frame has been added
-                    inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
-                } else {
-                    inputs.estimatedVisionPose = null; // out of date (already added to pose estimator)
-                }
-            }, () -> {
-                inputs.estimatedVisionPose = null;
-            });
-        
-        if(result.hasTargets()) {
-            inputs.rotationToClosestTarget = result.getBestTarget().getYaw();
-        } else {
-            inputs.rotationToClosestTarget = 0.0; // dont move
-        }
+        cameraPoseEstimator
+                .update()
+                .ifPresentOrElse(
+                        est -> {
+                            if (newResult) {
+                                lastEstTimestamp =
+                                        result.getTimestampSeconds(); // update timestamp since
+                                // frame has been added
+                                inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
+                            } else {
+                                inputs.estimatedVisionPose =
+                                        null; // out of date (already added to pose estimator)
+                            }
+                        },
+                        () -> {
+                            inputs.estimatedVisionPose = null;
+                        });
     }
 
-    public void updatePose (Pose2d drivetrainPoseMeters) {
+    public void updatePose(Pose2d drivetrainPoseMeters) {
         cameraPoseEstimator.setReferencePose(drivetrainPoseMeters);
     }
 }
