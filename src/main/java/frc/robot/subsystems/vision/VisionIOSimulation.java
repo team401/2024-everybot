@@ -1,13 +1,11 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants;
-import java.io.IOException;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -27,7 +25,7 @@ public class VisionIOSimulation implements VisionIO {
     public VisionIOSimulation() {
         // create simulated field
         sim = new VisionSystemSim(Constants.VisionConstants.CAMERA_NAME);
-        layout = Constants.VisionConstants.FIELD_LAYOUT;
+        layout = Constants.FieldConstants.FIELD_LAYOUT;
         sim.addAprilTags(layout);
 
         // set up camera

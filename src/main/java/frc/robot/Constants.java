@@ -52,7 +52,6 @@ public final class Constants {
     }
 
     public static class VisionConstants { // ALL PLACEHOLDERS
-        public static final AprilTagFieldLayout FIELD_LAYOUT = initLayout();
         public static final String CAMERA_NAME = "";
         public static final double CAMERA_HEIGHT_METERS = 0.7;
         public static final double TARGET_HEIGHT_METERS = 0.8; // changes per goal
@@ -73,6 +72,11 @@ public final class Constants {
         public static final Rotation3d BOT_TO_CAMERA_ROT =
                 new Rotation3d(0, Math.toRadians(-15), 0);
         public static final boolean SIM_FIELD_ENABLED = false;
+    }
+
+    public static class FieldConstants {
+        public static final AprilTagFieldLayout FIELD_LAYOUT = initLayout();
+        // april tag ids (speaker = 1, etc)
     }
 
     private static AprilTagFieldLayout initLayout() {

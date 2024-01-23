@@ -1,11 +1,9 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.Constants;
-import java.io.IOException;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -19,7 +17,7 @@ public class VisionIOReal implements VisionIO {
 
     public VisionIOReal() {
         camera = new PhotonCamera(Constants.VisionConstants.CAMERA_NAME);
-        layout = Constants.VisionConstants.FIELD_LAYOUT;
+        layout = Constants.FieldConstants.FIELD_LAYOUT;
         Transform3d robotToCamera =
                 new Transform3d(
                         Constants.VisionConstants.BOT_TO_CAM_TRL,

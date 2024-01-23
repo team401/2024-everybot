@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -28,6 +29,8 @@ public class Navigation extends SubsystemBase {
     private DoubleSupplier rightDistance;
     private Supplier<Rotation2d> gyro;
     private Supplier<Pose2d> simulatedPose;
+    private AprilTagFieldLayout layout;
+    private Pose2d desiredTargetPose;
 
     public Navigation(
             DoubleSupplier leftDistance,
@@ -64,6 +67,9 @@ public class Navigation extends SubsystemBase {
         this.leftDistance = leftDistance;
         this.rightDistance = rightDistance;
         this.gyro = gyro;
+
+        // set layout
+        layout = Constants.FieldConstants.FIELD_LAYOUT;
     }
 
     public void updateOdometry(
@@ -77,12 +83,21 @@ public class Navigation extends SubsystemBase {
         }
     }
 
-    /*
-        @return pose of vision's declared best target
-        by getting transform of camera to target from vision and passing it to add to the estimated pose
-    */
+    public double getTargetHeadingError() {
+        return 0.0;
+    }
 
-    public Pose2d aimAtTarget() {}
+    public void setDesiredTarget(int targetId) {
+        layout.getTagPose(targetId)
+                .ifPresentOrElse(
+                        (pose) -> { // should always be present tag id will be hardcoded in
+                            // constants
+                            desiredTargetPose = pose.toPose2d();
+                        },
+                        () -> {
+                            desiredTargetPose = null;
+                        });
+    }
 
     @Override
     public void periodic() {
