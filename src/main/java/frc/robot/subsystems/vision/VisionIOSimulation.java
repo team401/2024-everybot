@@ -83,7 +83,6 @@ public class VisionIOSimulation implements VisionIO {
                 });
         if (newResult) {
             lastEstTimestamp = latestTimestamp;
-            inputs.CamToTargetTransform = result.getBestTarget().getBestCameraToTarget();
         }
     }
 

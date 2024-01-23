@@ -84,14 +84,6 @@ public class Navigation extends SubsystemBase {
     */
 
     public Pose2d aimAtTarget() {
-        Pose2d botPose = poseEstimator.getEstimatedPosition();
-        Transform2d botToTarget =
-                new Transform2d(
-                        inputs.CamToTargetTransform.getX(),
-                        inputs.CamToTargetTransform.getY(),
-                        inputs.CamToTargetTransform.getRotation().toRotation2d());
-        Pose2d targetPose = botPose.plus(botToTarget);
-        return targetPose;
     }
 
     @Override
