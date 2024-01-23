@@ -4,7 +4,6 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -83,8 +82,7 @@ public class Navigation extends SubsystemBase {
         by getting transform of camera to target from vision and passing it to add to the estimated pose
     */
 
-    public Pose2d aimAtTarget() {
-    }
+    public Pose2d aimAtTarget() {}
 
     @Override
     public void periodic() {

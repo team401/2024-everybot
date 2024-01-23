@@ -19,13 +19,7 @@ public class VisionIOReal implements VisionIO {
 
     public VisionIOReal() {
         camera = new PhotonCamera(Constants.VisionConstants.CAMERA_NAME);
-        try {
-            layout =
-                    AprilTagFieldLayout.loadFromResource(
-                            AprilTagFields.k2024Crescendo.m_resourceFile);
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+        layout = Constants.VisionConstants.FIELD_LAYOUT;
         Transform3d robotToCamera =
                 new Transform3d(
                         Constants.VisionConstants.BOT_TO_CAM_TRL,

@@ -4,9 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.io.IOException;
+import java.util.Collections;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -48,6 +52,7 @@ public final class Constants {
     }
 
     public static class VisionConstants { // ALL PLACEHOLDERS
+        public static final AprilTagFieldLayout FIELD_LAYOUT = initLayout();
         public static final String CAMERA_NAME = "";
         public static final double CAMERA_HEIGHT_METERS = 0.7;
         public static final double TARGET_HEIGHT_METERS = 0.8; // changes per goal
@@ -68,5 +73,17 @@ public final class Constants {
         public static final Rotation3d BOT_TO_CAMERA_ROT =
                 new Rotation3d(0, Math.toRadians(-15), 0);
         public static final boolean SIM_FIELD_ENABLED = false;
+    }
+
+    private static AprilTagFieldLayout initLayout() {
+        AprilTagFieldLayout layout;
+        try {
+            layout =
+                    AprilTagFieldLayout.loadFromResource(
+                            AprilTagFields.k2024Crescendo.m_resourceFile);
+        } catch (IOException ioe) {
+            layout = new AprilTagFieldLayout(Collections.emptyList(), 0.0, 0.0);
+        }
+        return layout;
     }
 }

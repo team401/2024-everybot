@@ -27,13 +27,7 @@ public class VisionIOSimulation implements VisionIO {
     public VisionIOSimulation() {
         // create simulated field
         sim = new VisionSystemSim(Constants.VisionConstants.CAMERA_NAME);
-        try {
-            layout =
-                    AprilTagFieldLayout.loadFromResource(
-                            AprilTagFields.k2024Crescendo.m_resourceFile);
-        } catch (IOException e) {
-            System.out.println(e); // quit program ?
-        }
+        layout = Constants.VisionConstants.FIELD_LAYOUT;
         sim.addAprilTags(layout);
 
         // set up camera
