@@ -67,7 +67,6 @@ public class Navigation extends SubsystemBase {
         this.leftDistance = leftDistance;
         this.rightDistance = rightDistance;
         this.gyro = gyro;
-
         // set layout
         layout = Constants.FieldConstants.FIELD_LAYOUT;
     }
@@ -83,8 +82,12 @@ public class Navigation extends SubsystemBase {
         }
     }
 
+    // returns heading error in radians
     public double getTargetHeadingError() {
-        return 0.0;
+        double currentHeading = poseEstimator.getEstimatedPosition().getRotation().getRadians();
+        double desiredHeading = desiredTargetPose.getRotation().getRadians();
+
+        return desiredHeading - currentHeading;
     }
 
     public void setDesiredTarget(int targetId) {
