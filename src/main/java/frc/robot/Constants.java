@@ -99,6 +99,11 @@ public final class Constants {
         public static final AprilTagFieldLayout FIELD_LAYOUT = initLayout();
     }
 
+    public static class FieldConstants {
+        public static final AprilTagFieldLayout FIELD_LAYOUT = initLayout();
+        // april tag ids (speaker = 1, etc)
+    }
+
     private static AprilTagFieldLayout initLayout() {
         AprilTagFieldLayout layout;
         try {
