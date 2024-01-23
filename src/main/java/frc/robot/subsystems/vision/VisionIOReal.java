@@ -40,34 +40,21 @@ public class VisionIOReal implements VisionIO {
 
         boolean newResult = Math.abs(result.getTimestampSeconds() - lastEstTimestamp) > 1e-5;
 
-        cameraPoseEstimator
-                .update()
-                .ifPresentOrElse(
-                        est -> {
-                            if (newResult) {
-                                lastEstTimestamp =
-                                        result.getTimestampSeconds(); // update timestamp since
-                                // frame has been added
-                                inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
-                            } else {
-                                inputs.estimatedVisionPose =
-                                        null; // out of date (already added to pose estimator)
-                            }
-                        },
-                        () -> {
-                            inputs.estimatedVisionPose = null;
-                        });
         cameraPoseEstimator.update().ifPresentOrElse(
-            est -> {
-                if(newResult) {
-                    lastEstTimestamp = result.getTimestampSeconds(); // update timestamp since frame has been added
-                    inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
-                } else {
-                    inputs.estimatedVisionPose = null; // out of date (already added to pose estimator)
-                }
-            }, () -> {
-                inputs.estimatedVisionPose = null;
-            });
+                est -> {
+                        if (newResult) {
+                        lastEstTimestamp =
+                                result.getTimestampSeconds(); // update timestamp since
+                        // frame has been added
+                        inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
+                        } else {
+                        inputs.estimatedVisionPose =
+                                null; // out of date (already added to pose estimator)
+                        }
+                },
+                () -> {
+                        inputs.estimatedVisionPose = null;
+        });
         
         if(result.hasTargets()) {
             inputs.rotationToClosestTarget = result.getBestTarget().getYaw();
