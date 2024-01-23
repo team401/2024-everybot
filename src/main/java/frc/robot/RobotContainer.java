@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.DiffDrive;
+import frc.robot.commands.ArcadeDrive;
 import frc.robot.subsystems.Navigation;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIO;
@@ -99,7 +99,7 @@ public class RobotContainer {
         // Configure the trigger bindings
 
         drive.setDefaultCommand(
-                new DiffDrive(
+                new ArcadeDrive(
                         drive,
                         () -> -leftJoystick.getRawAxis(1),
                         () -> rightJoystick.getRawAxis(0)));
@@ -118,7 +118,7 @@ public class RobotContainer {
      */
     private void configureBindings() {
         drive.setDefaultCommand(
-                new DiffDrive(
+                new ArcadeDrive(
                         drive,
                         () -> driverController.getLeftY(),
                         () -> driverController.getRightY()));

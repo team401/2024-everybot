@@ -18,7 +18,17 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public final class Constants {
 
-    public static final Mode mode = Mode.SIM;
+    public static enum driveTrainState {
+
+        /*Manual control */
+        MANUAL,
+
+        /*Aiming to shot */
+        AIM,
+
+        /*Auto pathfollowing */
+        PATHFOLLOW,
+    }
 
     public static final int pigeonID = 0; // placeholder
 
