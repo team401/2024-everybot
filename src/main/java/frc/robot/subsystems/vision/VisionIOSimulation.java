@@ -1,11 +1,13 @@
 package frc.robot.subsystems.vision;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants;
+import java.util.ArrayList;
+
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -77,7 +79,6 @@ public class VisionIOSimulation implements VisionIO {
             lastEstTimestamp = latestTimestamp;
         }
     }
-
     public Field2d getField() {
         return sim.getDebugField();
     }
@@ -86,7 +87,7 @@ public class VisionIOSimulation implements VisionIO {
         sim.update(simRobotPoseMeters);
     }
 
-    public void set3dFieldSimActive(boolean enabled) {
+    public void set3dFieldSimActive (boolean enabled) {
         simulatedCamera.enableDrawWireframe(enabled);
     }
 }
