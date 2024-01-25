@@ -84,10 +84,20 @@ public class Navigation extends SubsystemBase {
 
     // returns heading error in radians
     public double getTargetHeadingError() {
-        double currentHeading = poseEstimator.getEstimatedPosition().getRotation().getRadians();
-        double desiredHeading = desiredTargetPose.getRotation().getRadians();
+        double currentX = poseEstimator.getEstimatedPosition().getX();
+        double currentY = poseEstimator.getEstimatedPosition().getY();
 
-        return desiredHeading - currentHeading;
+        double desiredX = desiredTargetPose.getX();
+        double desiredY = desiredTargetPose.getY();
+
+        double dotProduct = (currentX * desiredX) + (currentY * desiredY);
+
+        // use pythagorean theorem to find magnitudes of vectors
+        double currentVecMagnitude = Math.sqrt(Math.pow(currentX, 2) + Math.pow(currentY, 2)); 
+        double desiredVecMagnitude = Math.sqrt(Math.pow(desiredX, 2) + Math.pow(desiredY, 2));
+
+        // take inverse cosine of dot product / magnitudes to find angle between
+        return Units.degreesToRadians(Math.acos(dotProduct / (currentVecMagnitude * desiredVecMagnitude)));
     }
 
     public void setDesiredTarget(int targetId) {
