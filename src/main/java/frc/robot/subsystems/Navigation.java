@@ -93,11 +93,12 @@ public class Navigation extends SubsystemBase {
         double dotProduct = (currentX * desiredX) + (currentY * desiredY);
 
         // use pythagorean theorem to find magnitudes of vectors
-        double currentVecMagnitude = Math.sqrt(Math.pow(currentX, 2) + Math.pow(currentY, 2)); 
+        double currentVecMagnitude = Math.sqrt(Math.pow(currentX, 2) + Math.pow(currentY, 2));
         double desiredVecMagnitude = Math.sqrt(Math.pow(desiredX, 2) + Math.pow(desiredY, 2));
 
         // take inverse cosine of dot product / magnitudes to find angle between
-        return Units.degreesToRadians(Math.acos(dotProduct / (currentVecMagnitude * desiredVecMagnitude)));
+        return Units.degreesToRadians(
+                Math.acos(dotProduct / (currentVecMagnitude * desiredVecMagnitude)));
     }
 
     public void setDesiredTarget(int targetId) {
