@@ -26,30 +26,7 @@ public class Drive extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Drive", inputs);
-        updateMode(mode);
-        
-        controlDriveTrain(foward, rotation, mode);
-        
-        
     }
-
-    /** Run open loop at the specified voltage. */
-    public void driveVolts(double leftVolts, double rightVolts) {
-        io.setVoltage(leftVolts, rightVolts);
-    }
-
-    // /** Run closed loop at the specified voltage. */
-    // public void driveVelocity(double leftMetersPerSec, double rightMetersPerSec) {
-    //     Logger.recordOutput("Drive/LeftVelocitySetpointMetersPerSec", leftMetersPerSec);
-    //     Logger.recordOutput("Drive/RightVelocitySetpointMetersPerSec", rightMetersPerSec);
-    //     double leftRadPerSec = leftMetersPerSec / Constants.DriveConstants.WHEEL_RADIUS;
-    //     double rightRadPerSec = rightMetersPerSec / Constants.DriveConstants.WHEEL_RADIUS;
-    //     io.setVelocity(
-    //             leftRadPerSec,
-    //             rightRadPerSec,
-    //             driveff.calculate(leftRadPerSec),
-    //             driveff.calculate(rightRadPerSec));
-    // }
 
     /** Run open loop based on stick positions. */
     public void driveArcade(double xSpeed, double zRotation) {
@@ -94,23 +71,20 @@ public class Drive extends SubsystemBase {
         return inputs.simulatedPose;
     }
 
-    public void setArcadeDriveControls(double forward, double rotation) {
-        io.setVoltage(forward, rotation);
-    }
-
-    public void updateMode(driveTrainState mode){
-        this.mode = mode;  
+    public void updateMode(driveTrainState mode) {
+        this.mode = mode;
     }
 
     public void controlDriveTrain(double foward, double rotation, driveTrainState mode) {
-        switch (mode){
+        switch (mode) {
             case MANUAL:
-                io.setVoltage(foward, rotation);
+                this.driveArcade(foward, rotation);
                 break;
             case AIM:
-                //io.shoot?
+                this.stop();
                 break;
             default:
+                this.stop();
                 break;
         }
     }
