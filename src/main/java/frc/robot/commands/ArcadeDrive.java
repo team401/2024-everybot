@@ -24,7 +24,7 @@ public class ArcadeDrive extends Command {
 
     @Override
     public void execute() {
-        drivesub.controlDriveTrain(
+        drivesub.setArcadeDrive(
                 xPercent.getAsDouble(), yPercent.getAsDouble(), driveTrainState.MANUAL);
     }
 

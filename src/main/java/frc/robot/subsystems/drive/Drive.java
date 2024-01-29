@@ -18,6 +18,9 @@ public class Drive extends SubsystemBase {
     private final SimpleMotorFeedforward driveff =
             new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV);
 
+    private double forward;
+    private double rotation;
+
     public Drive(DriveIO io) {
         this.io = io;
     }
@@ -26,6 +29,13 @@ public class Drive extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Drive", inputs);
+        controlDriveTrain();
+    }
+
+    public void setArcadeDrive(double forward, double rotation, driveTrainState mode) {
+        this.forward = forward;
+        this.rotation = rotation;
+        this.mode = mode;
     }
 
     /** Run open loop based on stick positions. */
@@ -75,10 +85,10 @@ public class Drive extends SubsystemBase {
         this.mode = mode;
     }
 
-    public void controlDriveTrain(double foward, double rotation, driveTrainState mode) {
+    public void controlDriveTrain() {
         switch (mode) {
             case MANUAL:
-                this.driveArcade(foward, rotation);
+                this.driveArcade(forward, rotation);
                 break;
             case AIM:
                 this.stop();
