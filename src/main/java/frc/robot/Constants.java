@@ -33,6 +33,11 @@ public final class Constants {
         REPLAY
     }
 
+    public static enum FieldOrientation {
+        BLUE,
+        RED,
+    }
+
     public static class OperatorConstants {
         public static final int kDriverControllerPort = 0;
     }
@@ -76,7 +81,13 @@ public final class Constants {
 
     public static class FieldConstants {
         public static final AprilTagFieldLayout FIELD_LAYOUT = initLayout();
-        // april tag ids (speaker = 1, etc)
+        public static final FieldOrientation ALLY_COLOR = FieldOrientation.BLUE;
+        public static final boolean isBlue = (ALLY_COLOR == FieldOrientation.BLUE);
+        // april tag ids (speaker = 1, etc) PLACEHOLDERS
+        public static final int SPEAKER_ID = isBlue ? 1 : 2;
+        public static final int AMP_ID = isBlue ? 3 : 4;
+        public static final int STAGE_ID = isBlue ? 5 : 6;
+        public static final int DROP_ID = isBlue ? 7 : 8;
     }
 
     private static AprilTagFieldLayout initLayout() {
