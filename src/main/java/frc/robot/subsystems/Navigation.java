@@ -88,8 +88,10 @@ public class Navigation extends SubsystemBase {
         double robotVectorX = Math.cos(currentHeading);
         double robotVectorY = Math.sin(currentHeading);
 
-        double targetVectorX = desiredTargetPose.getX() - robotVectorX;
-        double targetVectorY = desiredTargetPose.getY() - robotVectorY;
+        double targetVectorX =
+                desiredTargetPose.getX() - poseEstimator.getEstimatedPosition().getX();
+        double targetVectorY =
+                desiredTargetPose.getY() - poseEstimator.getEstimatedPosition().getY();
 
         double dotProduct = (robotVectorX * targetVectorX) + (robotVectorY - targetVectorY);
 
