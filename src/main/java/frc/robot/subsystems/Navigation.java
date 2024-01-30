@@ -84,14 +84,10 @@ public class Navigation extends SubsystemBase {
 
     // returns heading error in radians
     public double getTargetHeadingError() {
-        Pose2d botToTarget =
-                new Pose2d()
-                        .transformBy(poseEstimator.getEstimatedPosition().minus(desiredTargetPose));
-
-        double targetHeading = Math.atan(botToTarget.getX() / botToTarget.getY());
-
-        return poseEstimator.getEstimatedPosition().getRotation().getRadians()
-                - targetHeading; // returns error
+        double currentHeading = poseEstimator.getEstimatedPosition().getRotation().getRadians();
+        double robotVectorX = Math.cos(currentHeading);
+        double robotVectorY = Math.sin(currentHeading);
+        return 0.0;
     }
 
     public void setDesiredTarget(int targetId) {
