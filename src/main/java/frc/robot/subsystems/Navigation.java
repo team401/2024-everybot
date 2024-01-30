@@ -87,7 +87,17 @@ public class Navigation extends SubsystemBase {
         double currentHeading = poseEstimator.getEstimatedPosition().getRotation().getRadians();
         double robotVectorX = Math.cos(currentHeading);
         double robotVectorY = Math.sin(currentHeading);
-        return 0.0;
+
+        double targetVectorX = desiredTargetPose.getX() - robotVectorX;
+        double targetVectorY = desiredTargetPose.getY() - robotVectorY;
+
+        double dotProduct = (robotVectorX * targetVectorX) + (robotVectorY - targetVectorY);
+
+        double targetVecMagnitude =
+                Math.sqrt(Math.pow(targetVectorX, 2) + Math.pow(targetVectorY, 2));
+
+        return Math.acos(
+                dotProduct / targetVecMagnitude); // robot vector magnitude is one (unit vector)
     }
 
     public void setDesiredTarget(int targetId) {
