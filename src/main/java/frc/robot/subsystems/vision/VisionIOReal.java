@@ -1,14 +1,13 @@
 package frc.robot.subsystems.vision;
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.targeting.PhotonPipelineResult;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.Constants;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 public class VisionIOReal implements VisionIO {
     public PhotonCamera camera;
@@ -34,23 +33,25 @@ public class VisionIOReal implements VisionIO {
 
         boolean newResult = Math.abs(result.getTimestampSeconds() - lastEstTimestamp) > 1e-5;
 
-        cameraPoseEstimator.update().ifPresentOrElse(
-                est -> {
-                        if (newResult) {
-                        lastEstTimestamp =
-                                result.getTimestampSeconds(); // update timestamp since
-                        // frame has been added
-                        inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
-                        } else {
-                        inputs.estimatedVisionPose =
-                                null; // out of date (already added to pose estimator)
-                        }
-                },
-                () -> {
-                        inputs.estimatedVisionPose = null;
-        });
-        
-        if(result.hasTargets()) {
+        cameraPoseEstimator
+                .update()
+                .ifPresentOrElse(
+                        est -> {
+                            if (newResult) {
+                                lastEstTimestamp =
+                                        result.getTimestampSeconds(); // update timestamp since
+                                // frame has been added
+                                inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
+                            } else {
+                                inputs.estimatedVisionPose =
+                                        null; // out of date (already added to pose estimator)
+                            }
+                        },
+                        () -> {
+                            inputs.estimatedVisionPose = null;
+                        });
+
+        if (result.hasTargets()) {
             inputs.rotationToClosestTarget = result.getBestTarget().getYaw();
         } else {
             inputs.rotationToClosestTarget = 0.0; // dont move

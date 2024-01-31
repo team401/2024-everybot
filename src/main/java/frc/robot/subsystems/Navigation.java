@@ -83,7 +83,7 @@ public class Navigation extends SubsystemBase {
     }
 
     // returns heading error in radians
-    public double getTargetHeadingError() {
+    public double getTargetHeading() {
         double currentHeading = poseEstimator.getEstimatedPosition().getRotation().getRadians();
         double robotVectorX = Math.cos(currentHeading);
         double robotVectorY = Math.sin(currentHeading);

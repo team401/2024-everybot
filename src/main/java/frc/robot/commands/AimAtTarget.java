@@ -24,7 +24,6 @@ public class AimAtTarget extends Command {
 
     @Override
     public void execute() {
-        // navSubsystem.getTargetHeadingError();
-        // navSubsystem.getCurrentHeading();
+        driveSubsystem.aim(navSubsystem.getCurrentHeading(), navSubsystem.getTargetHeading());
     }
 }
