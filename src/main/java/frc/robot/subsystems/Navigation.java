@@ -93,7 +93,7 @@ public class Navigation extends SubsystemBase {
         double targetVectorY =
                 desiredTargetPose.getY() - poseEstimator.getEstimatedPosition().getY();
 
-        double dotProduct = (robotVectorX * targetVectorX) + (robotVectorY - targetVectorY);
+        double dotProduct = (robotVectorX * targetVectorX) + (robotVectorY * targetVectorY);
 
         double targetVecMagnitude =
                 Math.sqrt(Math.pow(targetVectorX, 2) + Math.pow(targetVectorY, 2));
