@@ -1,11 +1,14 @@
 package frc.robot.subsystems.drive;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.driveTrainState;
+import frc.robot.subsystems.Navigation;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -14,6 +17,8 @@ public class Drive extends SubsystemBase {
     private final DriveIO io;
     private driveTrainState mode;
     private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
+
+    private PIDController thetaController = new PIDController(0, 0, 0);// placeholders
 
     private double forward;
     private double rotation;
@@ -44,6 +49,13 @@ public class Drive extends SubsystemBase {
     /** Stops the drive. */
     public void stop() {
         io.setVoltage(0.0, 0.0);
+    }
+
+    public void setTargetHeading(double targetHeading, double currentHeading){
+        this.forward = 0;
+        this.rotation = thetaController.calculate(
+            currentHeading, targetHeading);
+        this.mode = driveTrainState.AIM;
     }
 
     public Rotation2d getGyroRotation2d() {
@@ -88,6 +100,7 @@ public class Drive extends SubsystemBase {
                 this.driveArcade(forward, rotation);
                 break;
             case AIM:
+                this.driveArcade(forward, rotation);
                 this.stop();
                 break;
             default:
