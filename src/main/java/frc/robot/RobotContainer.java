@@ -6,7 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -17,6 +19,7 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIO;
 import frc.robot.subsystems.drive.DriveIOSim;
 import frc.robot.subsystems.drive.DriveIOTalonFX;
+
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -122,6 +125,14 @@ public class RobotContainer {
                         drive,
                         () -> driverController.getLeftY(),
                         () -> driverController.getRightY()));
+    }
+
+    public String getAlliance () {
+      boolean ally = DriverStation.getAlliance().isPresent();
+      if(ally) {
+        return DriverStation.getAlliance().get() == Alliance.Blue ? "blue" : "red";
+      }
+      return "red";
     }
 
     /**
