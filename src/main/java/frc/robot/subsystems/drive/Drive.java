@@ -1,41 +1,101 @@
 package frc.robot.subsystems.drive;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.driveTrainState;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
-    private DifferentialDriveKinematics kinematics;
-    // TODO: Odometry -> add auto log with advantage kit and inputs class
-    private DifferentialDriveOdometry odometry;
 
-    public Drive (DriveIO io) {
-        kinematics = new DifferentialDriveKinematics(Constants.DriveConstants.TRACK_WIDTH);
-        odometry = new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
-    }
+    private final DriveIO io;
+    private driveTrainState mode;
+    private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
+    private final SimpleMotorFeedforward driveff =
+            new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV);
 
-    public Pose2d getPose () {
-        return odometry.getPoseMeters();
-    }
-    
-    public void setPose (Pose2d newPose) {
-        odometry.resetPosition(new Rotation2d(), 0, 0, newPose);
-    }
+    private double forward;
+    private double rotation;
 
-    public void arcadeDrive (double xSpeed, double rotation) {
-        var speeds = kinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, rotation));
-        // TODO: Add feedforward and PID Controller before settting voltages or add in IO class
-        // io.setVoltage (speeds.right * 12.0, speeds.left * 12.0)
+    public Drive(DriveIO io) {
+        this.io = io;
     }
 
     @Override
     public void periodic() {
-        odometry.update(new Rotation2d(), 0, 0); // placeholders
+        io.updateInputs(inputs);
+        Logger.processInputs("Drive", inputs);
+        controlDriveTrain();
+    }
+
+    public void setArcadeDrive(double forward, double rotation, driveTrainState mode) {
+        this.forward = forward;
+        this.rotation = rotation;
+        this.mode = mode;
+    }
+
+    /** Run open loop based on stick positions. */
+    public void driveArcade(double xSpeed, double zRotation) {
+        var speeds = DifferentialDrive.arcadeDriveIK(xSpeed, zRotation, true);
+        io.setVoltage(speeds.left * 12.0, speeds.right * 12.0);
+    }
+
+    /** Stops the drive. */
+    public void stop() {
+        io.setVoltage(0.0, 0.0);
+    }
+
+    public Rotation2d getGyroRotation2d() {
+        return inputs.gyroYaw;
+    }
+
+    /** Returns the position of the left wheels in meters. */
+    @AutoLogOutput
+    public double getLeftPositionMeters() {
+        return inputs.leftPositionRad * Constants.DriveConstants.WHEEL_RADIUS;
+    }
+
+    /** Returns the position of the right wheels in meters. */
+    @AutoLogOutput
+    public double getRightPositionMeters() {
+        return inputs.rightPositionRad * Constants.DriveConstants.WHEEL_RADIUS;
+    }
+
+    /** Returns the velocity of the left wheels in meters/second. */
+    @AutoLogOutput
+    public double getLeftVelocityMetersPerSec() {
+        return inputs.leftVelocityRadPerSec * Constants.DriveConstants.WHEEL_RADIUS;
+    }
+
+    /** Returns the velocity of the right wheels in meters/second. */
+    @AutoLogOutput
+    public double getRightVelocityMetersPerSec() {
+        return inputs.rightVelocityRadPerSec * Constants.DriveConstants.WHEEL_RADIUS;
+    }
+
+    public Pose2d getSimulatedPose() {
+        return inputs.simulatedPose;
+    }
+
+    public void updateMode(driveTrainState mode) {
+        this.mode = mode;
+    }
+
+    public void controlDriveTrain() {
+        switch (mode) {
+            case MANUAL:
+                this.driveArcade(forward, rotation);
+                break;
+            case AIM:
+                this.stop();
+                break;
+            default:
+                this.stop();
+                break;
+        }
     }
 }
