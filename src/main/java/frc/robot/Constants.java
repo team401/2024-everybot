@@ -22,6 +22,20 @@ import java.util.Collections;
  */
 public final class Constants {
 
+    public static enum driveTrainState {
+
+        /*Manual control */
+        MANUAL,
+
+        /*Aiming to shot */
+        AIM,
+
+        /*Auto pathfollowing */
+        PATHFOLLOW,
+    }
+
+    public static final int pigeonID = 0; // placeholder
+
     public static enum Mode {
         /** Running on a real robot. */
         REAL,
@@ -33,11 +47,6 @@ public final class Constants {
         REPLAY
     }
 
-    public static enum FieldOrientation {
-        BLUE,
-        RED,
-    }
-
     public static class OperatorConstants {
         public static final int kDriverControllerPort = 0;
     }
@@ -47,13 +56,23 @@ public final class Constants {
     }
 
     public static class DriveConstants {
-        public static final double TRACK_WIDTH = 0.0;
+        public static final double TRACK_WIDTH = 0.0; // placeholder
         public static final int frontLeftID = 0; // placeholder
         public static final int backLeftID = 0; // placeholder
         public static final int frontRightID = 0; // placeholder
         public static final int backRightID = 0; // placeholder
+        public static final int pigeonID = 0; // placeholder
+
+        public static final double GEAR_RATIO = 10.0;
 
         public static final double autoDrivePercent = 0.0; // placeholder
+
+        public static final double WHEEL_RADIUS = 0.0; // placeholder
+
+        public static final double kS = 0.0; // placeholder
+        public static final double kP = 0.0; // placeholder
+        public static final double kD = 0.0; // placeholder
+        public static final double kV = 0.0; // placeholder
     }
 
     public static class VisionConstants { // ALL PLACEHOLDERS
@@ -81,13 +100,6 @@ public final class Constants {
 
     public static class FieldConstants {
         public static final AprilTagFieldLayout FIELD_LAYOUT = initLayout();
-        public static final FieldOrientation ALLY_COLOR = FieldOrientation.BLUE;
-        public static final boolean isBlue = (ALLY_COLOR == FieldOrientation.BLUE);
-        // april tag ids (speaker = 1, etc) PLACEHOLDERS
-        public static final int SPEAKER_ID = isBlue ? 1 : 2;
-        public static final int AMP_ID = isBlue ? 3 : 4;
-        public static final int STAGE_ID = isBlue ? 5 : 6;
-        public static final int DROP_ID = isBlue ? 7 : 8;
     }
 
     private static AprilTagFieldLayout initLayout() {
@@ -100,5 +112,9 @@ public final class Constants {
             layout = new AprilTagFieldLayout(Collections.emptyList(), 0.0, 0.0);
         }
         return layout;
+    }
+    public static class SimConstants {
+        public static final double KP = 0.2; // placeholder
+        public static final double KD = 0.0; // placeholder
     }
 }

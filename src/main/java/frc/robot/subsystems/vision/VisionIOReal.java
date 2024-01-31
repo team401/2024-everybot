@@ -13,7 +13,7 @@ public class VisionIOReal implements VisionIO {
     public PhotonCamera camera;
     private PhotonPoseEstimator cameraPoseEstimator;
     private AprilTagFieldLayout layout;
-    private double lastEstTimestamp = 0;
+    private double lastEstTimestamp = 0.0;
 
     public VisionIOReal() {
         camera = new PhotonCamera(Constants.VisionConstants.CAMERA_NAME);
