@@ -25,5 +25,6 @@ public class AimAtTarget extends Command {
     @Override
     public void execute() {
         // navSubsystem.getTargetHeadingError();
+        // navSubsystem.getCurrentHeading();
     }
 }

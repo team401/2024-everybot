@@ -114,6 +114,10 @@ public class Navigation extends SubsystemBase {
                         });
     }
 
+    public double getCurrentHeading() {
+        return poseEstimator.getEstimatedPosition().getRotation().getRadians();
+    }
+
     @Override
     public void periodic() {
         updateOdometry(gyro.get(), leftDistance.getAsDouble(), rightDistance.getAsDouble());
