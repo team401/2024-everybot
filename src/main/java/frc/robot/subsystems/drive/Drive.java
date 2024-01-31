@@ -1,6 +1,5 @@
 package frc.robot.subsystems.drive;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -15,8 +14,6 @@ public class Drive extends SubsystemBase {
     private final DriveIO io;
     private driveTrainState mode;
     private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
-    private final SimpleMotorFeedforward driveff =
-            new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV);
 
     private double forward;
     private double rotation;
