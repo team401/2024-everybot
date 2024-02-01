@@ -125,7 +125,8 @@ public class RobotContainer {
                         drive,
                         () -> driverController.getLeftY(),
                         () -> driverController.getRightY()));
-        AimAtTarget aimAtSpeaker = new AimAtTarget(drive, nav, getAlliance() == Alliance.Blue ? 1 : 2)
+        AimAtTarget aimAtSpeaker =
+                new AimAtTarget(drive, nav, getAlliance() == Alliance.Blue ? 1 : 2);
         driverController.a().whileTrue(aimAtSpeaker);
     }
 
