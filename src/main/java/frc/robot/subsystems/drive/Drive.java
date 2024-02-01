@@ -23,6 +23,7 @@ public class Drive extends SubsystemBase {
 
     public Drive(DriveIO io) {
         this.io = io;
+        this.mode = driveTrainState.MANUAL;
     }
 
     @Override
