@@ -64,9 +64,9 @@ public final class Constants {
         public static final double IDEAL_GOAL_RANGE_METERS = 1;
 
         // simulation
-        public static final int RESOLUTION_WIDTH = 0;
-        public static final int RESOLUTION_HEIGHT = 0;
-        public static final double CAM_DIAG_FOV = 0.0;
+        public static final int RESOLUTION_WIDTH = 480;
+        public static final int RESOLUTION_HEIGHT = 480;
+        public static final double CAM_DIAG_FOV = 140.0;
         public static final double MAX_LED_RANGE = 0.0;
         public static final double MIN_TARGET_AREA = 0.0;
         public static final Translation3d BOT_TO_CAM_TRL =
