@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AimAtTarget;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.subsystems.Navigation;
 import frc.robot.subsystems.drive.Drive;
@@ -124,14 +125,16 @@ public class RobotContainer {
                         drive,
                         () -> driverController.getLeftY(),
                         () -> driverController.getRightY()));
+        AimAtTarget aimAtSpeaker = new AimAtTarget(drive, nav, getAlliance() == Alliance.Blue ? 1 : 2)
+        driverController.a().whileTrue(aimAtSpeaker);
     }
 
-    public String getAlliance() {
+    public Alliance getAlliance() {
         boolean ally = DriverStation.getAlliance().isPresent();
         if (ally) {
-            return DriverStation.getAlliance().get() == Alliance.Blue ? "blue" : "red";
+            return DriverStation.getAlliance().get();
         }
-        return "red";
+        return Alliance.Red;
     }
 
     /**
