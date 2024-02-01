@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -37,10 +39,13 @@ public class RobotContainer {
     private Joystick leftJoystick = new Joystick(0);
     private Joystick rightJoystick = new Joystick(1);
 
+    SendableChooser<String> autoChooser = new SendableChooser<String>();
+
     // private final LoggedDashboardChooser<Command> autoChooser;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+
         switch (Constants.BotConstants.botMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
@@ -107,6 +112,10 @@ public class RobotContainer {
         configureBindings();
     }
 
+    public Command getAutonomous() {
+        return drive.getAutoPath(autoChooser.getSelected());
+    }
+
     /**
      * Use this method to define your trigger->command mappings. Triggers can be created via the
      * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -132,5 +141,12 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
         return new Command() {};
+    }
+
+    public void configureAuto() {
+        autoChooser.setDefaultOption("Testing Auto", "Testing Auto");
+        SmartDashboard.putData("Auto Mode", autoChooser);
+
+        drive.configurePathPlanner();
     }
 }
