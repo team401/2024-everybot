@@ -6,24 +6,35 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.driveTrainState;
+import frc.robot.Constants.DriveTrainState;
+import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
 
     private final DriveIO io;
-    private driveTrainState mode;
+    private DriveTrainState mode;
+    private DoubleSupplier targetHeading;
+    private DoubleSupplier currentHeading;
     private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
 
-    private PIDController thetaController = new PIDController(0, 0, 0); // placeholders
+    private PIDController thetaController = new PIDController(0.05, 0.05, 0.05); // placeholders
 
     private double forward;
     private double rotation;
 
     public Drive(DriveIO io) {
         this.io = io;
-        this.mode = driveTrainState.MANUAL;
+        this.targetHeading =
+                () -> {
+                    return 0.0;
+                };
+        this.currentHeading =
+                () -> {
+                    return 0.0;
+                };
+        this.mode = DriveTrainState.MANUAL;
     }
 
     @Override
@@ -33,10 +44,22 @@ public class Drive extends SubsystemBase {
         controlDriveTrain();
     }
 
-    public void setArcadeDrive(double forward, double rotation, driveTrainState mode) {
+    public void setDriveState(DriveTrainState state) {
+        mode = state;
+    }
+
+    public void setCurrentHeadingSupplier(DoubleSupplier currentHeading) {
+        this.currentHeading = currentHeading;
+    }
+
+    public void setTargetHeadingSupplier(DoubleSupplier targetHeading) {
+        this.targetHeading = targetHeading;
+    }
+
+    public void setArcadeDrive(double forward, double rotation) {
         this.forward = forward;
         this.rotation = rotation;
-        this.mode = mode;
+        mode = DriveTrainState.MANUAL;
     }
 
     /** Run open loop based on stick positions. */
@@ -50,10 +73,14 @@ public class Drive extends SubsystemBase {
         io.setVoltage(0.0, 0.0);
     }
 
-    public void aim(double targetHeading, double currentHeading) {
+    public void aim() {
         this.forward = 0;
-        this.rotation = thetaController.calculate(currentHeading, targetHeading);
-        this.mode = driveTrainState.AIM;
+        this.rotation =
+                thetaController.calculate(
+                        currentHeading.getAsDouble(), targetHeading.getAsDouble());
+        if (Math.abs(currentHeading.getAsDouble() - targetHeading.getAsDouble()) < 1e-5) {
+            mode = DriveTrainState.MANUAL;
+        }
     }
 
     public Rotation2d getGyroRotation2d() {
@@ -88,17 +115,13 @@ public class Drive extends SubsystemBase {
         return inputs.simulatedPose;
     }
 
-    public void updateMode(driveTrainState mode) {
-        this.mode = mode;
-    }
-
     public void controlDriveTrain() {
         switch (mode) {
             case MANUAL:
                 this.driveArcade(forward, rotation);
                 break;
             case AIM:
-                this.driveArcade(forward, rotation);
+                this.aim();
                 break;
             default:
                 this.stop();

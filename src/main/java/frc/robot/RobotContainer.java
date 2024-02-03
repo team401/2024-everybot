@@ -88,6 +88,17 @@ public class RobotContainer {
                         gyroSupplier,
                         simulatedPoseSupplier);
 
+        // add suppliers for drive
+        drive.setCurrentHeadingSupplier(
+                () -> {
+                    return nav.getCurrentHeading();
+                });
+
+        drive.setTargetHeadingSupplier(
+                () -> {
+                    return nav.getTargetHeading();
+                });
+
         // Set up auto routines
 
         // Set up feedforward characterization

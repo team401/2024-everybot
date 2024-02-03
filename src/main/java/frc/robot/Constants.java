@@ -22,7 +22,7 @@ import java.util.Collections;
  */
 public final class Constants {
 
-    public static enum driveTrainState {
+    public static enum DriveTrainState {
         /*Manual control */
         MANUAL,
 
