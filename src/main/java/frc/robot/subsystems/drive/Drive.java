@@ -17,6 +17,7 @@ public class Drive extends SubsystemBase {
     private DriveTrainState mode;
     private DoubleSupplier targetHeading;
     private DoubleSupplier currentHeading;
+    private boolean aligned = false;
     private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
 
     private PIDController thetaController = new PIDController(0.05, 0.05, 0.05); // placeholders
@@ -46,6 +47,9 @@ public class Drive extends SubsystemBase {
 
     public void setDriveState(DriveTrainState state) {
         mode = state;
+        if(state == DriveTrainState.AIM) {
+            aligned = false; // reset aim
+        }
     }
 
     public void setCurrentHeadingSupplier(DoubleSupplier currentHeading) {
@@ -79,7 +83,7 @@ public class Drive extends SubsystemBase {
                 thetaController.calculate(
                         currentHeading.getAsDouble(), targetHeading.getAsDouble());
         if (Math.abs(currentHeading.getAsDouble() - targetHeading.getAsDouble()) < 1e-5) {
-            mode = DriveTrainState.MANUAL;
+            aligned = true;
         }
     }
 
@@ -113,6 +117,10 @@ public class Drive extends SubsystemBase {
 
     public Pose2d getSimulatedPose() {
         return inputs.simulatedPose;
+    }
+
+    public boolean isAligned() {
+        return aligned;
     }
 
     public void controlDriveTrain() {
