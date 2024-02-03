@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 public class RobotContainer {
     private Drive drive;
@@ -42,7 +43,7 @@ public class RobotContainer {
     private Joystick leftJoystick = new Joystick(0);
     private Joystick rightJoystick = new Joystick(1);
 
-    private final SendableChooser<Command> autoChooser;
+    private final SendableChooser<String> autoChooser;
 
     // private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -140,12 +141,17 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand(){
-    return new PathPlannerAuto("Example Auto");
+    public Command getAutonomousCommand() {
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+
+        // Create a path following command using AutoBuilder. This will also trigger event markers.
+        // return AutoBuilder.followPathWithEvents(path);
+        return null;
     }
 
     public void configureAuto() {
-        autoChooser.setDefaultOption("Testing Auto", );
+        autoChooser.setDefaultOption("Testing Auto", "beep");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         drive.configurePathPlanner();

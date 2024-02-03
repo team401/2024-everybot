@@ -1,7 +1,9 @@
 package frc.robot.subsystems.drive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.FollowPathRamsete;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -13,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.proto.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,8 +30,8 @@ public class Drive extends SubsystemBase {
     private final DriveIO io;
     private driveTrainState mode;
     private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
-    private final SimpleMotorFeedforward driveff =
-            new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV);
+    private final SimpleMotorFeedforward driveff = new SimpleMotorFeedforward(Constants.DriveConstants.kS,
+            Constants.DriveConstants.kV);
 
     private double forward;
     private double rotation;
@@ -36,24 +39,79 @@ public class Drive extends SubsystemBase {
     public Drive(DriveIO io) {
         this.io = io;
         configurePathPlanner();
-        // Configure the AutoBuilder last
+    }
+
+    public Command followPathCommand(String pathName) {
+        PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+
+        return path;
+
+        // return new FollowPathRamsete(
+        // path,
+        // this::getPose, // Robot pose supplier
+        // this::getCurrentSpeeds, // Current ChassisSpeeds supplier
+        // this::drive, // Method that will drive the robot given ChassisSpeeds
+        // new ReplanningConfig(), // Default path replanning config. See the API for
+        // the options here
+        // () -> {
+        // // Boolean supplier that controls when the path will be mirrored for the red
+        // alliance
+        // // This will flip the path being followed to the red side of the field.
+        // // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+        // var alliance = DriverStation.getAlliance();
+        // if (alliance.isPresent()) {
+        // return alliance.get() == DriverStation.Alliance.Red;
+        // }
+        // return false;
+        // },
+        // this // Reference to this subsystem to set requirements
+        // );
+    }
+
+    public void configurePathPlanner() {
+        double driveBaseRadius = 0;
+
         AutoBuilder.configureRamsete(
-            this::getPose, // Robot pose supplier
-            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            this::getCurrentSpeeds, // Current ChassisSpeeds supplier
-            this::drive, // Method that will drive the robot given ChassisSpeeds
-            new ReplanningConfig(), // Default path replanning config. See the API for the options here
-            this // Reference to this subsystem to set requirements
+                this::getPose, // Robot pose supplier
+                this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::getCurrentSpeeds, // Current ChassisSpeeds supplier
+                this::drive, // Method that will drive the robot given ChassisSpeeds
+                new ReplanningConfig(), // Default path replanning config. See the API for the options here
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red
+                    // alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this // Reference to this subsystem to set requirements
         );
     }
-    
-
-    public void configurePathPlanner(){
-        double driveBaseRadius = 0;
-        }
 
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
+    }
+
+    public Pose2d getPose(){
+        return null;
+    }
+
+    public void resetPose(){
+       
+    }
+
+    public ChassisSpeeds getSpeeds(){
+        return ;
+    }
+
+    public void drive(){
+
     }
 
     @Override
