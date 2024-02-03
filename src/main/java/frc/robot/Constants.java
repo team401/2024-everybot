@@ -46,12 +46,22 @@ public final class Constants {
         REPLAY
     }
 
+    public static enum iMode {
+        /* Joystick Imputs */
+        Stick,
+
+        /* Keyboard Inputs */
+        Key,
+    }
+
     public static class OperatorConstants {
         public static final int kDriverControllerPort = 0;
     }
 
     public static class BotConstants {
         public static Mode botMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
+        public static iMode inputMode =
+                iMode.Stick; // my puny brain can't think of how to set inputMode automatically
     }
 
     public static class VisionConstants { // ALL PLACEHOLDERS

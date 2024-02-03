@@ -103,11 +103,20 @@ public class RobotContainer {
         // configureButtonBindings();
         // Configure the trigger bindings
 
-        drive.setDefaultCommand(
-                new ArcadeDrive(
-                        drive,
-                        () -> -leftJoystick.getRawAxis(1),
-                        () -> rightJoystick.getRawAxis(0)));
+        //it still doesn't turn in simulation T_T
+        if (Constants.BotConstants.inputMode.equals(Constants.iMode.Key)) {
+            drive.setDefaultCommand(
+                    new ArcadeDrive(
+                            drive,
+                            () -> -leftJoystick.getRawAxis(1),
+                            () -> leftJoystick.getRawAxis(0)));
+        } else {
+            drive.setDefaultCommand(
+                    new ArcadeDrive(
+                            drive,
+                            () -> -leftJoystick.getRawAxis(1),
+                            () -> rightJoystick.getRawAxis(0)));
+        }
 
         configureBindings();
     }
