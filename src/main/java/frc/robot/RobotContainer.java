@@ -99,15 +99,6 @@ public class RobotContainer {
                     return nav.getTargetHeading();
                 });
 
-        // Set up auto routines
-
-        // Set up feedforward characterization
-        // //autoChooser.addOption(
-        //     "Drive FF Characterization",
-        //     new FeedForward(
-        //         drive, (volts) -> drive.driveVolts(volts, volts),
-        // drive::getCharacterizationVelocity));
-
         // Configure the button bindings
         // configureButtonBindings();
         // Configure the trigger bindings

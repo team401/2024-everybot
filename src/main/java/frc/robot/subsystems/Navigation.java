@@ -132,5 +132,7 @@ public class Navigation extends SubsystemBase {
             // io sim pose input?)
         }
         updateNavVision();
+
+        // Logger.recordOutput("Telemetry/fieldToRobot", simulatedPose);
     }
 }

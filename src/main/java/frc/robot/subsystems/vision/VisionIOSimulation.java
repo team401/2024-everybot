@@ -63,15 +63,12 @@ public class VisionIOSimulation implements VisionIO {
                                 .getObject("VisionEstimation")
                                 .setPose(est.estimatedPose.toPose2d());
                         inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
-                    } else {
-                        inputs.estimatedVisionPose = null;
                     }
                 },
                 () -> {
                     if (newResult) {
                         getField().getObject("VisionEstimation").setPoses();
                     }
-                    inputs.estimatedVisionPose = null;
                 });
         if (newResult) {
             lastEstTimestamp = latestTimestamp;
