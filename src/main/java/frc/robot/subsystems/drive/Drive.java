@@ -23,6 +23,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
 
+    private double vx, vy, omega = 0.0;
     private final DriveIO io;
     private driveTrainState mode;
     private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
@@ -32,39 +33,24 @@ public class Drive extends SubsystemBase {
     private double forward;
     private double rotation;
 
-    Trajectory.State goal = trajectory.sample(3.4); // sample the trajectory at 3.4 seconds from the beginning
-    ChassisSpeeds adjustedSpeeds = controller.calculate(currentRobotPose, goal);
-
-    RamseteController controller1 = new RamseteController();
-    ChassisSpeeds adjustedSpeeds = controller.calculate(currentRobotPose, goal);
-    DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(adjustedSpeeds);
-    double left = wheelSpeeds.leftMetersPerSecond;
-    double right = wheelSpeeds.rightMetersPerSecond;
-
     public Drive(DriveIO io) {
         this.io = io;
         configurePathPlanner();
+        // Configure the AutoBuilder last
+        AutoBuilder.configureRamsete(
+            this::getPose, // Robot pose supplier
+            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getCurrentSpeeds, // Current ChassisSpeeds supplier
+            this::drive, // Method that will drive the robot given ChassisSpeeds
+            new ReplanningConfig(), // Default path replanning config. See the API for the options here
+            this // Reference to this subsystem to set requirements
+        );
     }
+    
 
-    public void configurePathPlanner() {
+    public void configurePathPlanner(){
         double driveBaseRadius = 0;
-
-        AutoBuilder.configureHolonomic(
-                () -> this.getState().Pose, // Supplier of current robot pose
-                this::seedFieldRelative, // Consumer for seeding pose against auto
-                this::getCurrentRobotChassisSpeeds,
-                (speeds) ->
-                        this.setGoalChassisSpeeds(
-                                speeds, true), // Consumer of ChassisSpeeds to drive the robot
-                new HolonomicPathFollowerConfig(
-                        new PIDConstants(10, 0, 0),
-                        new PIDConstants(10, 0, 0),
-                        TunerConstants.kSpeedAt12VoltsMps,
-                        driveBaseRadius,
-                        new ReplanningConfig()),
-                () -> false, // Change this if the path needs to be flipped on red vs blue
-                this); // Subsystem for requirements
-    }
+        }
 
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);

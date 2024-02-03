@@ -22,6 +22,9 @@ import frc.robot.subsystems.drive.DriveIOTalonFX;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 public class RobotContainer {
     private Drive drive;
 
@@ -39,12 +42,14 @@ public class RobotContainer {
     private Joystick leftJoystick = new Joystick(0);
     private Joystick rightJoystick = new Joystick(1);
 
-    SendableChooser<String> autoChooser = new SendableChooser<String>();
+    private final SendableChooser<Command> autoChooser;
 
     // private final LoggedDashboardChooser<Command> autoChooser;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
 
         switch (Constants.BotConstants.botMode) {
             case REAL:
@@ -112,10 +117,7 @@ public class RobotContainer {
         configureBindings();
     }
 
-    public Command getAutonomous() {
-        return drive.getAutoPath(autoChooser.getSelected());
-    }
-
+    
     /**
      * Use this method to define your trigger->command mappings. Triggers can be created via the
      * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -138,13 +140,12 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand() {
-        // An example command will be run in autonomous
-        return new Command() {};
+    public Command getAutonomousCommand(){
+    return new PathPlannerAuto("Example Auto");
     }
 
     public void configureAuto() {
-        autoChooser.setDefaultOption("Testing Auto", "Testing Auto");
+        autoChooser.setDefaultOption("Testing Auto", );
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         drive.configurePathPlanner();
