@@ -31,9 +31,4 @@ public class AimAtTarget extends Command {
     public void end(boolean interrupted) {
         driveSubsystem.setDriveState(DriveTrainState.MANUAL);
     }
-
-    @Override
-    public boolean isFinished() {
-        return Math.abs(navSubsystem.getCurrentHeading() - navSubsystem.getTargetHeading()) < 1e-5;
-    }
 }

@@ -47,7 +47,7 @@ public class Drive extends SubsystemBase {
 
     public void setDriveState(DriveTrainState state) {
         mode = state;
-        if(state == DriveTrainState.AIM) {
+        if (state == DriveTrainState.AIM) {
             aligned = false; // reset aim
         }
     }
