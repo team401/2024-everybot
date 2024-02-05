@@ -103,7 +103,7 @@ public class RobotContainer {
         // configureButtonBindings();
         // Configure the trigger bindings
 
-        //it still doesn't turn in simulation T_T
+        // it still doesn't turn in simulation T_T
         if (Constants.BotConstants.inputMode.equals(Constants.iMode.Key)) {
             drive.setDefaultCommand(
                     new ArcadeDrive(

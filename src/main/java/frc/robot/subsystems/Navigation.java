@@ -21,7 +21,7 @@ import org.photonvision.EstimatedRobotPose;
 
 public class Navigation extends SubsystemBase {
     private DifferentialDriveKinematics kinematics;
-    @AutoLogOutput private DifferentialDrivePoseEstimator poseEstimator;
+    private DifferentialDrivePoseEstimator poseEstimator;
     @AutoLogOutput private EstimatedRobotPose estimatedVisionPosition;
     private VisionIO vision;
     private VisionIOInputsAutoLogged inputs = new VisionIOInputsAutoLogged();
@@ -123,6 +123,7 @@ public class Navigation extends SubsystemBase {
         updateOdometry(gyro.get(), leftDistance.getAsDouble(), rightDistance.getAsDouble());
         vision.updateInputs(inputs);
         Logger.processInputs("Vision", inputs);
+        Logger.recordOutput("Estimated Pose", poseEstimator.getEstimatedPosition());
         if (Constants.BotConstants.botMode == Constants.Mode.REAL) {
             vision.updatePose(poseEstimator.getEstimatedPosition());
         } else {
