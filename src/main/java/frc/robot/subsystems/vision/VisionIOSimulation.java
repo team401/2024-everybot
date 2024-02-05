@@ -47,6 +47,7 @@ public class VisionIOSimulation implements VisionIO {
         cameraPoseEstimator =
                 new PhotonPoseEstimator(
                         layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, robotToCamera);
+        cameraPoseEstimator.setReferencePose(new Pose2d());
     }
 
     public void updateInputs(VisionIOInputs inputs) {

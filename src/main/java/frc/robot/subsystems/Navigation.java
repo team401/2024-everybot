@@ -31,6 +31,7 @@ public class Navigation extends SubsystemBase {
     private Supplier<Pose2d> simulatedPose;
     private AprilTagFieldLayout layout;
     private Pose2d desiredTargetPose;
+    private Pose2d currentPose;
 
     public Navigation(
             DoubleSupplier leftDistance,
@@ -67,8 +68,12 @@ public class Navigation extends SubsystemBase {
         this.leftDistance = leftDistance;
         this.rightDistance = rightDistance;
         this.gyro = gyro;
+
         // set layout
         layout = Constants.FieldConstants.FIELD_LAYOUT;
+
+        // set pose
+        currentPose = new Pose2d();
     }
 
     public void updateOdometry(
@@ -84,7 +89,7 @@ public class Navigation extends SubsystemBase {
 
     // returns heading error in radians
     public double getTargetHeading() {
-        double currentHeading = poseEstimator.getEstimatedPosition().getRotation().getRadians();
+        double currentHeading = getCurrentHeading();
         double robotVectorX = Math.cos(currentHeading);
         double robotVectorY = Math.sin(currentHeading);
 
@@ -115,22 +120,27 @@ public class Navigation extends SubsystemBase {
     }
 
     public double getCurrentHeading() {
-        return poseEstimator.getEstimatedPosition().getRotation().getRadians();
+        return currentPose.getRotation().getRadians();
+    }
+
+    public void updateCurrentPose() {
+        currentPose =
+                Constants.BotConstants.botMode == Constants.Mode.REAL
+                        ? poseEstimator.getEstimatedPosition()
+                        : simulatedPose.get();
     }
 
     @Override
     public void periodic() {
         updateOdometry(gyro.get(), leftDistance.getAsDouble(), rightDistance.getAsDouble());
+        updateCurrentPose();
         vision.updateInputs(inputs);
         Logger.processInputs("Vision", inputs);
         Logger.recordOutput("Estimated Pose", poseEstimator.getEstimatedPosition());
         if (Constants.BotConstants.botMode == Constants.Mode.REAL) {
             vision.updatePose(poseEstimator.getEstimatedPosition());
         } else {
-            vision.updatePose(
-                    simulatedPose
-                            .get()); // calls supplier ( init in robot container as accessing drive
-            // io sim pose input?)
+            vision.updatePose(simulatedPose.get());
         }
         updateNavVision();
 
