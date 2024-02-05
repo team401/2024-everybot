@@ -98,7 +98,7 @@ public class RobotContainer {
                 () -> {
                     return nav.getTargetHeading();
                 });
-        
+
         configureBindings();
     }
 
