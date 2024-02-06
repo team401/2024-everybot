@@ -56,10 +56,11 @@ public class VisionIOSimulation implements VisionIO {
 
         var estimate = cameraPoseEstimator.update();
         double latestTimestamp = result.getTimestampSeconds();
-        boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
+        inputs.newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
         estimate.ifPresentOrElse(
                 est -> {
-                    if (newResult) {
+                    inputs.poseAvailable = true;
+                    if (inputs.newResult) {
                         getField()
                                 .getObject("VisionEstimation")
                                 .setPose(est.estimatedPose.toPose2d());
@@ -67,11 +68,12 @@ public class VisionIOSimulation implements VisionIO {
                     }
                 },
                 () -> {
-                    if (newResult) {
+                    if (inputs.newResult) {
                         getField().getObject("VisionEstimation").setPoses();
                     }
+                    inputs.poseAvailable = false;
                 });
-        if (newResult) {
+        if (inputs.newResult) {
             lastEstTimestamp = latestTimestamp;
         }
     }

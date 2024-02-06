@@ -32,24 +32,22 @@ public class VisionIOReal implements VisionIO {
         PhotonPipelineResult result = camera.getLatestResult();
         inputs.timestampSeconds = result.getTimestampSeconds();
 
-        boolean newResult = Math.abs(result.getTimestampSeconds() - lastEstTimestamp) > 1e-5;
+        inputs.newResult = Math.abs(result.getTimestampSeconds() - lastEstTimestamp) > 1e-5;
 
         cameraPoseEstimator
                 .update()
                 .ifPresentOrElse(
                         est -> {
-                            if (newResult) {
+                            inputs.poseAvailable = true;
+                            if (inputs.newResult) {
                                 lastEstTimestamp =
                                         result.getTimestampSeconds(); // update timestamp since
                                 // frame has been added
                                 inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
-                            } else {
-                                inputs.estimatedVisionPose =
-                                        null; // out of date (already added to pose estimator)
                             }
                         },
                         () -> {
-                            inputs.estimatedVisionPose = null;
+                            inputs.poseAvailable = false;
                         });
 
         if (result.hasTargets()) {

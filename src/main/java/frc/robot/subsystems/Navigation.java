@@ -82,7 +82,7 @@ public class Navigation extends SubsystemBase {
     }
 
     public void updateNavVision() {
-        if (inputs.estimatedVisionPose != null) {
+        if (inputs.poseAvailable && inputs.newResult) {
             poseEstimator.addVisionMeasurement(inputs.estimatedVisionPose, inputs.timestampSeconds);
         }
     }
@@ -138,6 +138,6 @@ public class Navigation extends SubsystemBase {
         } else {
             vision.updatePose(simulatedPose.get());
         }
-        // updateNavVision();
+        updateNavVision();
     }
 }
