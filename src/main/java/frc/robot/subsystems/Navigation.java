@@ -15,8 +15,6 @@ import frc.robot.subsystems.vision.VisionIOReal;
 import frc.robot.subsystems.vision.VisionIOSimulation;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
@@ -90,6 +88,7 @@ public class Navigation extends SubsystemBase {
     }
 
     // returns heading error in radians
+    @AutoLogOutput
     public double getTargetHeading() {
         double currentHeading = getCurrentHeading();
         double robotVectorX = Math.cos(currentHeading);
@@ -129,21 +128,17 @@ public class Navigation extends SubsystemBase {
         currentPose = poseEstimator.getEstimatedPosition();
     }
 
-
     @Override
     public void periodic() {
         updateOdometry(gyro.get(), leftDistance.getAsDouble(), rightDistance.getAsDouble());
         updateCurrentPose();
         vision.updateInputs(inputs);
         Logger.processInputs("Vision", inputs);
-        Logger.recordOutput("Estimated Pose", poseEstimator.getEstimatedPosition());
         if (Constants.BotConstants.botMode == Constants.Mode.REAL) {
             vision.updatePose(poseEstimator.getEstimatedPosition());
         } else {
             vision.updatePose(simulatedPose.get());
         }
-        updateNavVision();
-
-        // Logger.recordOutput("Telemetry/fieldToRobot", simulatedPose);
+        // updateNavVision();
     }
 }
