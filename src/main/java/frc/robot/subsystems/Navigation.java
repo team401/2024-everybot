@@ -15,6 +15,8 @@ import frc.robot.subsystems.vision.VisionIOReal;
 import frc.robot.subsystems.vision.VisionIOSimulation;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
@@ -31,7 +33,7 @@ public class Navigation extends SubsystemBase {
     private Supplier<Pose2d> simulatedPose;
     private AprilTagFieldLayout layout;
     private Pose2d desiredTargetPose;
-    private Pose2d currentPose;
+    @AutoLogOutput private Pose2d currentPose;
 
     public Navigation(
             DoubleSupplier leftDistance,
@@ -124,11 +126,9 @@ public class Navigation extends SubsystemBase {
     }
 
     public void updateCurrentPose() {
-        currentPose =
-                Constants.BotConstants.botMode == Constants.Mode.REAL
-                        ? poseEstimator.getEstimatedPosition()
-                        : simulatedPose.get();
+        currentPose = poseEstimator.getEstimatedPosition();
     }
+
 
     @Override
     public void periodic() {
