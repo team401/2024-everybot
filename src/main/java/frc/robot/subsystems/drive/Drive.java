@@ -17,13 +17,13 @@ public class Drive extends SubsystemBase {
     private DriveTrainState mode;
     private DoubleSupplier targetHeading;
     private DoubleSupplier currentHeading;
-    private boolean aligned = false;
+    @AutoLogOutput private boolean aligned = false;
     private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
 
     private PIDController thetaController = new PIDController(0.05, 0.05, 0.05); // placeholders
 
     private double forward;
-    private double rotation;
+    @AutoLogOutput private double rotation;
 
     public Drive(DriveIO io) {
         this.io = io;
@@ -82,6 +82,7 @@ public class Drive extends SubsystemBase {
         this.rotation =
                 thetaController.calculate(
                         currentHeading.getAsDouble(), targetHeading.getAsDouble());
+        this.driveArcade(forward, rotation);
         if (Math.abs(currentHeading.getAsDouble() - targetHeading.getAsDouble()) < 1e-5) {
             aligned = true;
         }

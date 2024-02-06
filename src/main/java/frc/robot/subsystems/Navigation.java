@@ -88,7 +88,6 @@ public class Navigation extends SubsystemBase {
     }
 
     // returns heading error in radians
-    @AutoLogOutput
     public double getTargetHeading() {
         double currentHeading = getCurrentHeading();
         double robotVectorX = Math.cos(currentHeading);
@@ -116,7 +115,7 @@ public class Navigation extends SubsystemBase {
                             desiredTargetPose = pose.toPose2d();
                         },
                         () -> {
-                            desiredTargetPose = null;
+                            desiredTargetPose = new Pose2d();
                         });
     }
 
