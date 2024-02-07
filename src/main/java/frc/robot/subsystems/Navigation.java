@@ -1,14 +1,19 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOInputsAutoLogged;
 import frc.robot.subsystems.vision.VisionIOReal;
@@ -76,6 +81,25 @@ public class Navigation extends SubsystemBase {
         currentPose = new Pose2d();
     }
 
+    private boolean robotInMidField() {
+        return currentPose.getX() > FieldConstants.midfieldLowThresholdM
+                && currentPose.getX() < FieldConstants.midfieldHighThresholdM;
+    }
+    private Matrix<N3, N1> cameraUncertainty(double averageTagDistanceM, int nTags) {
+        /*
+         * On this year's field, AprilTags are arranged into rough 'corridors' between the stage and
+         * speaker, and a central 'desert,' where few tags can be found. It follows that we should
+         * determine the variance of our camera measurements based on that.
+         */
+        if (nTags < 2) {
+            return VisionConstants.singleTagUncertainty;
+        } else if (averageTagDistanceM < 2.0 && this.robotInMidField()) {
+            return VisionConstants.lowCameraUncertainty;
+        } else {
+            return VisionConstants.highCameraUncertainty;
+        }
+    }
+
     public void updateOdometry(
             Rotation2d gyro, double leftDistanceMeters, double rightDistanceMeters) {
         poseEstimator.update(gyro, leftDistanceMeters, rightDistanceMeters);
@@ -83,7 +107,7 @@ public class Navigation extends SubsystemBase {
 
     public void updateNavVision() {
         if (inputs.poseAvailable && inputs.newResult) {
-            poseEstimator.addVisionMeasurement(inputs.estimatedVisionPose, inputs.timestampSeconds);
+            poseEstimator.addVisionMeasurement(inputs.estimatedVisionPose, inputs.timestampSeconds, cameraUncertainty(inputs.averageTagDistanceM, inputs.nTags));
         }
     }
 
