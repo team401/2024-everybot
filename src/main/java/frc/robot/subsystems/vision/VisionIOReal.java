@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.robot.Constants;
-
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -66,6 +65,7 @@ public class VisionIOReal implements VisionIO {
     public void updatePose(Pose2d drivetrainPoseMeters) {
         cameraPoseEstimator.setReferencePose(drivetrainPoseMeters);
     }
+
     private static double calculateAverageTagDistance(EstimatedRobotPose pose) {
         double distance = 0.0;
         for (PhotonTrackedTarget target : pose.targetsUsed) {

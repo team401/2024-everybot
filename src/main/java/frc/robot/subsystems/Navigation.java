@@ -85,6 +85,7 @@ public class Navigation extends SubsystemBase {
         return currentPose.getX() > FieldConstants.midfieldLowThresholdM
                 && currentPose.getX() < FieldConstants.midfieldHighThresholdM;
     }
+
     private Matrix<N3, N1> cameraUncertainty(double averageTagDistanceM, int nTags) {
         /*
          * On this year's field, AprilTags are arranged into rough 'corridors' between the stage and
@@ -107,7 +108,10 @@ public class Navigation extends SubsystemBase {
 
     public void updateNavVision() {
         if (inputs.poseAvailable && inputs.newResult) {
-            poseEstimator.addVisionMeasurement(inputs.estimatedVisionPose, inputs.timestampSeconds, cameraUncertainty(inputs.averageTagDistanceM, inputs.nTags));
+            poseEstimator.addVisionMeasurement(
+                    inputs.estimatedVisionPose,
+                    inputs.timestampSeconds,
+                    cameraUncertainty(inputs.averageTagDistanceM, inputs.nTags));
         }
     }
 

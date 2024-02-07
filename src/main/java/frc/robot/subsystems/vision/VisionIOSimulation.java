@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants;
-
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -95,7 +94,7 @@ public class VisionIOSimulation implements VisionIO {
     public void set3dFieldSimActive(boolean enabled) {
         simulatedCamera.enableDrawWireframe(enabled);
     }
-    
+
     private static double calculateAverageTagDistance(EstimatedRobotPose pose) {
         double distance = 0.0;
         for (PhotonTrackedTarget target : pose.targetsUsed) {

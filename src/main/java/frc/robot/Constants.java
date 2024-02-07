@@ -77,12 +77,11 @@ public final class Constants {
         public static final int CAMERA_FPS = 20;
         public static final double IDEAL_GOAL_RANGE_METERS = 1;
 
-
-         // 0.45 from 2023
+        // 0.45 from 2023
         public static final Matrix<N3, N1> lowCameraUncertainty = VecBuilder.fill(1.2, 1.2, 2);
         // 1.2 from 2023
         public static final Matrix<N3, N1> highCameraUncertainty = VecBuilder.fill(3.5, 3.5, 10);
-        public static final Matrix<N3, N1> singleTagUncertainty = VecBuilder.fill(20.0, 20.0, 10);
+        public static final Matrix<N3, N1> singleTagUncertainty = VecBuilder.fill(20.0, 20.0, 20.0);
 
         // simulation
         public static final int RESOLUTION_WIDTH = 480;
@@ -102,7 +101,6 @@ public final class Constants {
         public static final AprilTagFieldLayout FIELD_LAYOUT = initLayout();
         public static final double midfieldLowThresholdM = 5.87;
         public static final double midfieldHighThresholdM = 10.72;
-
     }
 
     private static AprilTagFieldLayout initLayout() {
