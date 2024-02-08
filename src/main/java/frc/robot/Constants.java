@@ -27,7 +27,7 @@ public final class Constants {
         AIM,
 
         /*Auto pathfollowing */
-        //PATHFOLLOW, TO,
+        // PATHFOLLOW, TO,
         AUTO,
     }
 

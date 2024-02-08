@@ -1,20 +1,16 @@
 package frc.robot.subsystems.drive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.FollowPathRamsete;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-
-import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.math.proto.Trajectory;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,43 +26,32 @@ public class Drive extends SubsystemBase {
     private final DriveIO io;
     private driveTrainState mode;
     private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
-    private final SimpleMotorFeedforward driveff = new SimpleMotorFeedforward(Constants.DriveConstants.kS,
-            Constants.DriveConstants.kV);
+    private final SimpleMotorFeedforward driveff =
+            new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV);
 
     private double forward;
     private double rotation;
+
+    ChassisSpeeds speed =
+            ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, Math.PI / 2.0, this.getGyroRotation2d());
+    Pose2d pose = Pose2d(vx, vy, omega);
+    DifferentialDriveKinematics kinematics =
+            new DifferentialDriveKinematics(Units.inchesToMeters(27.0));
 
     public Drive(DriveIO io) {
         this.io = io;
         configurePathPlanner();
     }
 
-    public Command followPathCommand(String pathName) {
+    private Pose2d Pose2d(double vx2, double vy2, double omega2) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'Pose2d'");
+    }
+
+    public PathPlannerPath followPathCommand(String pathName) {
         PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
         return path;
-
-        // return new FollowPathRamsete(
-        // path,
-        // this::getPose, // Robot pose supplier
-        // this::getCurrentSpeeds, // Current ChassisSpeeds supplier
-        // this::drive, // Method that will drive the robot given ChassisSpeeds
-        // new ReplanningConfig(), // Default path replanning config. See the API for
-        // the options here
-        // () -> {
-        // // Boolean supplier that controls when the path will be mirrored for the red
-        // alliance
-        // // This will flip the path being followed to the red side of the field.
-        // // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-        // var alliance = DriverStation.getAlliance();
-        // if (alliance.isPresent()) {
-        // return alliance.get() == DriverStation.Alliance.Red;
-        // }
-        // return false;
-        // },
-        // this // Reference to this subsystem to set requirements
-        // );
     }
 
     public void configurePathPlanner() {
@@ -74,10 +59,12 @@ public class Drive extends SubsystemBase {
 
         AutoBuilder.configureRamsete(
                 this::getPose, // Robot pose supplier
-                this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::resetPose, // Method to reset odometry (will be called if your auto has a
+                // starting pose)
                 this::getCurrentSpeeds, // Current ChassisSpeeds supplier
                 this::drive, // Method that will drive the robot given ChassisSpeeds
-                new ReplanningConfig(), // Default path replanning config. See the API for the options here
+                new ReplanningConfig(), // Default path replanning config. See the API for the
+                // options here
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red
                     // alliance
@@ -91,27 +78,31 @@ public class Drive extends SubsystemBase {
                     return false;
                 },
                 this // Reference to this subsystem to set requirements
-        );
+                );
     }
 
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
     }
 
-    public Pose2d getPose(){
-        return null;
+    public Pose2d getPose() {
+        return pose;
     }
 
-    public void resetPose(){
-       
+    public void resetPose(Pose2d pose) {
+        vx = 0;
+        vy = 0;
+        omega = 0;
+        pose = Pose2d(0, 0, 0);
     }
 
-    public ChassisSpeeds getSpeeds(){
-        return ;
+    public ChassisSpeeds getCurrentSpeeds() {
+        return this.speed;
     }
 
-    public void drive(){
-
+    public void drive(ChassisSpeeds speed) {
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speed);
+        driveArcade(wheelSpeeds.leftMetersPerSecond, omega);
     }
 
     @Override

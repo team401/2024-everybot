@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
@@ -22,10 +23,6 @@ import frc.robot.subsystems.drive.DriveIOTalonFX;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
-
 public class RobotContainer {
     private Drive drive;
 
@@ -43,7 +40,7 @@ public class RobotContainer {
     private Joystick leftJoystick = new Joystick(0);
     private Joystick rightJoystick = new Joystick(1);
 
-    private final SendableChooser<String> autoChooser;
+    private final SendableChooser<Command> autoChooser;
 
     // private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -116,9 +113,9 @@ public class RobotContainer {
                         () -> rightJoystick.getRawAxis(0)));
 
         configureBindings();
+        SmartDashboard.putData("Auto Choose", autoChooser);
     }
 
-    
     /**
      * Use this method to define your trigger->command mappings. Triggers can be created via the
      * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -142,18 +139,13 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // Load the path you want to follow using its name in the GUI
-        PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
-
-        // Create a path following command using AutoBuilder. This will also trigger event markers.
-        // return AutoBuilder.followPathWithEvents(path);
-        return null;
+        return autoChooser.getSelected();
     }
 
-    public void configureAuto() {
-        autoChooser.setDefaultOption("Testing Auto", "beep");
+    /*  public void configureAuto() {
+        autoChooser.setDefaultOption("Testing Auto", "Wing 3pc");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         drive.configurePathPlanner();
-    }
+    }*/
 }
