@@ -21,8 +21,8 @@ public class ArmIOSim implements ArmIO {
     }
 
     public void setMotorPower(double leftPercent, double rightPercent) {
-        leftMotor.set(-leftPercent);
-        rightMotor.set(-rightPercent);
+        // leftMotor.set(-leftPercent);
+        // rightMotor.set(-rightPercent);
     }
 
     private double getLeftMotorAmps() {
