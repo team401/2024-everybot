@@ -16,27 +16,28 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.driveTrainState;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
-
+    
+    private double forward;
+    private double rotation;
     private double vx, vy, omega = 0.0;
     private final DriveIO io;
     private driveTrainState mode;
     private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
     private final SimpleMotorFeedforward driveff =
             new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV);
-
-    private double forward;
-    private double rotation;
-
     ChassisSpeeds speed =
             ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, Math.PI / 2.0, this.getGyroRotation2d());
     Pose2d pose = Pose2d(vx, vy, omega);
     DifferentialDriveKinematics kinematics =
             new DifferentialDriveKinematics(Units.inchesToMeters(27.0));
+
+    RobotContainer robotContainer = new RobotContainer();
 
     public Drive(DriveIO io) {
         this.io = io;
@@ -50,13 +51,10 @@ public class Drive extends SubsystemBase {
 
     public PathPlannerPath followPathCommand(String pathName) {
         PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
-
         return path;
     }
 
     public void configurePathPlanner() {
-        double driveBaseRadius = 0;
-
         AutoBuilder.configureRamsete(
                 this::getPose, // Robot pose supplier
                 this::resetPose, // Method to reset odometry (will be called if your auto has a
@@ -174,7 +172,7 @@ public class Drive extends SubsystemBase {
                 this.stop();
                 break;
             case AUTO:
-                this.getAutoPath("Center 3pc");
+                robotContainer.setAutonomousCommand("Center 3pc");
             default:
                 this.stop();
                 break;

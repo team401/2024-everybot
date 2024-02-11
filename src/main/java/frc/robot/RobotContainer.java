@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
@@ -138,14 +140,11 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
+
+    public Command setAutonomousCommand(String path) {
+        return new PathPlannerAuto(path);
+    }
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
-
-    /*  public void configureAuto() {
-        autoChooser.setDefaultOption("Testing Auto", "Wing 3pc");
-        SmartDashboard.putData("Auto Mode", autoChooser);
-
-        drive.configurePathPlanner();
-    }*/
 }
