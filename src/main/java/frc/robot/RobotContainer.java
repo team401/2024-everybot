@@ -4,9 +4,14 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -37,10 +42,15 @@ public class RobotContainer {
     private Joystick leftJoystick = new Joystick(0);
     private Joystick rightJoystick = new Joystick(1);
 
+    private final SendableChooser<Command> autoChooser;
+
     // private final LoggedDashboardChooser<Command> autoChooser;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+
         switch (Constants.BotConstants.botMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
@@ -105,6 +115,7 @@ public class RobotContainer {
                         () -> rightJoystick.getRawAxis(0)));
 
         configureBindings();
+        SmartDashboard.putData("Auto Choose", autoChooser);
     }
 
     /**
@@ -129,8 +140,11 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
+
+    public Command setAutonomousCommand(String path) {
+        return new PathPlannerAuto(path);
+    }
     public Command getAutonomousCommand() {
-        // An example command will be run in autonomous
-        return new Command() {};
+        return autoChooser.getSelected();
     }
 }
