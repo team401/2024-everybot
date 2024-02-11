@@ -11,11 +11,9 @@ public interface ArmIO {
         public double rightMotorCurrent = 0.0;
         public double encoderLeftPosition = 0.0;
         public double encoderRightPosition = 0.0;
-        public double armAmps = 0.0;
     }
 
     public default void updateInputs(ArmIOInputs inputs) {}
 
     public default void setMotorPower(double left, double right) {}
-
 }

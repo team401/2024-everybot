@@ -39,7 +39,7 @@ public class DriveIOSim implements DriveIO {
                             12.0);
             rightAppliedVolts =
                     MathUtil.clamp(
-                            leftPID.calculate(
+                            rightPID.calculate(
                                             sim.getRightVelocityMetersPerSecond()
                                                     / DriveConstants.WHEEL_RADIUS)
                                     + rightFFVolts,
@@ -72,13 +72,5 @@ public class DriveIOSim implements DriveIO {
         leftAppliedVolts = MathUtil.clamp(leftVolts, -12.0, 12.0);
         rightAppliedVolts = MathUtil.clamp(rightVolts, -12.0, 12.0);
         sim.setInputs(leftAppliedVolts, rightAppliedVolts);
-    }
-
-    @Override
-    public void setVelocity(
-            double leftRadPerSec, double rightRadPerSec, double leftFFVolts, double rightFFVolts) {
-        closedLoop = true;
-        leftPID.setSetpoint(leftRadPerSec);
-        rightPID.setSetpoint(rightRadPerSec);
     }
 }

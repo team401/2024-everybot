@@ -82,6 +82,12 @@ public class Drive extends SubsystemBase {
         }
     }
 
+    public void endgame() {
+        this.forward = 0;
+        this.rotation = 0;
+        this.driveArcade(forward, rotation);
+    }
+
     public Rotation2d getGyroRotation2d() {
         return inputs.gyroYaw;
     }
@@ -126,6 +132,8 @@ public class Drive extends SubsystemBase {
             case AIM:
                 this.aim();
                 break;
+            case ENDGAME:
+                this.endgame();
             default:
                 this.stop();
                 break;

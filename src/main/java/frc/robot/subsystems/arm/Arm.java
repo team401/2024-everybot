@@ -1,12 +1,11 @@
 package frc.robot.subsystems.arm;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class Arm extends SubsystemBase {
 
@@ -16,43 +15,45 @@ public class Arm extends SubsystemBase {
 
     private final ArmIOInputsAutoLogged armInputs = new ArmIOInputsAutoLogged();
 
-    private double leftEndgameMotorPower = 0.5;
-    private double rightEndgameMotorPower = 0.5;
+    private double leftMotorPowewr;
+    private double rightMotorPower;
     private double endgameGoalPosition;
+    private boolean upDown;
 
     public Arm(ArmIO arm) {
         this.arm = arm;
     }
 
     public void armDown() {
-        endgameGoalPosition = Constants.ArmConstants.armUp;
-    }
-
-    public void armUp() {
         endgameGoalPosition = Constants.ArmConstants.armDown;
     }
 
-    public void armControl() {
-        double leftOutput =
+    public void armUp() {
+        endgameGoalPosition = Constants.ArmConstants.armUp;
+    }
+
+    public void armControl(boolean upDown) {
+        this.upDown = upDown;
+        if (upDown) {
+            armUp();
+        } else {
+            armDown();
+        }
+        leftMotorPowewr =
                 armController.calculate(armInputs.encoderLeftPosition, endgameGoalPosition);
-        double rightOutput =
+        rightMotorPower =
                 armController.calculate(armInputs.encoderRightPosition, endgameGoalPosition);
-        arm.setMotorPower(leftOutput, rightOutput);
-        double amps = armInputs.armAmps;
+        arm.setMotorPower(leftMotorPowewr, rightMotorPower);
     }
 
     @Override
     public void periodic() {
         arm.updateInputs(armInputs);
         armController.setPID(0, 0, 0);
-        armControl();
+        armControl(upDown);
 
         Logger.recordOutput(
-                "endgame/Elevator3d",
-                new Pose3d(
-                        0.0,
-                        0.0,
-                        armInputs.encoderLeftPosition + 0.1,
-                        new Rotation3d(0, 0, 0)));
+                "arm/Elevator3d",
+                new Pose3d(0.0, 0.0, armInputs.encoderLeftPosition + 0.1, new Rotation3d(0, 0, 0)));
     }
 }

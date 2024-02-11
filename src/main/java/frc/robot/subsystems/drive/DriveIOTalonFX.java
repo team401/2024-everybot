@@ -4,7 +4,6 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -117,32 +116,5 @@ public class DriveIOTalonFX implements DriveIO {
     public void setVoltage(double leftVolts, double rightVolts) {
         driveMotorFrontLeft.setControl(new VoltageOut(leftVolts));
         driveMotorFrontRight.setControl(new VoltageOut(rightVolts));
-    }
-
-    @Override
-    public void setVelocity(
-            double leftRadPerSec, double rightRadPerSec, double leftFFVolts, double rightFFVolts) {
-        driveMotorFrontLeft.setControl(
-                new VelocityVoltage(
-                        Units.radiansToRotations(
-                                leftRadPerSec * Constants.DriveConstants.GEAR_RATIO),
-                        0.0,
-                        true,
-                        leftFFVolts,
-                        0,
-                        false,
-                        false,
-                        false));
-        driveMotorFrontRight.setControl(
-                new VelocityVoltage(
-                        Units.radiansToRotations(
-                                rightRadPerSec * Constants.DriveConstants.GEAR_RATIO),
-                        0.0,
-                        true,
-                        rightFFVolts,
-                        0,
-                        false,
-                        false,
-                        false));
     }
 }

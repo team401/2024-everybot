@@ -31,6 +31,9 @@ public final class Constants {
 
         /*Auto pathfollowing */
         PATHFOLLOW,
+
+        /*Arm up down*/
+        ENDGAME,
     }
 
     public static final int pigeonID = 0; // placeholder

@@ -11,7 +11,7 @@ public class ArmIOReal implements ArmIO {
 
     CANSparkMax rightMotor = new CANSparkMax(ArmConstants.leftMotorID, MotorType.kBrushless);
 
-    public void updateInputs(ArmIOInputs inputs){
+    public void updateInputs(ArmIOInputs inputs) {
         armIOInputs.leftMotorCurrent = getRightMotorAmps();
         armIOInputs.rightMotorCurrent = getLeftMotorAmps();
         armIOInputs.encoderLeftPosition = getLeftMotorPosition();
@@ -28,7 +28,6 @@ public class ArmIOReal implements ArmIO {
 
     private double getLeftMotorPosition() {
         return leftMotor.getEncoder().getPosition() / ArmConstants.ticksPerFoot;
-        
     }
 
     private double getRightMotorPosition() {
@@ -39,6 +38,4 @@ public class ArmIOReal implements ArmIO {
         rightMotor.set(-rightPercent);
         leftMotor.set(-leftPercent);
     }
-
-
 }
