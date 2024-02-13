@@ -3,6 +3,7 @@ package frc.robot.subsystems.drive;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -34,7 +35,7 @@ public class Drive extends SubsystemBase {
                     return 0.0;
                 };
         this.mode = DriveTrainState.MANUAL;
-        rotationController = new PIDController(0.05, 0.05, 0.05);
+        rotationController = new PIDController(0.1, 0.1, 0.1);
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
@@ -86,11 +87,9 @@ public class Drive extends SubsystemBase {
 
     public void aim() {
         this.forward = 0;
-        this.rotation =
-                rotationController.calculate(
-                        currentHeading.getAsDouble(), targetHeading.getAsDouble());
+        this.rotation = targetHeading.getAsDouble();
         this.driveArcade(forward, rotation);
-        if (Math.abs(currentHeading.getAsDouble() - targetHeading.getAsDouble()) < 1) {
+        if (Units.radiansToDegrees(targetHeading.getAsDouble()) < 1) {
             aligned = true;
         }
     }

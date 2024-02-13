@@ -78,7 +78,7 @@ public final class Constants {
         public static final double IDEAL_GOAL_RANGE_METERS = 1;
 
         // PhotonLib Deviations
-        public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(4, 4, 8);
+        public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(20, 20, 40);
         public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
         // simulation
