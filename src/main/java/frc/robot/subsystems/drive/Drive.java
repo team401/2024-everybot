@@ -23,7 +23,6 @@ public class Drive extends SubsystemBase {
     private double rotation;
     private PIDController rotationController;
 
-
     public Drive(DriveIO io) {
         this.io = io;
         this.targetHeading =
@@ -43,6 +42,13 @@ public class Drive extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Drive", inputs);
+        if (mode == DriveTrainState.AIM) {
+            Logger.recordOutput("Current Heading", currentHeading.getAsDouble());
+            Logger.recordOutput("Target heading", targetHeading.getAsDouble());
+        } else {
+            Logger.recordOutput("Current Heading", currentHeading.getAsDouble());
+            Logger.recordOutput("Target heading", 0.0);
+        }
         controlDriveTrain();
     }
 
@@ -80,7 +86,9 @@ public class Drive extends SubsystemBase {
 
     public void aim() {
         this.forward = 0;
-        this.rotation = rotationController.calculate(currentHeading.getAsDouble(), targetHeading.getAsDouble());
+        this.rotation =
+                rotationController.calculate(
+                        currentHeading.getAsDouble(), targetHeading.getAsDouble());
         this.driveArcade(forward, rotation);
         if (Math.abs(currentHeading.getAsDouble() - targetHeading.getAsDouble()) < 1) {
             aligned = true;

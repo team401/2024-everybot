@@ -12,7 +12,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOInputsAutoLogged;
@@ -81,24 +80,21 @@ public class Navigation extends SubsystemBase {
         currentPose = new Pose2d();
     }
 
-    private boolean robotInMidField() {
-        return currentPose.getX() > FieldConstants.midfieldLowThresholdM
-                && currentPose.getX() < FieldConstants.midfieldHighThresholdM;
-    }
+    // modelled off of PhotonLib Swerve Pose Estimation example
+    // (https://github.com/PhotonVision/photonvision/blob/2a6fa1b6ac81f239c59d724da5339f608897c510/photonlib-java-examples/swervedriveposeestsim/src/main/java/frc/robot/Vision.java)
+    public Matrix<N3, N1> getEstimationStdDevs() {
+        var estStdDevs = VisionConstants.singleTagStdDevs;
+        int numTags = inputs.nTags;
+        double avgDist = inputs.averageTagDistanceM;
+        if (numTags == 0) return estStdDevs;
+        // Decrease std devs if multiple targets are visible
+        if (numTags > 1) estStdDevs = VisionConstants.multiTagStdDevs;
+        // Increase std devs based on (average) distance
+        if (numTags == 1 && avgDist > 4)
+            estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+        else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
 
-    private Matrix<N3, N1> cameraUncertainty(double averageTagDistanceM, int nTags) {
-        /*
-         * On this year's field, AprilTags are arranged into rough 'corridors' between the stage and
-         * speaker, and a central 'desert,' where few tags can be found. It follows that we should
-         * determine the variance of our camera measurements based on that.
-         */
-        if (nTags < 2) {
-            return VisionConstants.singleTagUncertainty;
-        } else if (averageTagDistanceM < 2.0 && this.robotInMidField()) {
-            return VisionConstants.lowCameraUncertainty;
-        } else {
-            return VisionConstants.highCameraUncertainty;
-        }
+        return estStdDevs;
     }
 
     public void updateOdometry(
@@ -109,9 +105,7 @@ public class Navigation extends SubsystemBase {
     public void updateNavVision() {
         if (inputs.poseAvailable && inputs.newResult) {
             poseEstimator.addVisionMeasurement(
-                    inputs.estimatedVisionPose,
-                    inputs.timestampSeconds,
-                    cameraUncertainty(inputs.averageTagDistanceM, inputs.nTags));
+                    inputs.estimatedVisionPose, inputs.timestampSeconds, getEstimationStdDevs());
         }
     }
 
