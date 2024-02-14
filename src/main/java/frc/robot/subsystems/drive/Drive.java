@@ -7,6 +7,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveTrainState;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -35,7 +36,8 @@ public class Drive extends SubsystemBase {
                     return 0.0;
                 };
         this.mode = DriveTrainState.MANUAL;
-        rotationController = new PIDController(0.3, 0.3, 0.1);
+        rotationController =
+                new PIDController(DriveConstants.kP, DriveConstants.kI, DriveConstants.kD);
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
@@ -91,7 +93,8 @@ public class Drive extends SubsystemBase {
                 rotationController.calculate(
                         currentHeading.getAsDouble(), targetHeading.getAsDouble());
         this.driveArcade(forward, rotation);
-        if (Units.radiansToDegrees(targetHeading.getAsDouble()) < 1) {
+        if (Units.radiansToDegrees(targetHeading.getAsDouble())
+                < DriveConstants.alignToleranceRadians) {
             aligned = true;
         }
     }

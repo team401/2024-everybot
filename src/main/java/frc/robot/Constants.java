@@ -125,10 +125,11 @@ public final class Constants {
 
         public static final double WHEEL_RADIUS = 1.0; // placeholder
 
-        public static final double kS = 0.1; // placeholder
-        public static final double kP = 0.1; // placeholder
-        public static final double kD = 0.1; // placeholder
-        public static final double kV = 0.1; // placeholder
+        public static final double kP = 0.3;
+        public static final double kI = 0.3;
+        public static final double kD = 0.1;
+
+        public static final double alignToleranceRadians = 1;
     }
 
     public static class SimConstants {
