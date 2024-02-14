@@ -35,7 +35,7 @@ public class Drive extends SubsystemBase {
                     return 0.0;
                 };
         this.mode = DriveTrainState.MANUAL;
-        rotationController = new PIDController(0.1, 0.1, 0.1);
+        rotationController = new PIDController(0.3, 0.3, 0.1);
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
@@ -48,7 +48,7 @@ public class Drive extends SubsystemBase {
             Logger.recordOutput("Target heading", targetHeading.getAsDouble());
         } else {
             Logger.recordOutput("Current Heading", currentHeading.getAsDouble());
-            Logger.recordOutput("Target heading", 0.0);
+            Logger.recordOutput("Target heading", targetHeading.getAsDouble());
         }
         controlDriveTrain();
     }
@@ -87,7 +87,9 @@ public class Drive extends SubsystemBase {
 
     public void aim() {
         this.forward = 0;
-        this.rotation = targetHeading.getAsDouble();
+        this.rotation =
+                rotationController.calculate(
+                        currentHeading.getAsDouble(), targetHeading.getAsDouble());
         this.driveArcade(forward, rotation);
         if (Units.radiansToDegrees(targetHeading.getAsDouble()) < 1) {
             aligned = true;

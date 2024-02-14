@@ -78,6 +78,8 @@ public class Navigation extends SubsystemBase {
 
         // set pose
         currentPose = new Pose2d();
+
+        this.setDesiredTarget(6);
     }
 
     // modelled off of PhotonLib Swerve Pose Estimation example
@@ -111,22 +113,11 @@ public class Navigation extends SubsystemBase {
 
     // returns heading error in radians
     public double getTargetHeading() {
-        double currentHeading = getCurrentHeading();
-        double robotVectorX = Math.cos(currentHeading);
-        double robotVectorY = Math.sin(currentHeading);
-
         double targetVectorX =
                 desiredTargetPose.getX() - poseEstimator.getEstimatedPosition().getX();
         double targetVectorY =
                 desiredTargetPose.getY() - poseEstimator.getEstimatedPosition().getY();
-
-        double dotProduct = (robotVectorX * targetVectorX) + (robotVectorY * targetVectorY);
-
-        double targetVecMagnitude =
-                Math.sqrt(Math.pow(targetVectorX, 2) + Math.pow(targetVectorY, 2));
-
-        return Math.acos(
-                dotProduct / targetVecMagnitude); // robot vector magnitude is one (unit vector)
+        return Math.atan2(targetVectorY, targetVectorX);
     }
 
     public void setDesiredTarget(int targetId) {
