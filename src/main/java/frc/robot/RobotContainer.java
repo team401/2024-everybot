@@ -129,6 +129,7 @@ public class RobotContainer {
         driverController.a().whileTrue(aimAtSpeaker);
 
         driverController.b().whileTrue(new ArmMove(drive, arm, true));
+
         driverController.x().whileTrue(new ArmMove(drive, arm, false));
     }
 

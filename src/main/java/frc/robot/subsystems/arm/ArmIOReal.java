@@ -6,16 +6,21 @@ import frc.robot.Constants.ArmConstants;
 
 public class ArmIOReal implements ArmIO {
 
-    ArmIOInputs armIOInputs = new ArmIOInputs();
-    CANSparkMax leftMotor = new CANSparkMax(ArmConstants.leftMotorID, MotorType.kBrushless);
+    private final CANSparkMax leftMotor =
+            new CANSparkMax(ArmConstants.leftMotorID, MotorType.kBrushless);
 
-    CANSparkMax rightMotor = new CANSparkMax(ArmConstants.leftMotorID, MotorType.kBrushless);
+    private final CANSparkMax rightMotor =
+            new CANSparkMax(ArmConstants.leftMotorID, MotorType.kBrushless);
 
+    @Override
     public void updateInputs(ArmIOInputs inputs) {
-        armIOInputs.leftMotorCurrent = getRightMotorAmps();
-        armIOInputs.rightMotorCurrent = getLeftMotorAmps();
-        armIOInputs.encoderLeftPosition = getLeftMotorPosition();
-        armIOInputs.encoderRightPosition = getRightMotorPosition();
+        inputs.leftMotorCurrent = getRightMotorAmps();
+        inputs.rightMotorCurrent = getLeftMotorAmps();
+
+        inputs.encoderLeftPosition = getLeftMotorPosition();
+        inputs.encoderRightPosition = getRightMotorPosition();
+
+        inputs.velocity = leftMotor.getEncoder().getVelocity();
     }
 
     private double getLeftMotorAmps() {
@@ -34,8 +39,8 @@ public class ArmIOReal implements ArmIO {
         return rightMotor.getEncoder().getPosition() / ArmConstants.ticksPerFoot;
     }
 
-    public void setMotorPower(double leftPercent, double rightPercent) {
-        rightMotor.set(-rightPercent);
-        leftMotor.set(-leftPercent);
+    public void setMotorPower(double left, double right) {
+        rightMotor.setVoltage(left); // check inverted or not
+        leftMotor.setVoltage(right);
     }
 }

@@ -1,43 +1,30 @@
 package frc.robot.subsystems.arm;
 
-import com.revrobotics.CANSparkMax;
-import frc.robot.Constants.ArmConstants;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import frc.robot.Constants;
 
 public class ArmIOSim implements ArmIO {
 
-    private CANSparkMax leftMotor;
-    private CANSparkMax rightMotor;
+    private final ElevatorSim elevatorSim =
+            new ElevatorSim(DCMotor.getNeoVortex(2), 20, 1.814, 0.02231009, 0.0, 0.45, true, 0.0);
 
-    private int leftArmEncoder;
-    private int encoderIndex;
-    ArmIOInputs armIOInputs = new ArmIOInputs();
+    double appliedVolts = 0.0;
 
-    public void updateInputs(ArmIOInputsAutoLogged inputs) {
-
-        armIOInputs.leftMotorCurrent = getLeftMotorAmps();
-        armIOInputs.rightMotorCurrent = getRightMotorAmps();
-        armIOInputs.encoderLeftPosition = getLeftMotorPosition();
-        armIOInputs.encoderRightPosition = getRightMotorPosition();
+    @Override
+    public void setMotorPower(double left, double right) {
+        appliedVolts = left;
     }
 
-    public void setMotorPower(double leftPercent, double rightPercent) {
-        // leftMotor.set(-leftPercent);
-        // rightMotor.set(-rightPercent);
-    }
+    @Override
+    public void updateInputs(ArmIOInputs inputs) {
+        elevatorSim.update(Constants.loopTime);
+        elevatorSim.setInputVoltage(appliedVolts);
 
-    private double getLeftMotorAmps() {
-        return leftMotor.getOutputCurrent();
-    }
+        inputs.leftMotorCurrent = appliedVolts;
+        inputs.rightMotorCurrent = appliedVolts;
 
-    private double getRightMotorAmps() {
-        return rightMotor.getOutputCurrent();
-    }
-
-    private double getLeftMotorPosition() {
-        return leftMotor.getEncoder().getPosition() / ArmConstants.ticksPerFoot;
-    }
-
-    private double getRightMotorPosition() {
-        return rightMotor.getEncoder().getPosition() / ArmConstants.ticksPerFoot;
+        inputs.encoderLeftPosition = elevatorSim.getPositionMeters();
+        inputs.encoderRightPosition = elevatorSim.getPositionMeters();
     }
 }

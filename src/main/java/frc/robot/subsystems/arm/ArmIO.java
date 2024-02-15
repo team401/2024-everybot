@@ -9,8 +9,11 @@ public interface ArmIO {
 
         public double leftMotorCurrent = 0.0;
         public double rightMotorCurrent = 0.0;
+
         public double encoderLeftPosition = 0.0;
         public double encoderRightPosition = 0.0;
+
+        public double velocity = 0.0;
     }
 
     public default void updateInputs(ArmIOInputs inputs) {}
