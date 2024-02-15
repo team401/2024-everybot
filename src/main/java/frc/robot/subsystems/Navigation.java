@@ -36,6 +36,7 @@ public class Navigation extends SubsystemBase {
     private AprilTagFieldLayout layout;
     private Pose2d desiredTargetPose;
     @AutoLogOutput private Pose2d currentPose;
+    private Pose2d prevPose;
 
     public Navigation(
             DoubleSupplier leftDistance,
@@ -78,6 +79,7 @@ public class Navigation extends SubsystemBase {
 
         // set pose
         currentPose = new Pose2d();
+        prevPose = new Pose2d();
 
         this.setDesiredTarget(6);
     }
@@ -94,7 +96,7 @@ public class Navigation extends SubsystemBase {
         // Increase std devs based on (average) distance
         if (numTags == 1 && avgDist > 4)
             estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-        else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
+        else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist));
 
         return estStdDevs;
     }
@@ -105,7 +107,8 @@ public class Navigation extends SubsystemBase {
     }
 
     public void updateNavVision() {
-        if (inputs.poseAvailable && inputs.newResult) {
+        /* only update if new vision estimate and estimated pose different than previous pose (robot moved) */
+        if ((inputs.poseAvailable && inputs.newResult) && !prevPose.equals(currentPose)) {
             poseEstimator.addVisionMeasurement(
                     inputs.estimatedVisionPose, inputs.timestampSeconds, getEstimationStdDevs());
         }
@@ -137,6 +140,7 @@ public class Navigation extends SubsystemBase {
     }
 
     public void updateCurrentPose() {
+        prevPose = currentPose;
         currentPose = poseEstimator.getEstimatedPosition();
     }
 
