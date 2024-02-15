@@ -79,7 +79,7 @@ public final class Constants {
 
         // PhotonLib Deviations
         public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(20, 20, 40);
-        public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+        public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(5, 5, 10);
 
         // simulation
         public static final int RESOLUTION_WIDTH = 480;
@@ -125,11 +125,11 @@ public final class Constants {
 
         public static final double WHEEL_RADIUS = 1.0; // placeholder
 
-        public static final double kP = 0.3;
-        public static final double kI = 0.3;
-        public static final double kD = 0.1;
+        public static final double kP = 0.5;
+        public static final double kI = 0.05;
+        public static final double kD = 0.05;
 
-        public static final double alignToleranceRadians = 1;
+        public static final double alignToleranceRadians = 0.01;
     }
 
     public static class SimConstants {

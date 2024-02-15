@@ -45,13 +45,9 @@ public class Drive extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Drive", inputs);
-        if (mode == DriveTrainState.AIM) {
-            Logger.recordOutput("Current Heading", currentHeading.getAsDouble());
-            Logger.recordOutput("Target heading", targetHeading.getAsDouble());
-        } else {
-            Logger.recordOutput("Current Heading", currentHeading.getAsDouble());
-            Logger.recordOutput("Target heading", targetHeading.getAsDouble());
-        }
+        Logger.recordOutput("Current Heading", currentHeading.getAsDouble());
+        Logger.recordOutput("Target heading", targetHeading.getAsDouble());
+        Logger.recordOutput("Aligned", aligned);
         controlDriveTrain();
     }
 
@@ -93,10 +89,11 @@ public class Drive extends SubsystemBase {
                 rotationController.calculate(
                         currentHeading.getAsDouble(), targetHeading.getAsDouble());
         this.driveArcade(forward, rotation);
-        if (Units.radiansToDegrees(targetHeading.getAsDouble())
+        if (Math.abs(currentHeading.getAsDouble() - targetHeading.getAsDouble())
                 < DriveConstants.alignToleranceRadians) {
             aligned = true;
         }
+        Logger.recordOutput("Align error", rotationController.getPositionError());
     }
 
     public Rotation2d getGyroRotation2d() {
