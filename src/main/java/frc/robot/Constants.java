@@ -37,6 +37,12 @@ public final class Constants {
         PATHFOLLOW,
     }
 
+    public static enum AlignState {
+        SPEAKER,
+        AMP,
+        ENDGAME,
+    }
+
     public static final int pigeonID = 0; // placeholder
 
     public static enum Mode {
@@ -125,9 +131,9 @@ public final class Constants {
 
         public static final double WHEEL_RADIUS = 1.0; // placeholder
 
-        public static final double kP = 0.5;
-        public static final double kI = 0.05;
-        public static final double kD = 0.05;
+        public static final double kP = 1.5;
+        public static final double kI = 0.01;
+        public static final double kD = 0.15;
 
         public static final double alignToleranceRadians = 0.01;
     }
