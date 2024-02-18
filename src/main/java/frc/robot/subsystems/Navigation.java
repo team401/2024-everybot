@@ -1,14 +1,18 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOInputsAutoLogged;
 import frc.robot.subsystems.vision.VisionIOReal;
@@ -32,6 +36,7 @@ public class Navigation extends SubsystemBase {
     private AprilTagFieldLayout layout;
     private Pose2d desiredTargetPose;
     @AutoLogOutput private Pose2d currentPose;
+    private Pose2d prevPose;
 
     public Navigation(
             DoubleSupplier leftDistance,
@@ -74,6 +79,26 @@ public class Navigation extends SubsystemBase {
 
         // set pose
         currentPose = new Pose2d();
+        prevPose = new Pose2d();
+
+        this.setDesiredTarget(6);
+    }
+
+    // modelled off of PhotonLib Swerve Pose Estimation example
+    // (https://github.com/PhotonVision/photonvision/blob/2a6fa1b6ac81f239c59d724da5339f608897c510/photonlib-java-examples/swervedriveposeestsim/src/main/java/frc/robot/Vision.java)
+    public Matrix<N3, N1> getEstimationStdDevs() {
+        var estStdDevs = VisionConstants.singleTagStdDevs;
+        int numTags = inputs.nTags;
+        double avgDist = inputs.averageTagDistanceM;
+        if (numTags == 0) return estStdDevs;
+        // Decrease std devs if multiple targets are visible
+        if (numTags > 1) estStdDevs = VisionConstants.multiTagStdDevs;
+        // Increase std devs based on (average) distance
+        if (numTags == 1 && avgDist > 4)
+            estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+        else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist));
+
+        return estStdDevs;
     }
 
     public void updateOdometry(
@@ -82,29 +107,20 @@ public class Navigation extends SubsystemBase {
     }
 
     public void updateNavVision() {
-        if (inputs.poseAvailable && inputs.newResult) {
-            poseEstimator.addVisionMeasurement(inputs.estimatedVisionPose, inputs.timestampSeconds);
+        /* only update if new vision estimate and estimated pose different than previous pose (robot moved) */
+        if ((inputs.poseAvailable && inputs.newResult) && !prevPose.equals(currentPose)) {
+            poseEstimator.addVisionMeasurement(
+                    inputs.estimatedVisionPose, inputs.timestampSeconds, getEstimationStdDevs());
         }
     }
 
     // returns heading error in radians
     public double getTargetHeading() {
-        double currentHeading = getCurrentHeading();
-        double robotVectorX = Math.cos(currentHeading);
-        double robotVectorY = Math.sin(currentHeading);
-
         double targetVectorX =
                 desiredTargetPose.getX() - poseEstimator.getEstimatedPosition().getX();
         double targetVectorY =
                 desiredTargetPose.getY() - poseEstimator.getEstimatedPosition().getY();
-
-        double dotProduct = (robotVectorX * targetVectorX) + (robotVectorY * targetVectorY);
-
-        double targetVecMagnitude =
-                Math.sqrt(Math.pow(targetVectorX, 2) + Math.pow(targetVectorY, 2));
-
-        return Math.acos(
-                dotProduct / targetVecMagnitude); // robot vector magnitude is one (unit vector)
+        return Math.atan2(targetVectorY, targetVectorX);
     }
 
     public void setDesiredTarget(int targetId) {
@@ -124,6 +140,7 @@ public class Navigation extends SubsystemBase {
     }
 
     public void updateCurrentPose() {
+        prevPose = currentPose;
         currentPose = poseEstimator.getEstimatedPosition();
     }
 

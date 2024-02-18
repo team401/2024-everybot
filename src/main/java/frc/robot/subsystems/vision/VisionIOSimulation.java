@@ -4,8 +4,10 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants;
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -13,6 +15,7 @@ import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class VisionIOSimulation implements VisionIO {
     public PhotonCamera camera;
@@ -65,6 +68,8 @@ public class VisionIOSimulation implements VisionIO {
                                 .getObject("VisionEstimation")
                                 .setPose(est.estimatedPose.toPose2d());
                         inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
+                        inputs.averageTagDistanceM = calculateAverageTagDistance(est);
+                        inputs.nTags = est.targetsUsed.size();
                     }
                 },
                 () -> {
@@ -88,5 +93,18 @@ public class VisionIOSimulation implements VisionIO {
 
     public void set3dFieldSimActive(boolean enabled) {
         simulatedCamera.enableDrawWireframe(enabled);
+    }
+
+    private static double calculateAverageTagDistance(EstimatedRobotPose pose) {
+        double distance = 0.0;
+        for (PhotonTrackedTarget target : pose.targetsUsed) {
+            distance +=
+                    target.getBestCameraToTarget()
+                            .getTranslation()
+                            .getDistance(new Translation3d());
+        }
+        distance /= pose.targetsUsed.size();
+
+        return distance;
     }
 }

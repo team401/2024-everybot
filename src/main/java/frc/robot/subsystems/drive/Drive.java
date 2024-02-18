@@ -1,10 +1,12 @@
 package frc.robot.subsystems.drive;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveTrainState;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -19,7 +21,8 @@ public class Drive extends SubsystemBase {
     @AutoLogOutput private boolean aligned = false;
     private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
     private double forward;
-    @AutoLogOutput private double rotation;
+    private double rotation;
+    private PIDController rotationController;
 
     public Drive(DriveIO io) {
         this.io = io;
@@ -32,12 +35,18 @@ public class Drive extends SubsystemBase {
                     return 0.0;
                 };
         this.mode = DriveTrainState.MANUAL;
+        rotationController =
+                new PIDController(DriveConstants.kP, DriveConstants.kI, DriveConstants.kD);
+        rotationController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     @Override
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Drive", inputs);
+        Logger.recordOutput("Current Heading", currentHeading.getAsDouble());
+        Logger.recordOutput("Target heading", targetHeading.getAsDouble());
+        Logger.recordOutput("Aligned", aligned);
         controlDriveTrain();
     }
 
@@ -75,17 +84,15 @@ public class Drive extends SubsystemBase {
 
     public void aim() {
         this.forward = 0;
-        this.rotation = targetHeading.getAsDouble();
+        this.rotation =
+                rotationController.calculate(
+                        currentHeading.getAsDouble(), targetHeading.getAsDouble());
         this.driveArcade(forward, rotation);
-        if (Math.abs(currentHeading.getAsDouble() - targetHeading.getAsDouble()) < 1e-5) {
+        if (Math.abs(currentHeading.getAsDouble() - targetHeading.getAsDouble())
+                < DriveConstants.alignToleranceRadians) {
             aligned = true;
         }
-    }
-
-    public void endgame() {
-        this.forward = 0;
-        this.rotation = 0;
-        this.driveArcade(forward, rotation);
+        Logger.recordOutput("Align error", rotationController.getPositionError());
     }
 
     public Rotation2d getGyroRotation2d() {

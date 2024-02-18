@@ -6,8 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.RobotBase;
 import java.io.IOException;
 import java.util.Collections;
@@ -35,6 +39,12 @@ public final class Constants {
         PATHFOLLOW,
 
         /*Arm up down*/
+        ENDGAME,
+    }
+
+    public static enum AlignState {
+        SPEAKER,
+        AMP,
         ENDGAME,
     }
 
@@ -77,6 +87,10 @@ public final class Constants {
                 0; // difference betweeen horizontal and camera angle
         public static final int CAMERA_FPS = 20;
         public static final double IDEAL_GOAL_RANGE_METERS = 1;
+
+        // PhotonLib Deviations
+        public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(40, 40, 80);
+        public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(5, 5, 10);
 
         // simulation
         public static final int RESOLUTION_WIDTH = 480;
@@ -122,10 +136,11 @@ public final class Constants {
 
         public static final double WHEEL_RADIUS = 1.0; // placeholder
 
-        public static final double kS = 0.1; // placeholder
-        public static final double kP = 0.1; // placeholder
-        public static final double kD = 0.1; // placeholder
-        public static final double kV = 0.1; // placeholder
+        public static final double kP = 1.5;
+        public static final double kI = 0.01;
+        public static final double kD = 0.15;
+
+        public static final double alignToleranceRadians = 0.01;
     }
 
     public static class SimConstants {

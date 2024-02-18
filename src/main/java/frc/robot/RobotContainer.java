@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.AlignState;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtTarget;
 import frc.robot.commands.ArcadeDrive;
@@ -106,6 +107,11 @@ public class RobotContainer {
                 () -> {
                     return nav.getTargetHeading();
                 });
+
+        drive.setTargetHeadingSupplier(
+                () -> {
+                    return nav.getTargetHeading();
+                });
         configureBindings();
     }
 
@@ -124,21 +130,8 @@ public class RobotContainer {
                         drive,
                         () -> -driverController.getLeftY(),
                         () -> -driverController.getLeftX()));
-        AimAtTarget aimAtSpeaker =
-                new AimAtTarget(drive, nav, getAlliance() == Alliance.Blue ? 7 : 7);
+        AimAtTarget aimAtSpeaker = new AimAtTarget(drive, nav, AlignState.SPEAKER);
         driverController.a().whileTrue(aimAtSpeaker);
-
-        driverController.b().whileTrue(new ArmMove(drive, arm, true));
-
-        driverController.x().whileTrue(new ArmMove(drive, arm, false));
-    }
-
-    public Alliance getAlliance() {
-        boolean ally = DriverStation.getAlliance().isPresent();
-        if (ally) {
-            return DriverStation.getAlliance().get();
-        }
-        return Alliance.Red;
     }
 
     /**

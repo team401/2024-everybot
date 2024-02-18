@@ -12,6 +12,8 @@ public interface VisionIO {
         public double rotationToClosestTarget = 0.0;
         public boolean newResult = false;
         public boolean poseAvailable = false;
+        public double averageTagDistanceM = 0.0;
+        public int nTags = 0;
     }
 
     public default void updateInputs(VisionIOInputs inputs) {}
