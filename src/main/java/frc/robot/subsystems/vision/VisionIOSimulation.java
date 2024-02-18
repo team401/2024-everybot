@@ -1,13 +1,13 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants;
-import java.io.IOException;
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -15,6 +15,7 @@ import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class VisionIOSimulation implements VisionIO {
     public PhotonCamera camera;
@@ -27,13 +28,7 @@ public class VisionIOSimulation implements VisionIO {
     public VisionIOSimulation() {
         // create simulated field
         sim = new VisionSystemSim(Constants.VisionConstants.CAMERA_NAME);
-        try {
-            layout =
-                    AprilTagFieldLayout.loadFromResource(
-                            AprilTagFields.k2024Crescendo.m_resourceFile);
-        } catch (IOException e) {
-            System.out.println(e); // quit program ?
-        }
+        layout = Constants.FieldConstants.FIELD_LAYOUT;
         sim.addAprilTags(layout);
 
         // set up camera
@@ -55,6 +50,7 @@ public class VisionIOSimulation implements VisionIO {
         cameraPoseEstimator =
                 new PhotonPoseEstimator(
                         layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, robotToCamera);
+        cameraPoseEstimator.setReferencePose(new Pose2d());
     }
 
     public void updateInputs(VisionIOInputs inputs) {
@@ -63,25 +59,26 @@ public class VisionIOSimulation implements VisionIO {
 
         var estimate = cameraPoseEstimator.update();
         double latestTimestamp = result.getTimestampSeconds();
-        boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
+        inputs.newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
         estimate.ifPresentOrElse(
                 est -> {
-                    if (newResult) {
+                    inputs.poseAvailable = true;
+                    if (inputs.newResult) {
                         getField()
                                 .getObject("VisionEstimation")
                                 .setPose(est.estimatedPose.toPose2d());
                         inputs.estimatedVisionPose = est.estimatedPose.toPose2d();
-                    } else {
-                        inputs.estimatedVisionPose = null;
+                        inputs.averageTagDistanceM = calculateAverageTagDistance(est);
+                        inputs.nTags = est.targetsUsed.size();
                     }
                 },
                 () -> {
-                    if (newResult) {
+                    if (inputs.newResult) {
                         getField().getObject("VisionEstimation").setPoses();
                     }
-                    inputs.estimatedVisionPose = null;
+                    inputs.poseAvailable = false;
                 });
-        if (newResult) {
+        if (inputs.newResult) {
             lastEstTimestamp = latestTimestamp;
         }
     }
@@ -96,5 +93,18 @@ public class VisionIOSimulation implements VisionIO {
 
     public void set3dFieldSimActive(boolean enabled) {
         simulatedCamera.enableDrawWireframe(enabled);
+    }
+
+    private static double calculateAverageTagDistance(EstimatedRobotPose pose) {
+        double distance = 0.0;
+        for (PhotonTrackedTarget target : pose.targetsUsed) {
+            distance +=
+                    target.getBestCameraToTarget()
+                            .getTranslation()
+                            .getDistance(new Translation3d());
+        }
+        distance /= pose.targetsUsed.size();
+
+        return distance;
     }
 }

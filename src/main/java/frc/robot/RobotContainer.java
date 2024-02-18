@@ -10,7 +10,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.AlignState;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AimAtTarget;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.subsystems.Navigation;
 import frc.robot.subsystems.drive.Drive;
@@ -85,24 +87,16 @@ public class RobotContainer {
                         gyroSupplier,
                         simulatedPoseSupplier);
 
-        // Set up auto routines
+        // add suppliers for drive
+        drive.setCurrentHeadingSupplier(
+                () -> {
+                    return nav.getCurrentHeading();
+                });
 
-        // Set up feedforward characterization
-        // //autoChooser.addOption(
-        //     "Drive FF Characterization",
-        //     new FeedForward(
-        //         drive, (volts) -> drive.driveVolts(volts, volts),
-        // drive::getCharacterizationVelocity));
-
-        // Configure the button bindings
-        // configureButtonBindings();
-        // Configure the trigger bindings
-
-        drive.setDefaultCommand(
-                new ArcadeDrive(
-                        drive,
-                        () -> -leftJoystick.getRawAxis(1),
-                        () -> rightJoystick.getRawAxis(0)));
+        drive.setTargetHeadingSupplier(
+                () -> {
+                    return nav.getTargetHeading();
+                });
 
         configureBindings();
     }
@@ -120,8 +114,10 @@ public class RobotContainer {
         drive.setDefaultCommand(
                 new ArcadeDrive(
                         drive,
-                        () -> driverController.getLeftY(),
-                        () -> driverController.getRightY()));
+                        () -> -driverController.getLeftY(),
+                        () -> -driverController.getLeftX()));
+        AimAtTarget aimAtSpeaker = new AimAtTarget(drive, nav, AlignState.SPEAKER);
+        driverController.a().whileTrue(aimAtSpeaker);
     }
 
     /**

@@ -4,9 +4,17 @@
 
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.io.IOException;
+import java.util.Collections;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -18,8 +26,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public final class Constants {
 
-    public static enum driveTrainState {
-
+    public static enum DriveTrainState {
         /*Manual control */
         MANUAL,
 
@@ -28,6 +35,12 @@ public final class Constants {
 
         /*Auto pathfollowing */
         PATHFOLLOW,
+    }
+
+    public static enum AlignState {
+        SPEAKER,
+        AMP,
+        ENDGAME,
     }
 
     public static final int pigeonID = 0; // placeholder
@@ -43,12 +56,65 @@ public final class Constants {
         REPLAY
     }
 
+    public static enum iMode {
+        /* Joystick Imputs */
+        Stick,
+
+        /* Keyboard Inputs */
+        Key,
+    }
+
     public static class OperatorConstants {
         public static final int kDriverControllerPort = 0;
     }
 
     public static class BotConstants {
         public static Mode botMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
+        public static iMode inputMode =
+                iMode.Stick; // my puny brain can't think of how to set inputMode automatically
+    }
+
+    public static class VisionConstants { // ALL PLACEHOLDERS
+        public static final String CAMERA_NAME = "";
+        public static final double CAMERA_HEIGHT_METERS = 0.7;
+        public static final double TARGET_HEIGHT_METERS = 0.8; // changes per goal
+        public static final double CAMERA_PITCH_RADIANS =
+                0; // difference betweeen horizontal and camera angle
+        public static final int CAMERA_FPS = 20;
+        public static final double IDEAL_GOAL_RANGE_METERS = 1;
+
+        // PhotonLib Deviations
+        public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(40, 40, 80);
+        public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(5, 5, 10);
+
+        // simulation
+        public static final int RESOLUTION_WIDTH = 480;
+        public static final int RESOLUTION_HEIGHT = 480;
+        public static final double CAM_DIAG_FOV = 140.0;
+        public static final double MAX_LED_RANGE = 0.0;
+        public static final double MIN_TARGET_AREA = 0.0;
+        public static final Translation3d BOT_TO_CAM_TRL =
+                new Translation3d(
+                        0.1, 0, 0.5); // 0.1 from robot pose forward, 0.5 meters up from robot pose
+        public static final Rotation3d BOT_TO_CAMERA_ROT =
+                new Rotation3d(0, Math.toRadians(-15), 0);
+        public static final boolean SIM_FIELD_ENABLED = false;
+    }
+
+    public static class FieldConstants {
+        public static final AprilTagFieldLayout FIELD_LAYOUT = initLayout();
+    }
+
+    private static AprilTagFieldLayout initLayout() {
+        AprilTagFieldLayout layout;
+        try {
+            layout =
+                    AprilTagFieldLayout.loadFromResource(
+                            AprilTagFields.k2024Crescendo.m_resourceFile);
+        } catch (IOException ioe) {
+            layout = new AprilTagFieldLayout(Collections.emptyList(), 0.0, 0.0);
+        }
+        return layout;
     }
 
     public static class DriveConstants {
@@ -63,35 +129,13 @@ public final class Constants {
 
         public static final double autoDrivePercent = 0.0; // placeholder
 
-        public static final double WHEEL_RADIUS = 0.0; // placeholder
+        public static final double WHEEL_RADIUS = 1.0; // placeholder
 
-        public static final double kS = 0.0; // placeholder
-        public static final double kP = 0.0; // placeholder
-        public static final double kD = 0.0; // placeholder
-        public static final double kV = 0.0; // placeholder
-    }
+        public static final double kP = 1.5;
+        public static final double kI = 0.01;
+        public static final double kD = 0.15;
 
-    public static class VisionConstants { // ALL PLACEHOLDERS
-        public static final String CAMERA_NAME = "";
-        public static final double CAMERA_HEIGHT_METERS = 0.7;
-        public static final double TARGET_HEIGHT_METERS = 0.8; // changes per goal
-        public static final double CAMERA_PITCH_RADIANS =
-                0; // difference betweeen horizontal and camera angle
-        public static final int CAMERA_FPS = 20;
-        public static final double IDEAL_GOAL_RANGE_METERS = 1;
-
-        // simulation
-        public static final int RESOLUTION_WIDTH = 0;
-        public static final int RESOLUTION_HEIGHT = 0;
-        public static final double CAM_DIAG_FOV = 0.0;
-        public static final double MAX_LED_RANGE = 0.0;
-        public static final double MIN_TARGET_AREA = 0.0;
-        public static final Translation3d BOT_TO_CAM_TRL =
-                new Translation3d(
-                        0.1, 0, 0.5); // 0.1 from robot pose forward, 0.5 meters up from robot pose
-        public static final Rotation3d BOT_TO_CAMERA_ROT =
-                new Rotation3d(0, Math.toRadians(-15), 0);
-        public static final boolean SIM_FIELD_ENABLED = false;
+        public static final double alignToleranceRadians = 0.01;
     }
 
     public static class SimConstants {
