@@ -26,11 +26,8 @@ import java.util.Collections;
  */
 public final class Constants {
 
-<<<<<<< HEAD
     public static final double loopTime = 0.02;
 
-=======
->>>>>>> d6bb706 (Basic aim at target implementation (#27))
     public static enum DriveTrainState {
         /*Manual control */
         MANUAL,
@@ -42,12 +39,6 @@ public final class Constants {
         PATHFOLLOW,
 
         /*Arm up down*/
-        ENDGAME,
-    }
-
-    public static enum AlignState {
-        SPEAKER,
-        AMP,
         ENDGAME,
     }
 
