@@ -6,8 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -16,7 +14,6 @@ import frc.robot.Constants.AlignState;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtTarget;
 import frc.robot.commands.ArcadeDrive;
-import frc.robot.commands.ArmMove;
 import frc.robot.subsystems.Navigation;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIOReal;
