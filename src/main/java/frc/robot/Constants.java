@@ -27,7 +27,7 @@ import java.util.Collections;
 public final class Constants {
 
     public static final double loopTime = 0.02;
-  
+
     public static enum DriveTrainState {
         /*Manual control */
         MANUAL,
@@ -39,12 +39,6 @@ public final class Constants {
         PATHFOLLOW,
 
         /*Arm up down*/
-        ENDGAME,
-    }
-
-    public static enum AlignState {
-        SPEAKER,
-        AMP,
         ENDGAME,
     }
 
