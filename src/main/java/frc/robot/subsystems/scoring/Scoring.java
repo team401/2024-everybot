@@ -1,6 +1,8 @@
 package frc.robot.subsystems.scoring;
 
-public class Scoring {
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class Scoring extends SubsystemBase{
 
     private final ScoringIO scoringIO;
     private final ScoringIOInputsAutoLogged scoringInputs = new ScoringIOInputsAutoLogged();
@@ -11,12 +13,13 @@ public class Scoring {
     }
 
     @Override
-    public void periodic() {
+    public void periodic(){
         
     }
 
     public void shoot(){
         
+        scoringIO.setShooterVolts(0);// placeholder
     }
 
     

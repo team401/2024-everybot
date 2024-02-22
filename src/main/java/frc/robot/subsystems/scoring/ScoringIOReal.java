@@ -20,9 +20,9 @@ public class ScoringIOReal implements ScoringIO{
         rightShooter.setNeutralMode(NeutralModeValue.Coast); //placeholders
     }
 
-    public void setVoltage(){
-        leftShooter.setVoltage(0); //placeholders
-        rightShooter.setVoltage(0); //placeholders
+    public void setShooterVolts(double volts){
+        leftShooter.setVoltage(volts); //placeholders
+        rightShooter.setVoltage(volts); //placeholders
     }
 
     @Override
