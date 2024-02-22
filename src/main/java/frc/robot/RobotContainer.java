@@ -14,19 +14,24 @@ import frc.robot.Constants.AlignState;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtTarget;
 import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.Score;
 import frc.robot.subsystems.Navigation;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIO;
 import frc.robot.subsystems.drive.DriveIOSim;
 import frc.robot.subsystems.drive.DriveIOTalonFX;
+import frc.robot.subsystems.scoring.Scoring;
+import frc.robot.subsystems.scoring.ScoringIO;
+import frc.robot.subsystems.scoring.ScoringIOReal;
+import frc.robot.subsystems.scoring.ScoringIOSim;
+
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class RobotContainer {
     private Drive drive;
-
-    // init navigation
     private Navigation nav;
+    private Scoring score;
 
     private DoubleSupplier leftDistanceSupplier;
     private DoubleSupplier rightDistanceSupplier;
@@ -51,16 +56,20 @@ public class RobotContainer {
                 // drive = new Drive(new DriveIOSparkMax()); // Spark Max/Spark Flex + NEO/Vortex
                 // drive = new Drive(new DriveIOTalonSRX()); // Talon SRX + brushed, no encoders
                 // drive = new Drive(new DriveIOTalonFX()); // Talon FX (Falon 500/Kraken X60)
+                score = new Scoring(new ScoringIOReal());
+                
                 break;
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drive = new Drive(new DriveIOSim());
+                score = new Scoring(new ScoringIOSim());
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
                 drive = new Drive(new DriveIO() {});
+                score = new Scoring(new ScoringIO() {});
                 break;
         }
         // make suppliers for navigation
@@ -118,6 +127,8 @@ public class RobotContainer {
                         () -> -driverController.getLeftX()));
         AimAtTarget aimAtSpeaker = new AimAtTarget(drive, nav, AlignState.SPEAKER);
         driverController.a().whileTrue(aimAtSpeaker);
+        Score shoot = new Score(score);
+        driverController.y().whileTrue(shoot);
     }
 
     /**
