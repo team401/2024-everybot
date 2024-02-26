@@ -26,6 +26,8 @@ import java.util.Collections;
  */
 public final class Constants {
 
+    public static final double loopTime = 0.02;
+
     public static enum DriveTrainState {
         /*Manual control */
         MANUAL,
@@ -35,6 +37,9 @@ public final class Constants {
 
         /*Auto pathfollowing */
         PATHFOLLOW,
+
+        /*Arm up down*/
+        ENDGAME,
     }
 
     public static enum AlignState {
@@ -141,5 +146,13 @@ public final class Constants {
     public static class SimConstants {
         public static final double KP = 0.2; // placeholder
         public static final double KD = 0.0; // placeholder
+    }
+
+    public static final class ArmConstants {
+        public static final int leftMotorID = 1;
+        public static final int rightMotorID = 2;
+        public static final int armUp = 3;
+        public static final int armDown = 0;
+        public static final int ticksPerFoot = 10;
     }
 }
