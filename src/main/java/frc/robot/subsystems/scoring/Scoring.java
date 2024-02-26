@@ -18,7 +18,6 @@ public class Scoring extends SubsystemBase{
     }
 
     public void shoot(){
-        
         scoringIO.setShooterVolts(0);// placeholder
     }
 

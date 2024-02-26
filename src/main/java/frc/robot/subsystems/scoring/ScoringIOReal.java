@@ -1,16 +1,16 @@
 package frc.robot.subsystems.scoring;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import frc.robot.Constants.ScoringConstants;
+
 public class ScoringIOReal implements ScoringIO{
     
-    private final TalonFX kicker = new TalonFX(0); //placeholders
+    private final TalonFX kicker = new TalonFX(ScoringConstants.kickerId); //placeholders
 
-    private final TalonFX leftShooter = new TalonFX(0); //placeholders
-    private final TalonFX rightShooter = new TalonFX(0); //placeholders
+    private final TalonFX leftShooter = new TalonFX(ScoringConstants.leftShooterId); //placeholders
+    private final TalonFX rightShooter = new TalonFX(ScoringConstants.rightShooterId); //placeholders
 
     private double goalLeftVelocityRPM = 0.0;
     private double goalRightVelocityRPM = 0.0;

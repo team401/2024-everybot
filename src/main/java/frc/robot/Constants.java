@@ -155,4 +155,10 @@ public final class Constants {
         public static final int armDown = 0;
         public static final int ticksPerFoot = 10;
     }
+
+    public static final class ScoringConstants {
+        public static final int kickerId = 0;
+        public static final int leftShooterId = 1;
+        public static final int rightShooterId = 2;
+    }
 }
