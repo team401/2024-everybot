@@ -15,6 +15,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtTarget;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.subsystems.Navigation;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIOReal;
+import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIO;
 import frc.robot.subsystems.drive.DriveIOSim;
@@ -27,6 +30,7 @@ public class RobotContainer {
 
     // init navigation
     private Navigation nav;
+    private Arm arm;
 
     private DoubleSupplier leftDistanceSupplier;
     private DoubleSupplier rightDistanceSupplier;
@@ -45,17 +49,20 @@ public class RobotContainer {
     public RobotContainer() {
         switch (Constants.BotConstants.botMode) {
             case REAL:
+
                 // Real robot, instantiate hardware IO implementations
                 drive = new Drive(new DriveIOTalonFX()); // Spark Max/Spark Flex + brushed, no
                 // encoders
                 // drive = new Drive(new DriveIOSparkMax()); // Spark Max/Spark Flex + NEO/Vortex
                 // drive = new Drive(new DriveIOTalonSRX()); // Talon SRX + brushed, no encoders
                 // drive = new Drive(new DriveIOTalonFX()); // Talon FX (Falon 500/Kraken X60)
+                arm = new Arm(new ArmIOReal());
                 break;
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drive = new Drive(new DriveIOSim());
+                arm = new Arm(new ArmIOSim());
                 break;
 
             default:
@@ -99,6 +106,7 @@ public class RobotContainer {
                 });
 
         configureBindings();
+
     }
 
     /**
