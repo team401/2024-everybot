@@ -160,5 +160,16 @@ public final class Constants {
         public static final int kickerId = 0;
         public static final int leftShooterId = 1;
         public static final int rightShooterId = 2;
+
+        public static final double kP = 1.0;
+        public static final double kI = 1.0;
+        public static final double kD = 1.0;
+        public static final double kS = 1.0;
+        public static final double kV = 1.0;
+        public static final double kA = 1.0;
+
+        public static final double leftCurrentLimit = 80.0;
+        public static final double rightCurrentLimit = 80.0;
+        public static final double kickerCurrentlimit = 80.0;
     }
 }

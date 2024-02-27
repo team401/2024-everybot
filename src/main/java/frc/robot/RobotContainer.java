@@ -27,7 +27,6 @@ import frc.robot.subsystems.scoring.Scoring;
 import frc.robot.subsystems.scoring.ScoringIO;
 import frc.robot.subsystems.scoring.ScoringIOReal;
 import frc.robot.subsystems.scoring.ScoringIOSim;
-
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -62,7 +61,7 @@ public class RobotContainer {
                 // drive = new Drive(new DriveIOTalonSRX()); // Talon SRX + brushed, no encoders
                 // drive = new Drive(new DriveIOTalonFX()); // Talon FX (Falon 500/Kraken X60)
                 score = new Scoring(new ScoringIOReal());
-                
+
                 arm = new Arm(new ArmIOReal());
                 break;
 

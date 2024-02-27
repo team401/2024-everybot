@@ -1,5 +1,3 @@
 package frc.robot.subsystems.scoring;
 
-public class ScoringIOSim implements ScoringIO{
-    
-}
+public class ScoringIOSim implements ScoringIO {}
