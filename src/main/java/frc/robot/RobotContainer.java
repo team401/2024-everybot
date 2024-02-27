@@ -105,11 +105,8 @@ public class RobotContainer {
                     return nav.getTargetHeading();
                 });
 
-        drive.setTargetHeadingSupplier(
-                () -> {
-                    return nav.getTargetHeading();
-                });
         configureBindings();
+
     }
 
     /**

@@ -1,6 +1,9 @@
 package frc.robot.subsystems.arm;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.math.controller.PIDController;
+
 import com.revrobotics.CANSparkMax;
 import frc.robot.Constants.ArmConstants;
 
@@ -32,7 +35,7 @@ public class ArmIOReal implements ArmIO {
     }
 
     private double getLeftMotorPosition() {
-        return leftMotor.getEncoder().getPosition() / ArmConstants.ticksPerFoot;
+        return leftMotor.getEncoder().getPosition() / ArmConstants.ticksPerFoot; // this calculation is wack
     }
 
     private double getRightMotorPosition() {

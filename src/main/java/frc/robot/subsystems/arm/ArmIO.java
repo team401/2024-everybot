@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import java.util.function.DoubleSupplier;
+
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {

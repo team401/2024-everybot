@@ -140,7 +140,7 @@ public class Drive extends SubsystemBase {
                 this.aim();
                 break;
             case ENDGAME:
-                this.stop();
+                this.driveArcade(forward, rotation);
             default:
                 this.stop();
                 break;
