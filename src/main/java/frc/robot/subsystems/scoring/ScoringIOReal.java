@@ -51,11 +51,11 @@ public class ScoringIOReal implements ScoringIO {
         rightShooter.getConfigurator().apply(slot0);
     }
 
-    public void setShooterVelocity (double velocity) {
+    public void setShooterVelocity(double velocity) {
         goalLeftVelocityRPM = velocity;
         goalRightVelocityRPM = velocity;
 
-        if(velocity == 0.0) {
+        if (velocity == 0.0) {
             setShooterVolts(0.0);
         } else {
             leftShooter.setControl(new VelocityDutyCycle(goalLeftVelocityRPM / 60.0));
@@ -76,12 +76,10 @@ public class ScoringIOReal implements ScoringIO {
     public void updateInputs(ScoringIOInputs inputs) {
         inputs.leftShooterVelocityRPM = leftShooter.getVelocity().getValueAsDouble() * 60.0;
         inputs.leftShooterAppliedVolts = leftShooter.getMotorVoltage().getValueAsDouble();
-        inputs.leftShooterVolts = leftShooter.getSupplyVoltage().getValueAsDouble();
         inputs.leftShooterCurrentAmps = leftShooter.getStatorCurrent().getValueAsDouble();
 
         inputs.rightShooterVelocityRPM = rightShooter.getVelocity().getValueAsDouble() * 60.0;
         inputs.rightShooterAppliedVolts = rightShooter.getMotorVoltage().getValueAsDouble();
-        inputs.rightShooterVolts = rightShooter.getSupplyVoltage().getValueAsDouble();
         inputs.rightShooterCurrentAmps = rightShooter.getStatorCurrent().getValueAsDouble();
 
         inputs.kickerAppliedVolts = kicker.getMotorVoltage().getValueAsDouble();
