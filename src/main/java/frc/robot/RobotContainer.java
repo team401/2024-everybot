@@ -14,7 +14,6 @@ import frc.robot.Constants.AlignState;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtTarget;
 import frc.robot.commands.ArcadeDrive;
-import frc.robot.commands.Score;
 import frc.robot.subsystems.Navigation;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIOReal;
@@ -23,17 +22,17 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIO;
 import frc.robot.subsystems.drive.DriveIOSim;
 import frc.robot.subsystems.drive.DriveIOTalonFX;
-import frc.robot.subsystems.scoring.Scoring;
 import frc.robot.subsystems.scoring.ShooterIO;
 import frc.robot.subsystems.scoring.ShooterIOReal;
 import frc.robot.subsystems.scoring.ShooterIOSim;
+import frc.robot.subsystems.scoring.ShooterSubsystem;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class RobotContainer {
     private Drive drive;
     private Navigation nav;
-    private Scoring score;
+    private ShooterSubsystem shooter;
     private Arm arm;
 
     private DoubleSupplier leftDistanceSupplier;
@@ -60,7 +59,7 @@ public class RobotContainer {
                 // drive = new Drive(new DriveIOSparkMax()); // Spark Max/Spark Flex + NEO/Vortex
                 // drive = new Drive(new DriveIOTalonSRX()); // Talon SRX + brushed, no encoders
                 // drive = new Drive(new DriveIOTalonFX()); // Talon FX (Falon 500/Kraken X60)
-                score = new Scoring(new ShooterIOReal());
+                shooter = new ShooterSubsystem(new ShooterIOReal());
 
                 arm = new Arm(new ArmIOReal());
                 break;
@@ -68,14 +67,14 @@ public class RobotContainer {
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drive = new Drive(new DriveIOSim());
-                score = new Scoring(new ShooterIOSim());
+                shooter = new ShooterSubsystem(new ShooterIOSim());
                 arm = new Arm(new ArmIOSim());
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
                 drive = new Drive(new DriveIO() {});
-                score = new Scoring(new ShooterIO() {});
+                shooter = new ShooterSubsystem(new ShooterIO() {});
                 break;
         }
         // make suppliers for navigation
@@ -137,8 +136,6 @@ public class RobotContainer {
                         () -> -driverController.getLeftX()));
         AimAtTarget aimAtSpeaker = new AimAtTarget(drive, nav, AlignState.SPEAKER);
         driverController.a().whileTrue(aimAtSpeaker);
-        Score shoot = new Score(score);
-        driverController.y().whileTrue(shoot);
     }
 
     /**

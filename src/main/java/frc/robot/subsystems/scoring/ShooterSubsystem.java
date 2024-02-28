@@ -6,7 +6,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private ShooterIO io;
     private ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
 
-    public ShooterSubsystem (ShooterIO io) {
+    public ShooterSubsystem(ShooterIO io) {
         this.io = io;
     }
 
