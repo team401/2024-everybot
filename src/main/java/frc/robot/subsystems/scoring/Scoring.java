@@ -4,10 +4,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Scoring extends SubsystemBase {
 
-    private final ScoringIO scoringIO;
-    private final ScoringIOInputsAutoLogged scoringInputs = new ScoringIOInputsAutoLogged();
+    private final ShooterIO scoringIO;
+    private final ShooterIOInputsAutoLogged scoringInputs = new ShooterIOInputsAutoLogged();
 
-    public Scoring(ScoringIO score) {
+    public Scoring(ShooterIO score) {
         this.scoringIO = score;
     }
 

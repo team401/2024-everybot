@@ -2,10 +2,10 @@ package frc.robot.subsystems.scoring;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface ScoringIO {
+public interface ShooterIO {
 
     @AutoLog
-    public static class ScoringIOInputs {
+    public static class ShooterIOInputs {
         public double leftShooterAppliedVolts = 0.0;
         public double leftShooterCurrentAmps = 0.0;
         public double leftShooterVelocityRPM = 0.0;
@@ -18,7 +18,7 @@ public interface ScoringIO {
         public double kickerCurrentAmps = 0.0;
     }
 
-    public default void updateInputs(ScoringIOInputs inputs) {}
+    public default void updateInputs(ShooterIOInputs inputs) {}
 
     public default void setShooterVolts(double volts) {}
 

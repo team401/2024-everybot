@@ -6,7 +6,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants.ScoringConstants;
 
-public class ScoringIOSim implements ScoringIO {
+public class ShooterIOSim implements ShooterIO {
     private FlywheelSim leftSim = new FlywheelSim(DCMotor.getKrakenX60(1), 0.5, 0.00001);
     private FlywheelSim rightSim = new FlywheelSim(DCMotor.getKrakenX60(1), 0.5, 0.00001);
 
@@ -49,7 +49,7 @@ public class ScoringIOSim implements ScoringIO {
     }
 
     @Override
-    public void updateInputs(ScoringIOInputs inputs) {
+    public void updateInputs(ShooterIOInputs inputs) {
         leftSim.update(0.02);
         rightSim.update(0.02);
 

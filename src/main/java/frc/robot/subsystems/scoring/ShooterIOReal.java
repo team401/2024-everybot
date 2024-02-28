@@ -9,7 +9,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants.ScoringConstants;
 
-public class ScoringIOReal implements ScoringIO {
+public class ShooterIOReal implements ShooterIO {
 
     private final TalonFX kicker = new TalonFX(ScoringConstants.kickerId);
 
@@ -19,7 +19,7 @@ public class ScoringIOReal implements ScoringIO {
     private double goalLeftVelocityRPM = 0.0;
     private double goalRightVelocityRPM = 0.0;
 
-    public ScoringIOReal() {
+    public ShooterIOReal() {
         Slot0Configs slot0 = new Slot0Configs();
         slot0.withKP(ScoringConstants.kP);
         slot0.withKI(ScoringConstants.kI);
@@ -73,7 +73,7 @@ public class ScoringIOReal implements ScoringIO {
     }
 
     @Override
-    public void updateInputs(ScoringIOInputs inputs) {
+    public void updateInputs(ShooterIOInputs inputs) {
         inputs.leftShooterVelocityRPM = leftShooter.getVelocity().getValueAsDouble() * 60.0;
         inputs.leftShooterAppliedVolts = leftShooter.getMotorVoltage().getValueAsDouble();
         inputs.leftShooterCurrentAmps = leftShooter.getStatorCurrent().getValueAsDouble();

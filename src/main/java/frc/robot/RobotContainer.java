@@ -24,9 +24,9 @@ import frc.robot.subsystems.drive.DriveIO;
 import frc.robot.subsystems.drive.DriveIOSim;
 import frc.robot.subsystems.drive.DriveIOTalonFX;
 import frc.robot.subsystems.scoring.Scoring;
-import frc.robot.subsystems.scoring.ScoringIO;
-import frc.robot.subsystems.scoring.ScoringIOReal;
-import frc.robot.subsystems.scoring.ScoringIOSim;
+import frc.robot.subsystems.scoring.ShooterIO;
+import frc.robot.subsystems.scoring.ShooterIOReal;
+import frc.robot.subsystems.scoring.ShooterIOSim;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -60,7 +60,7 @@ public class RobotContainer {
                 // drive = new Drive(new DriveIOSparkMax()); // Spark Max/Spark Flex + NEO/Vortex
                 // drive = new Drive(new DriveIOTalonSRX()); // Talon SRX + brushed, no encoders
                 // drive = new Drive(new DriveIOTalonFX()); // Talon FX (Falon 500/Kraken X60)
-                score = new Scoring(new ScoringIOReal());
+                score = new Scoring(new ShooterIOReal());
 
                 arm = new Arm(new ArmIOReal());
                 break;
@@ -68,14 +68,14 @@ public class RobotContainer {
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drive = new Drive(new DriveIOSim());
-                score = new Scoring(new ScoringIOSim());
+                score = new Scoring(new ShooterIOSim());
                 arm = new Arm(new ArmIOSim());
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
                 drive = new Drive(new DriveIO() {});
-                score = new Scoring(new ScoringIO() {});
+                score = new Scoring(new ShooterIO() {});
                 break;
         }
         // make suppliers for navigation
