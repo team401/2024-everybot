@@ -65,7 +65,7 @@ public final class Constants {
     }
 
     public static class OperatorConstants {
-        public static final int kDriverControllerPort = 0;
+        public static final int kDriverControllerPort = 2;
     }
 
     public static class BotConstants {
@@ -119,10 +119,10 @@ public final class Constants {
 
     public static class DriveConstants {
         public static final double TRACK_WIDTH = 0.0; // placeholder
-        public static final int frontLeftID = 0; // placeholder
-        public static final int backLeftID = 0; // placeholder
-        public static final int frontRightID = 0; // placeholder
-        public static final int backRightID = 0; // placeholder
+        public static final int frontLeftID = 1; // pelaceholder
+        public static final int backLeftID = 3; // placeholder
+        public static final int frontRightID = 2; // placeholder
+        public static final int backRightID = 4; // placeholder
         public static final int pigeonID = 0; // placeholder
 
         public static final double GEAR_RATIO = 10.0;

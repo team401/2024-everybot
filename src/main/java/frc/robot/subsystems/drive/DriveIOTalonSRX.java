@@ -16,16 +16,17 @@ package frc.robot.subsystems.drive;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
+import frc.robot.Constants.DriveConstants;
 
 /**
  * This drive implementation is for Talon SRXs driving brushed motors (e.g. CIMS) with no encoders
  * and no gyro.
  */
 public class DriveIOTalonSRX implements DriveIO {
-    private final TalonSRX leftLeader = new TalonSRX(0);
-    private final TalonSRX leftFollower = new TalonSRX(1);
-    private final TalonSRX rightLeader = new TalonSRX(2);
-    private final TalonSRX rightFollower = new TalonSRX(3);
+    private final TalonSRX leftLeader = new TalonSRX(DriveConstants.frontLeftID);
+    private final TalonSRX leftFollower = new TalonSRX(DriveConstants.backLeftID);
+    private final TalonSRX rightLeader = new TalonSRX(DriveConstants.frontRightID);
+    private final TalonSRX rightFollower = new TalonSRX(DriveConstants.backRightID);
 
     public DriveIOTalonSRX() {
         var config = new TalonSRXConfiguration();
@@ -37,6 +38,7 @@ public class DriveIOTalonSRX implements DriveIO {
         leftFollower.configAllSettings(config);
         rightLeader.configAllSettings(config);
         rightFollower.configAllSettings(config);
+        rightLeader.setInverted(true);
 
         leftFollower.follow(leftLeader);
         rightFollower.follow(rightLeader);
