@@ -1,5 +1,7 @@
 package frc.robot.subsystems.scoring;
 
+import java.io.FileReader;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.InterpolateDouble;
 
@@ -10,6 +12,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterSubsystem(ShooterIO io) {
         this.io = io;
+        rpmInterpolated = new InterpolateDouble()
     }
 
     @Override

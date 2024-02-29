@@ -13,6 +13,8 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.RobotBase;
+
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -171,5 +173,9 @@ public final class Constants {
         public static final double leftCurrentLimit = 80.0;
         public static final double rightCurrentLimit = 80.0;
         public static final double kickerCurrentlimit = 80.0;
+    }
+
+    public static final class FileConstants {
+        public static final String RPM_FILE_PATH = "../rpm.csv";
     }
 }

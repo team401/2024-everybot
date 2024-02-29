@@ -2,14 +2,16 @@ package frc.robot.utils;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class InterpolateDouble {
     private InterpolatingDoubleTreeMap map;
 
-    public InterpolateDouble(FileReader csvFile) {
+    public InterpolateDouble(String csvFilePath) {
         map = new InterpolatingDoubleTreeMap();
+        
         try (BufferedReader csvReader = new BufferedReader(csvFile)) {
             String line = csvReader.readLine();
             while (line != null) {
@@ -18,6 +20,7 @@ public class InterpolateDouble {
             }
         } catch (IOException ex) {
             System.out.println(ex.toString());
+        }
         }
     }
 
