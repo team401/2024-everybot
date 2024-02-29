@@ -15,7 +15,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOInputsAutoLogged;
-import frc.robot.subsystems.vision.VisionIOReal;
 import frc.robot.subsystems.vision.VisionIOSimulation;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -45,7 +44,7 @@ public class Navigation extends SubsystemBase {
             Supplier<Pose2d> simulatedPose) { // REAL ROBOT
         switch (Constants.BotConstants.botMode) {
             case REAL:
-                vision = new VisionIOReal();
+                vision = null;
                 this.simulatedPose = null;
                 break;
             case SIM:
@@ -148,13 +147,18 @@ public class Navigation extends SubsystemBase {
     public void periodic() {
         updateOdometry(gyro.get(), leftDistance.getAsDouble(), rightDistance.getAsDouble());
         updateCurrentPose();
-        vision.updateInputs(inputs);
-        Logger.processInputs("Vision", inputs);
-        if (Constants.BotConstants.botMode == Constants.Mode.REAL) {
+        if (vision != null) {
+            vision.updateInputs(inputs);
+            Logger.processInputs("Vision", inputs);
+        }
+        ;
+        if (Constants.BotConstants.botMode == Constants.Mode.REAL && vision != null) {
             vision.updatePose(poseEstimator.getEstimatedPosition());
-        } else {
+        } else if (vision != null) {
             vision.updatePose(simulatedPose.get());
         }
-        updateNavVision();
+        if (vision != null) {
+            updateNavVision();
+        }
     }
 }
