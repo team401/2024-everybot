@@ -18,7 +18,7 @@ import frc.robot.subsystems.Navigation;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIO;
 import frc.robot.subsystems.drive.DriveIOSim;
-import frc.robot.subsystems.drive.DriveIOTalonFX;
+import frc.robot.subsystems.drive.DriveIOTalonSRX;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -46,7 +46,7 @@ public class RobotContainer {
         switch (Constants.BotConstants.botMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                drive = new Drive(new DriveIOTalonFX()); // Spark Max/Spark Flex + brushed, no
+                drive = new Drive(new DriveIOTalonSRX()); // Spark Max/Spark Flex + brushed, no
                 // encoders
                 // drive = new Drive(new DriveIOSparkMax()); // Spark Max/Spark Flex + NEO/Vortex
                 // drive = new Drive(new DriveIOTalonSRX()); // Talon SRX + brushed, no encoders
