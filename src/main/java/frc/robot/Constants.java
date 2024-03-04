@@ -13,8 +13,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.RobotBase;
-
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
 
