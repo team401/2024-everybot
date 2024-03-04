@@ -26,6 +26,8 @@ import java.util.Collections;
  */
 public final class Constants {
 
+    public static final double loopTime = 0.02;
+
     public static enum DriveTrainState {
         /*Manual control */
         MANUAL,
@@ -35,6 +37,9 @@ public final class Constants {
 
         /*Auto pathfollowing */
         PATHFOLLOW,
+
+        /*Arm up down*/
+        ENDGAME,
     }
 
     public static enum AlignState {
@@ -141,5 +146,34 @@ public final class Constants {
     public static class SimConstants {
         public static final double KP = 0.2; // placeholder
         public static final double KD = 0.0; // placeholder
+    }
+
+    public static final class ArmConstants {
+        public static final int leftMotorID = 1;
+        public static final int rightMotorID = 2;
+        public static final int armUp = 3;
+        public static final int armDown = 0;
+        public static final int ticksPerFoot = 10;
+    }
+
+    public static final class ScoringConstants {
+        public static final int kickerId = 0;
+        public static final int leftShooterId = 1;
+        public static final int rightShooterId = 2;
+
+        public static final double kP = 1.0;
+        public static final double kI = 1.0;
+        public static final double kD = 1.0;
+        public static final double kS = 1.0;
+        public static final double kV = 1.0;
+        public static final double kA = 1.0;
+
+        public static final double leftCurrentLimit = 80.0;
+        public static final double rightCurrentLimit = 80.0;
+        public static final double kickerCurrentlimit = 80.0;
+    }
+
+    public static final class FileConstants {
+        public static final String RPM_FILE_PATH = "../rpm.csv";
     }
 }

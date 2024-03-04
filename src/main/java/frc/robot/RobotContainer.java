@@ -15,18 +15,25 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtTarget;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.subsystems.Navigation;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIOReal;
+import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIO;
 import frc.robot.subsystems.drive.DriveIOSim;
 import frc.robot.subsystems.drive.DriveIOTalonFX;
+import frc.robot.subsystems.scoring.ShooterIO;
+import frc.robot.subsystems.scoring.ShooterIOReal;
+import frc.robot.subsystems.scoring.ShooterIOSim;
+import frc.robot.subsystems.scoring.ShooterSubsystem;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class RobotContainer {
     private Drive drive;
-
-    // init navigation
     private Navigation nav;
+    private ShooterSubsystem shooter;
+    private Arm arm;
 
     private DoubleSupplier leftDistanceSupplier;
     private DoubleSupplier rightDistanceSupplier;
@@ -45,22 +52,29 @@ public class RobotContainer {
     public RobotContainer() {
         switch (Constants.BotConstants.botMode) {
             case REAL:
+
                 // Real robot, instantiate hardware IO implementations
                 drive = new Drive(new DriveIOTalonFX()); // Spark Max/Spark Flex + brushed, no
                 // encoders
                 // drive = new Drive(new DriveIOSparkMax()); // Spark Max/Spark Flex + NEO/Vortex
                 // drive = new Drive(new DriveIOTalonSRX()); // Talon SRX + brushed, no encoders
                 // drive = new Drive(new DriveIOTalonFX()); // Talon FX (Falon 500/Kraken X60)
+                shooter = new ShooterSubsystem(new ShooterIOReal());
+
+                arm = new Arm(new ArmIOReal());
                 break;
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drive = new Drive(new DriveIOSim());
+                shooter = new ShooterSubsystem(new ShooterIOSim());
+                arm = new Arm(new ArmIOSim());
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
                 drive = new Drive(new DriveIO() {});
+                shooter = new ShooterSubsystem(new ShooterIO() {});
                 break;
         }
         // make suppliers for navigation
@@ -98,6 +112,10 @@ public class RobotContainer {
                     return nav.getTargetHeading();
                 });
 
+        drive.setTargetHeadingSupplier(
+                () -> {
+                    return nav.getTargetHeading();
+                });
         configureBindings();
     }
 
