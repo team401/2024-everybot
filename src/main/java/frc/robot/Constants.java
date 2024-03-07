@@ -99,6 +99,11 @@ public final class Constants {
         public static final Rotation3d BOT_TO_CAMERA_ROT =
                 new Rotation3d(0, Math.toRadians(-15), 0);
         public static final boolean SIM_FIELD_ENABLED = false;
+
+        // Sensor Constants
+        public static final int sensorID = 0; // Placeholder
+        public static final double minDistSensor = 0; // Placeholder
+        public static final double maxDistSensor = 0; // Placeholder
     }
 
     public static class FieldConstants {

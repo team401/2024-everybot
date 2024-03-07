@@ -2,37 +2,29 @@ package frc.robot.subsystems;
 
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.VisionConstants;
 
-public class ToFSenso{
+public class ToFSensor {
 
-  TimeOfFlight sensor;
-  int distmin;
-  int distmax;
+    TimeOfFlight sensor;
+    double distmin;
+    double distmax;
 
-  public ToFSensor(){
-    sensor = new TimeOfFlight(DriveConstants.sensorID);
-    distmin = DriveConstants.minDistSensor;
-    distmax = DriveConstants.maxDistSensor;
-		sesnor.setRangingMode(RangingMode.Short, 24.0)
-  }
+    public ToFSensor() {
+        sensor = new TimeOfFlight(VisionConstants.sensorID);
+        distmin = VisionConstants.minDistSensor;
+        distmax = VisionConstants.maxDistSensor;
+        sensor.setRangingMode(RangingMode.Short, 24.0);
+    }
 
-  public boolean objectDetected(){
-    double dist = sensor.getRange();
-		while(!sensor.isRangeValid){
-			dist = sensor.getRange();
-		}
-		if((dist > distmin) && (dist < distmax)){
-			return true;
-		}
-		return false;
-	}
+    public boolean objectDetected() {
+        double dist = sensor.getRange();
+        while (!sensor.isRangeValid()) {
+            dist = sensor.getRange();
+        }
+        if ((dist > distmin) && (dist < distmax)) {
+            return true;
+        }
+        return false;
+    }
 }
-
-	
-	
-
-  
-
-  
-  
