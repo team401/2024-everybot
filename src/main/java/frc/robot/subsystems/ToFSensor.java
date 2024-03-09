@@ -6,9 +6,9 @@ import frc.robot.Constants.VisionConstants;
 
 public class ToFSensor {
 
-    TimeOfFlight sensor;
-    double distmin;
-    double distmax;
+    private TimeOfFlight sensor;
+    private double distmin;
+    private double distmax;
 
     public ToFSensor() {
         sensor = new TimeOfFlight(VisionConstants.sensorID);
@@ -26,5 +26,13 @@ public class ToFSensor {
             return true;
         }
         return false;
+    }
+
+    public double getDistance() {
+        double dist = sensor.getRange();
+        while (!sensor.isRangeValid()) {
+            dist = sensor.getRange();
+        }
+        return dist;
     }
 }

@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.ToFSensor;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -20,6 +22,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * project.
  */
 public class Robot extends LoggedRobot {
+    private ToFSensor sensor;
     private Command autonomousCommand;
 
     private RobotContainer robotContainer;
@@ -53,6 +56,7 @@ public class Robot extends LoggedRobot {
 
         Logger.start();
         robotContainer = new RobotContainer();
+        sensor = new ToFSensor();
     }
 
     /**
@@ -69,6 +73,8 @@ public class Robot extends LoggedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+        SmartDashboard.putBoolean("Object Detected", sensor.objectDetected());
+        SmartDashboard.putNumber("Measured Distance", sensor.getDistance());
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
