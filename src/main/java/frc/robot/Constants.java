@@ -101,9 +101,9 @@ public final class Constants {
         public static final boolean SIM_FIELD_ENABLED = false;
 
         // Sensor Constants
-        public static final int sensorID = 0; // Placeholder
+        public static final int sensorID = 5; // Placeholder
         public static final double minDistSensor = 0; // Placeholder
-        public static final double maxDistSensor = 0; // Placeholder
+        public static final double maxDistSensor = 200; // Placeholder
     }
 
     public static class FieldConstants {
@@ -124,10 +124,10 @@ public final class Constants {
 
     public static class DriveConstants {
         public static final double TRACK_WIDTH = 0.0; // placeholder
-        public static final int frontLeftID = 0; // placeholder
-        public static final int backLeftID = 0; // placeholder
-        public static final int frontRightID = 0; // placeholder
-        public static final int backRightID = 0; // placeholder
+        public static final int frontLeftID = 1; // placeholder
+        public static final int backLeftID = 3; // placeholder
+        public static final int frontRightID = 2; // placeholder
+        public static final int backRightID = 4; // placeholder
         public static final int pigeonID = 0; // placeholder
 
         public static final double GEAR_RATIO = 10.0;

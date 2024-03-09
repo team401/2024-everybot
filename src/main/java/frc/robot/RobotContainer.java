@@ -6,8 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AlignState;
@@ -18,7 +18,7 @@ import frc.robot.subsystems.Navigation;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIO;
 import frc.robot.subsystems.drive.DriveIOSim;
-import frc.robot.subsystems.drive.DriveIOSparkMax;
+import frc.robot.subsystems.drive.DriveIOTalonSRX;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -36,8 +36,8 @@ public class RobotContainer {
     private final CommandXboxController driverController =
             new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-    private Joystick leftJoystick = new Joystick(0);
-    private Joystick rightJoystick = new Joystick(1);
+    /*  private Joystick leftJoystick = new Joystick(0);
+    private Joystick rightJoystick = new Joystick(1); */
 
     // private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -48,7 +48,7 @@ public class RobotContainer {
                 // Real robot, instantiate hardware IO implementations
                 // drive = new Drive(new DriveIOTalonFX()); // Spark Max/Spark Flex + brushed, no
                 // encoders
-                drive = new Drive(new DriveIOSparkMax()); // Spark Max/Spark Flex + NEO/Vortex
+                drive = new Drive(new DriveIOTalonSRX()); // Spark Max/Spark Flex + NEO/Vortex
                 // drive = new Drive(new DriveIOTalonSRX()); // Talon SRX + brushed, no encoders
                 // drive = new Drive(new DriveIOTalonFX()); // Talon FX (Falon 500/Kraken X60)
                 break;
@@ -127,6 +127,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-        return new Command() {};
+        return new InstantCommand(() -> drive.driveArcade(0.1, 0.0));
     }
 }

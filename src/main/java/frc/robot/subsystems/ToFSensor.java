@@ -2,9 +2,10 @@ package frc.robot.subsystems;
 
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
-public class ToFSensor {
+public class ToFSensor extends SubsystemBase {
 
     private TimeOfFlight sensor;
     private double distmin;
@@ -20,7 +21,7 @@ public class ToFSensor {
     public boolean objectDetected() {
         double dist = sensor.getRange();
         while (!sensor.isRangeValid()) {
-            dist = sensor.getRange();
+            return false;
         }
         if ((dist > distmin) && (dist < distmax)) {
             return true;
@@ -31,8 +32,11 @@ public class ToFSensor {
     public double getDistance() {
         double dist = sensor.getRange();
         while (!sensor.isRangeValid()) {
-            dist = sensor.getRange();
+            return -1;
         }
         return dist;
     }
+
+    @Override
+    public void periodic() {}
 }

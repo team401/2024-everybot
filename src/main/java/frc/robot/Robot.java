@@ -22,8 +22,8 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * project.
  */
 public class Robot extends LoggedRobot {
-    private ToFSensor sensor;
     private Command autonomousCommand;
+    private ToFSensor sensor;
 
     private RobotContainer robotContainer;
 
