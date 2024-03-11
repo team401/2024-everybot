@@ -10,6 +10,7 @@ public class ToFSensor extends SubsystemBase {
     private TimeOfFlight sensor;
     private double distmin;
     private double distmax;
+    private double lastdist = 0;
 
     public ToFSensor() {
         sensor = new TimeOfFlight(VisionConstants.sensorID);
@@ -21,9 +22,13 @@ public class ToFSensor extends SubsystemBase {
     public boolean objectDetected() {
         double dist = sensor.getRange();
         while (!sensor.isRangeValid()) {
+            if (getDistance() != -1) {
+                return true;
+            }
             return false;
         }
         if ((dist > distmin) && (dist < distmax)) {
+            lastdist = dist;
             return true;
         }
         return false;
