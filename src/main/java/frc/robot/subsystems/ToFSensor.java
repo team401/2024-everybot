@@ -11,25 +11,22 @@ public class ToFSensor extends SubsystemBase {
     private double distmin;
     private double distmax;
     private double lastdist = 0;
+    private int counter = 0;
 
     public ToFSensor() {
         sensor = new TimeOfFlight(VisionConstants.sensorID);
         distmin = VisionConstants.minDistSensor;
         distmax = VisionConstants.maxDistSensor;
-        sensor.setRangingMode(RangingMode.Short, 24.0); //Maybe 40 so it's every other run
-        sensor.SetRangeOfInterest(pHandle, 8, 8, 12, 12); // Narrower FOV
+        sensor.setRangingMode(RangingMode.Short, 24.0); // Maybe 40 so it's every other run
+        sensor.setRangeOfInterest(8, 8, 12, 12); // Narrower FOV
     }
-    
+
     public boolean objectDetected() {
-        double dist = sensor.getRange();
-        while (!sensor.isRangeValid()) {
-            if (getDistance() != -1) {
-                return true;
-            }
+        double dist = getDistance();
+        if (getDistance() == -1) {
             return false;
         }
         if ((dist > distmin) && (dist < distmax)) {
-            lastdist = dist;
             return true;
         }
         return false;
@@ -37,9 +34,15 @@ public class ToFSensor extends SubsystemBase {
 
     public double getDistance() {
         double dist = sensor.getRange();
-        while (!sensor.isRangeValid()) {
+        if (!sensor.isRangeValid()) {
+            if (counter < 10) {
+                return lastdist;
+            }
+            counter++;
             return -1;
         }
+        lastdist = dist;
+        counter = 0;
         return dist;
     }
 
