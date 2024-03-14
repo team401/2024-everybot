@@ -104,6 +104,7 @@ public final class Constants {
         public static final int sensorID = 5; // Placeholder
         public static final double minDistSensor = 0; // Placeholder
         public static final double maxDistSensor = 200; // Placeholder
+        public static final int beamBreakPort = 0; // Placeholder
     }
 
     public static class FieldConstants {

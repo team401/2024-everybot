@@ -46,6 +46,9 @@ public class ToFSensor extends SubsystemBase {
         return dist;
     }
 
-    @Override
-    public void periodic() {}
+    /*@Override
+    public void periodic() {
+        SmartDashboard.putBoolean("Object Detected", sensor.objectDetected());
+        SmartDashboard.putNumber("Measured Distance", sensor.getDistance());
+    }*/
 }
