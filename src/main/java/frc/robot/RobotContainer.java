@@ -12,21 +12,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AlignState;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AimAtTarget;
-import frc.robot.commands.ArcadeDrive;
-import frc.robot.subsystems.Navigation;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.DriveIO;
-import frc.robot.subsystems.drive.DriveIOSim;
-import frc.robot.subsystems.drive.DriveIOTalonFX;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class RobotContainer {
-    private Drive drive;
-
-    // init navigation
-    private Navigation nav;
 
     private DoubleSupplier leftDistanceSupplier;
     private DoubleSupplier rightDistanceSupplier;
@@ -46,78 +35,20 @@ public class RobotContainer {
         switch (Constants.BotConstants.botMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                drive = new Drive(new DriveIOTalonFX()); // Spark Max/Spark Flex + brushed, no
-                // encoders
-                // drive = new Drive(new DriveIOSparkMax()); // Spark Max/Spark Flex + NEO/Vortex
-                // drive = new Drive(new DriveIOTalonSRX()); // Talon SRX + brushed, no encoders
-                // drive = new Drive(new DriveIOTalonFX()); // Talon FX (Falon 500/Kraken X60)
+                
                 break;
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
-                drive = new Drive(new DriveIOSim());
+
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
-                drive = new Drive(new DriveIO() {});
+                
                 break;
         }
-        // make suppliers for navigation
-        leftDistanceSupplier =
-                () -> {
-                    return drive.getLeftPositionMeters();
-                };
-        rightDistanceSupplier =
-                () -> {
-                    return drive.getRightPositionMeters();
-                };
-        gyroSupplier =
-                () -> {
-                    return drive.getGyroRotation2d();
-                };
-        simulatedPoseSupplier =
-                () -> {
-                    return drive.getSimulatedPose();
-                };
-        nav =
-                new Navigation(
-                        leftDistanceSupplier,
-                        rightDistanceSupplier,
-                        gyroSupplier,
-                        simulatedPoseSupplier);
-
-        // add suppliers for drive
-        drive.setCurrentHeadingSupplier(
-                () -> {
-                    return nav.getCurrentHeading();
-                });
-
-        drive.setTargetHeadingSupplier(
-                () -> {
-                    return nav.getTargetHeading();
-                });
-
-        configureBindings();
-    }
-
-    /**
-     * Use this method to define your trigger->command mappings. Triggers can be created via the
-     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-     * predicate, or via the named factories in {@link
-     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-     * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-     * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-     * joysticks}.
-     */
-    private void configureBindings() {
-        drive.setDefaultCommand(
-                new ArcadeDrive(
-                        drive,
-                        () -> -driverController.getLeftY(),
-                        () -> -driverController.getLeftX()));
-        AimAtTarget aimAtSpeaker = new AimAtTarget(drive, nav, AlignState.SPEAKER);
-        driverController.a().whileTrue(aimAtSpeaker);
+        
     }
 
     /**
