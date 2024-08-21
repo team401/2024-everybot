@@ -9,8 +9,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.AlignState;
 import frc.robot.Constants.OperatorConstants;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -35,7 +33,7 @@ public class RobotContainer {
         switch (Constants.BotConstants.botMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                
+
                 break;
 
             case SIM:
@@ -45,10 +43,9 @@ public class RobotContainer {
 
             default:
                 // Replayed robot, disable IO implementations
-                
+
                 break;
         }
-        
     }
 
     /**
