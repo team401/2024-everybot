@@ -1,7 +1,5 @@
 package frc.robot.subsystems.shooter_intake;
 
-
-
 public interface ShooterIntakeIO {
 
     public static class ShooterIntakeIOInputs {
@@ -9,5 +7,4 @@ public interface ShooterIntakeIO {
     }
 
     public void setVoltage(double volts);
-
 }

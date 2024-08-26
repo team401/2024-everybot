@@ -6,45 +6,46 @@ public class ShooterIntakeSubsystem {
     protected State targetState = State.IDLE;
     ShooterIntakeIO io;
 
-    public ShooterIntakeSubsystem(ShooterIntakeIO io){
+    public ShooterIntakeSubsystem(ShooterIntakeIO io) {
         this.io = io;
         State.subsystem = this;
     }
 
-    public void periodic(){
+    public void periodic() {
 
         currentState.periodic();
-
     }
 
-    public void setTargetState(State target){
+    public void setTargetState(State target) {
         this.targetState = target;
     }
 
-    public enum State{
-        IDLE{
+    // spotless:off
+    public enum State {
+        IDLE {
+
             @Override
-            void changeStates(){
-                subsystem.currentState = subsystem.targetState;
+            void changeStates() {
+                this.changeState(subsystem.targetState);
             }
 
             @Override
-            void onStart(){
+            void onStart() {
                 subsystem.io.setVoltage(0);
             }
         },
 
-        INTAKING{
+        INTAKING {
             @Override
-            void periodic(){
+            void periodic() {
                 super.periodic();
                 subsystem.io.setVoltage(-1);
             }
         },
 
-        SHOOTING{
+        SHOOTING {
             @Override
-            void periodic(){
+            void periodic() {
                 super.periodic();
                 subsystem.io.setVoltage(1);
             }
@@ -52,18 +53,26 @@ public class ShooterIntakeSubsystem {
 
         static ShooterIntakeSubsystem subsystem;
 
-        void periodic(){
+        void periodic() {
             this.changeStates();
         }
 
-        void changeStates(){
-            if (subsystem.currentState != subsystem.targetState){
-                subsystem.currentState = State.IDLE;
+        void changeStates() {
+            if (this != subsystem.targetState) {
+                this.changeState(IDLE);
             }
         }
 
         void onStart() {};
+
         void onEnd() {};
+
+        protected void changeState(State newState){
+            this.onEnd();
+            subsystem.currentState = newState;
+            newState.onStart();
+        }
     }
+    // spotless:on
 
 }
