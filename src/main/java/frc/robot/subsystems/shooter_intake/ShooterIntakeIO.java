@@ -4,8 +4,10 @@ package frc.robot.subsystems.shooter_intake;
 
 public interface ShooterIntakeIO {
 
-    public void setVoltage(double volts);
+    public static class ShooterIntakeIOInputs {
+        public double intakeVoltage = 0.0;
+    }
 
-    public double getVoltage(double volts);
+    public void setVoltage(double volts);
 
 }

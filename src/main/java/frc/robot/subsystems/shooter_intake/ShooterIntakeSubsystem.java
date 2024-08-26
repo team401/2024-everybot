@@ -2,53 +2,68 @@ package frc.robot.subsystems.shooter_intake;
 
 public class ShooterIntakeSubsystem {
 
-    State state = State.IDLE;
-    State newState = State.IDLE;
+    protected State currentState = State.IDLE;
+    protected State targetState = State.IDLE;
     ShooterIntakeIO io;
 
     public ShooterIntakeSubsystem(ShooterIntakeIO io){
         this.io = io;
+        State.subsystem = this;
     }
 
     public void periodic(){
 
-        state.periodic(this);
+        currentState.periodic();
 
     }
 
-    public void setNewState(State newState){
-        this.newState = newState;
+    public void setTargetState(State target){
+        this.targetState = target;
     }
 
-    private enum State{
+    public enum State{
         IDLE{
             @Override
-            void changeStates(ShooterIntakeSubsystem subsystem){
-                subsystem.state = subsystem.newState;
+            void changeStates(){
+                subsystem.currentState = subsystem.targetState;
             }
 
             @Override
-            void periodic(ShooterIntakeSubsystem subsystem){
-                super.periodic(subsystem);
+            void onStart(){
                 subsystem.io.setVoltage(0);
             }
         },
 
         INTAKING{
-            //TODO add periodic for intake
+            @Override
+            void periodic(){
+                super.periodic();
+                subsystem.io.setVoltage(-1);
+            }
         },
 
         SHOOTING{
-            //TODO add periodic for shooting
+            @Override
+            void periodic(){
+                super.periodic();
+                subsystem.io.setVoltage(1);
+            }
         };
 
-        void periodic(ShooterIntakeSubsystem subsystem){
-            this.changeStates(subsystem);
+        static ShooterIntakeSubsystem subsystem;
+
+        void periodic(){
+            this.changeStates();
         }
 
-        void changeStates(ShooterIntakeSubsystem subsystem){
-            subsystem.state = subsystem.newState;
+        void changeStates(){
+            if (subsystem.currentState != subsystem.targetState){
+                subsystem.currentState = State.IDLE;
+            }
         }
+
+        void onStart() {};
+        void onEnd() {};
     }
 
 }
