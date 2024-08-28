@@ -4,48 +4,54 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
+import frc.robot.commands.DriveWithGamepad;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class RobotContainer {
-
-    private DoubleSupplier leftDistanceSupplier;
-    private DoubleSupplier rightDistanceSupplier;
-    private Supplier<Rotation2d> gyroSupplier;
-    private Supplier<Pose2d> simulatedPoseSupplier;
 
     private final CommandXboxController driverController =
             new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-    private Joystick leftJoystick = new Joystick(0);
-    private Joystick rightJoystick = new Joystick(1);
+    // Subsystems
+    SwerveDriveSubsystem swerveDriveSubsystem;
 
-    // private final LoggedDashboardChooser<Command> autoChooser;
+    // Commands
+    DriveWithGamepad driveWithGamepad;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        setupSubsystems();
+    }
+
+    public void setupSubsystems() {
         switch (Constants.BotConstants.botMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-
+                swerveDriveSubsystem = new SwerveDriveSubsystem();
                 break;
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
-
+                swerveDriveSubsystem = new SwerveDriveSubsystem();
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
-
+                swerveDriveSubsystem = new SwerveDriveSubsystem();
                 break;
         }
+    }
+
+    public void setupCommands() {
+        driveWithGamepad =
+                new DriveWithGamepad(
+                        swerveDriveSubsystem,
+                        () -> driverController.getLeftX(),
+                        () -> driverController.getLeftY(),
+                        () -> driverController.getRightY());
     }
 
     /**
