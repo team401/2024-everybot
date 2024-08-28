@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.shooter_intake.ShooterIntakeIO;
+import frc.robot.subsystems.shooter_intake.ShooterIntakeSubsystem;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -19,6 +21,17 @@ public class RobotContainer {
     private DoubleSupplier rightDistanceSupplier;
     private Supplier<Rotation2d> gyroSupplier;
     private Supplier<Pose2d> simulatedPoseSupplier;
+    private ShooterIntakeSubsystem intakeSubsystem =
+            new ShooterIntakeSubsystem(
+                    new ShooterIntakeIO() {
+
+                        @Override
+                        public void setVoltage(double volts) {
+                            // TODO Auto-generated method stub
+                            throw new UnsupportedOperationException(
+                                    "Unimplemented method 'setVoltage'");
+                        }
+                    });
 
     private final CommandXboxController driverController =
             new CommandXboxController(OperatorConstants.kDriverControllerPort);
