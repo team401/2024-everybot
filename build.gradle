@@ -13,6 +13,11 @@ def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
+
+def VISUALVM_PROFILE = false
+
+// Define my targets (RoboRIO) and artifacts (deployable files)
+// This is added by GradleRIO's backing project DeployUtils.
 deploy {
 	targets {
 		roborio(getTargetTypeClass('RoboRIO')) {
@@ -28,6 +33,17 @@ deploy {
 				// getTargetTypeClass is a shortcut to get the class type using a string
 
 				frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
+					// jvmArgs.add("-XX:MaxHeapFreeRatio 40")
+
+					if (VISUALVM_PROFILE) {
+						// Enable VisualVM connection
+						jvmArgs.add("-Dcom.sun.management.jmxremote=true")
+						jvmArgs.add("-Dcom.sun.management.jmxremote.port=1198")
+						jvmArgs.add("-Dcom.sun.management.jmxremote.local.only=false")
+						jvmArgs.add("-Dcom.sun.management.jmxremote.ssl=false")
+						jvmArgs.add("-Dcom.sun.management.jmxremote.authenticate=false")
+						jvmArgs.add("-Djava.rmi.server.hostname=10.4.1.2")
+					}
 				}
 
 				// Static files artifact
@@ -46,7 +62,7 @@ def deployArtifact = deploy.targets.roborio.artifacts.frcJava
 wpi.java.debugJni = false
 
 // Set this to true to enable desktop support.
-def includeDesktopSupport = false
+def includeDesktopSupport = true
 
 repositories {
 	maven {
@@ -56,7 +72,11 @@ repositories {
 			password = "\u0067\u0068\u0070\u005f\u006e\u0056\u0051\u006a\u0055\u004f\u004c\u0061\u0079\u0066\u006e\u0078\u006e\u0037\u0051\u0049\u0054\u0042\u0032\u004c\u004a\u006d\u0055\u0070\u0073\u0031\u006d\u0037\u004c\u005a\u0030\u0076\u0062\u0070\u0063\u0051"
 		}
 	}
+	maven {
+		url 'https://jitpack.io'
+	}
 	mavenLocal()
+	mavenCentral()
 }
 
 spotless {
@@ -120,6 +140,8 @@ dependencies {
 
 	def akitJson = new groovy.json.JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
 	annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:$akitJson.version"
+
+	implementation 'com.github.team401:coppercore:main-SNAPSHOT'
 }
 
 test {

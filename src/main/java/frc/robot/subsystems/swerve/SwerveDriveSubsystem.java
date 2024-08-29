@@ -20,7 +20,6 @@ import frc.robot.constants.AutonConstants;
 import frc.robot.constants.SwerveConstants;
 import java.io.File;
 import java.io.IOException;
-import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -120,61 +119,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Command to drive the robot using translative values and heading as angular velocity.
-     *
-     * @param translationX Translation in the X direction. Cubed for smoother controls.
-     * @param translationY Translation in the Y direction. Cubed for smoother controls.
-     * @param angularRotationX Angular velocity of the robot to set. Cubed for smoother controls.
-     * @return Drive command.
-     */
-    public Command driveCommand(
-            DoubleSupplier translationX,
-            DoubleSupplier translationY,
-            DoubleSupplier angularRotationX) {
-        return run(
-                () -> {
-                    // Make the robot move
-                    swerveDrive.drive(
-                            SwerveMath.scaleTranslation(
-                                    new Translation2d(
-                                            translationX.getAsDouble()
-                                                    * swerveDrive.getMaximumVelocity(),
-                                            translationY.getAsDouble()
-                                                    * swerveDrive.getMaximumVelocity()),
-                                    0.8),
-                            Math.pow(angularRotationX.getAsDouble(), 3)
-                                    * swerveDrive.getMaximumAngularVelocity(),
-                            true,
-                            false);
-                });
-    }
-
-    /**
-     * Command to drive the robot using translative values and heading as a setpoint.
-     *
-     * @param translationX Translation in the X direction.
-     * @param translationY Translation in the Y direction.
-     * @param rotation Rotation as a value between [-1, 1] converted to radians.
-     * @return Drive command.
-     */
-    public Command simDriveCommand(
-            DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation) {
-        // swerveDrive.setHeadingCorrection(true); // Normally you would want heading
-        // correction for this kind of control.
-        return run(
-                () -> {
-                    // Make the robot move
-                    driveFieldOriented(
-                            swerveDrive.swerveController.getTargetSpeeds(
-                                    translationX.getAsDouble(),
-                                    translationY.getAsDouble(),
-                                    rotation.getAsDouble() * Math.PI,
-                                    swerveDrive.getOdometryHeading().getRadians(),
-                                    swerveDrive.getMaximumVelocity()));
-                });
-    }
-
-    /**
      * The primary method for controlling the drivebase. Takes a {@link Translation2d} and a
      * rotation rate, and calculates and commands module states accordingly. Can use either
      * open-loop or closed-loop velocity control for the wheel velocities. Also has field- and
@@ -208,6 +152,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {}
+
+    @Override
+    public void simulationPeriodic() {}
 
     /**
      * Resets odometry to the given pose. Gyro angle and module positions do not need to be reset
