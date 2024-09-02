@@ -1,97 +1,110 @@
 package frc.robot.subsystems.swerve;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
-import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import swervelib.math.SwerveMath;
-import swervelib.parser.PIDFConfig;
-import swervelib.parser.SwerveDriveConfiguration;
-import swervelib.parser.SwerveModuleConfiguration;
-import swervelib.parser.SwerveModulePhysicalCharacteristics;
-import swervelib.parser.json.ModuleJson;
-import swervelib.parser.json.MotorConfigDouble;
-import swervelib.simulation.SwerveModuleSimulation;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class SwerveSimIO implements SwerveIO {
 
-    SwerveDriveConfiguration config;
-    ChassisSpeeds truthChassisSpeeds;
-    Pose2d pose;
-    boolean brakeMode = false;
+    private ChassisSpeeds robotChassisSpeeds = new ChassisSpeeds();
+    private Pose2d pose;
+    private double gyroAngle = 0.0;
+    private boolean brakeMode = false;
+
+    // Sim constants.
+    private final double SIM_UPDATE_DT = 0.05;
 
     // Simulated hardware.
     private final double SIM_MAX_SPEED = 4.5;
     private final int NUM_MODULES = 4;
-    SimSwerveIMU simImu;
-    SimSwerveMotor[] driveMotors = new SimSwerveMotor[NUM_MODULES];
-    SimSwerveMotor[] angleMotors = new SimSwerveMotor[NUM_MODULES];
-    SimSwerveAbsoluteEncoder[] encoders = new SimSwerveAbsoluteEncoder[NUM_MODULES];
-
-    // Conversion factors (hardcoded for now, need to fork/update YAGSL to make this
-    // better).
-    private final double DRIVE_CONVERSION_FACTOR = 1.0;
-    private final double ANGLE_CONVERSION_FACTOR = 1.0;
-    private final MotorConfigDouble CONVERSION_FACTORS = new MotorConfigDouble(DRIVE_CONVERSION_FACTOR,
-            ANGLE_CONVERSION_FACTOR);
-    private final double ANGLE_OFFSET = 0.0;
+    Translation2d[] moduleOffsets = new Translation2d[NUM_MODULES];
+    SwerveModuleState[] swerveModuleStates = new SwerveModuleState[NUM_MODULES];
 
     // Physical dimensions (hardcoded for now, need to fork/update YAGSL to make
     // this better).
-    private final double X_METERS = 0.5;
-    private final double Y_METERS = 0.5;
-    private SwerveModulePhysicalCharacteristics moduleCharacteristics = new SwerveModulePhysicalCharacteristics(
-            CONVERSION_FACTORS, 1.0, 1.0);
+    private final double X_METERS = 0.32;
+    private final double Y_METERS = 0.218;
+    private final double DRIVE_RADIUS_METERS = 0.387;
 
-    // Controller configuration parameters (hardcoded, need to fork/update YAGsL to
-    // make this better).
-    private PIDFConfig velocityPidfConfig = new PIDFConfig(1.0, 0.0, 0.0, 0);
-    private PIDFConfig anglePidfConfig = new PIDFConfig(1.0, 0.0, 0.0, 0.0);
-
-    SwerveModuleConfiguration[] moduleConfigurations = new SwerveModuleConfiguration[NUM_MODULES];
-
-    FlywheelSim turnMotor;
+    // Pose estimation.
+    SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[NUM_MODULES];
+    SwerveDriveKinematics swerveKinematics;
+    SwerveDrivePoseEstimator poseEstimator;
 
     public SwerveSimIO() {
-        // create the simulated IMU
-        simImu = new SimSwerveIMU();
+        for (int i = 0; i < NUM_MODULES; ++i) {
+            double x_sign = (i > 1) ? 1 : -1;
+            double y_sign = (i % 2 == 0) ? 1 : -1;
+            moduleOffsets[i] = new Translation2d(x_sign * X_METERS, y_sign * Y_METERS);
 
-        // Create simulated modules
-        for (int i = 0; i < moduleConfigurations.length; i++) {
-            // Initialize the module's motors and encoder.
-            driveMotors[i] = new SimSwerveMotor();
-            angleMotors[i] = new SimSwerveMotor();
-            encoders[i] = new SimSwerveAbsoluteEncoder();
+            swerveModulePositions[i] = new SwerveModulePosition();
+        }
+        swerveKinematics = new SwerveDriveKinematics(moduleOffsets);
+        pose = new Pose2d(0.0, 0.0, new Rotation2d(0.0));
+        poseEstimator =
+                new SwerveDrivePoseEstimator(
+                        swerveKinematics, new Rotation2d(0.0), swerveModulePositions, pose);
+    }
 
-            String moduleName = "SimSwerveModule" + i;
-            moduleConfigurations[i] = new SwerveModuleConfiguration(driveMotors[i], angleMotors[i], CONVERSION_FACTORS,
-                    encoders[i],
-                    ANGLE_OFFSET, X_METERS, Y_METERS,
-                    velocityPidfConfig, anglePidfConfig, moduleCharacteristics,
-                    moduleName, brakeMode);
+    @Override
+    public void updateInputs(SwerveInputs inputs) {}
+
+    @Override
+    public void updateOutputs() {
+        // Update the swerve module states immediately to the goal speeds. Ensure the
+        // maximum speed is not exceeded.
+        swerveModuleStates = swerveKinematics.toSwerveModuleStates(robotChassisSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SIM_MAX_SPEED);
+
+        // Integrate the wheel positions and update the angles.
+        for (int i = 0; i < NUM_MODULES; ++i) {
+            swerveModulePositions[i].angle = swerveModuleStates[i].angle;
+            swerveModulePositions[i].distanceMeters +=
+                    swerveModuleStates[i].speedMetersPerSecond * SIM_UPDATE_DT;
         }
 
-        config = new SwerveDriveConfiguration(moduleConfigurations, simImu, brakeMode,
-                SwerveMath.createDriveFeedforward(
-                        moduleCharacteristics.optimalVoltage,
-                        SIM_MAX_SPEED,
-                        moduleCharacteristics.wheelGripCoefficientOfFriction),
-                moduleCharacteristics);
+        // Update gyro angle.
+        double omega = getFieldVelocity().omegaRadiansPerSecond;
+        gyroAngle += omega * SIM_UPDATE_DT;
+
+        // Update pose estimate.
+        poseEstimator.update(Rotation2d.fromRadians(gyroAngle), swerveModulePositions);
+
+        // Estimate the position.
+        pose = poseEstimator.getEstimatedPosition();
     }
 
     @Override
     public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
+        ChassisSpeeds speeds =
+                fieldRelative
+                        ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                                translation.getX(),
+                                translation.getY(),
+                                rotation,
+                                pose.getRotation())
+                        : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+
+        setChassisSpeeds(speeds);
     }
 
     @Override
     public void driveFieldOriented(ChassisSpeeds velocity) {
-        truthChassisSpeeds = velocity;
+        Translation2d translation2d =
+                new Translation2d(velocity.vxMetersPerSecond, velocity.vyMetersPerSecond);
+        drive(translation2d, velocity.omegaRadiansPerSecond, true);
     }
 
     @Override
     public void resetOdometry(Pose2d initialHolonomicPose) {
-        pose = initialHolonomicPose;
+        poseEstimator.resetPosition(
+                Rotation2d.fromRadians(gyroAngle), swerveModulePositions, initialHolonomicPose);
+        pose = poseEstimator.getEstimatedPosition();
     }
 
     @Override
@@ -101,11 +114,12 @@ public class SwerveSimIO implements SwerveIO {
 
     @Override
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
-        truthChassisSpeeds = chassisSpeeds;
+        robotChassisSpeeds = chassisSpeeds;
     }
 
     @Override
     public void zeroGyro() {
+        gyroAngle = 0.0;
     }
 
     @Override
@@ -115,21 +129,18 @@ public class SwerveSimIO implements SwerveIO {
 
     @Override
     public ChassisSpeeds getFieldVelocity() {
-        return truthChassisSpeeds;
+        ChassisSpeeds fieldChassisSpeeds =
+                ChassisSpeeds.fromRobotRelativeSpeeds(robotChassisSpeeds, pose.getRotation());
+        return fieldChassisSpeeds;
     }
 
     @Override
     public ChassisSpeeds getRobotVelocity() {
-        return truthChassisSpeeds;
+        return robotChassisSpeeds;
     }
 
     @Override
     public double getDriveBaseRadiusMeters() {
-        return 0.35;
-    }
-
-    @Override
-    public SwerveDriveConfiguration getSwerveDriveConfiguration() {
-        return config;
+        return DRIVE_RADIUS_METERS;
     }
 }

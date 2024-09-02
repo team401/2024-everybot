@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.AutonConstants;
 import frc.robot.constants.SwerveConstants;
-import swervelib.parser.SwerveDriveConfiguration;
+import org.littletonrobotics.junction.Logger;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
 
@@ -48,8 +48,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                         // Drive base radius in meters. Distance from robot center to furthest
                         // module.
                         new ReplanningConfig()
-                // Default path replanning config. See the API for the options here
-                ),
+                        // Default path replanning config. See the API for the options here
+                        ),
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red
                     // alliance
@@ -61,7 +61,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                             : false;
                 },
                 this // Reference to this subsystem to set requirements
-        );
+                );
     }
 
     /**
@@ -84,11 +84,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      */
     public Command driveToPose(Pose2d pose) {
         // Create the constraints to use while pathfinding
-        PathConstraints constraints = new PathConstraints(
-                SwerveConstants.MAX_OTF_SPEED,
-                4.0,
-                SwerveConstants.MAX_OTF_OMEGA,
-                Units.degreesToRadians(720));
+        PathConstraints constraints =
+                new PathConstraints(
+                        SwerveConstants.MAX_OTF_SPEED,
+                        4.0,
+                        SwerveConstants.MAX_OTF_OMEGA,
+                        Units.degreesToRadians(720));
 
         // Since AutoBuilder is configured, we can use it to build pathfinding commands
         return AutoBuilder.pathfindToPose(
@@ -96,8 +97,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                 constraints,
                 0.0, // Goal end velocity in meters/sec
                 0.0 // Rotation delay distance in meters. This is how far the robot should travel
-        // before attempting to rotate.
-        );
+                // before attempting to rotate.
+                );
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
@@ -115,11 +116,15 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        swerveIO.updateInputs(null);
+        swerveIO.updateOutputs();
+
+        Logger.recordOutput("Pose", swerveIO.getPose());
+        Logger.recordOutput("speeds", swerveIO.getRobotVelocity());
     }
 
     @Override
-    public void simulationPeriodic() {
-    }
+    public void simulationPeriodic() {}
 
     public void resetOdometry(Pose2d initialHolonomicPose) {
         swerveIO.resetOdometry(initialHolonomicPose);
@@ -143,11 +148,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * This will zero (calibrate) the robot to assume the current position is facing
-     * forward
+     * This will zero (calibrate) the robot to assume the current position is facing forward
      *
-     * <p>
-     * If red alliance rotate the robot 180 after the drviebase zero command
+     * <p>If red alliance rotate the robot 180 after the drviebase zero command
      */
     public void zeroGyroWithAlliance() {
         if (isRedAlliance()) {
@@ -164,10 +167,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Gets the current yaw angle of the robot, as reported by the swerve pose
-     * estimator in the
-     * underlying drivebase. Note, this is not the raw gyro reading, this may be
-     * corrected from
+     * Gets the current yaw angle of the robot, as reported by the swerve pose estimator in the
+     * underlying drivebase. Note, this is not the raw gyro reading, this may be corrected from
      * calls to resetOdometry().
      *
      * @return The yaw angle
@@ -182,9 +183,5 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public ChassisSpeeds getRobotVelocity() {
         return swerveIO.getRobotVelocity();
-    }
-
-    public SwerveDriveConfiguration getSwerveDriveConfiguration() {
-        return swerveIO.getSwerveDriveConfiguration();
     }
 }

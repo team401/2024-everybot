@@ -26,6 +26,7 @@ public class RobotContainer {
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         setupSubsystems();
+        setupCommands();
     }
 
     public void setupSubsystems() {
@@ -51,9 +52,10 @@ public class RobotContainer {
         driveWithGamepad =
                 new DriveWithGamepad(
                         swerveDriveSubsystem,
-                        () -> driverController.getLeftX(),
                         () -> driverController.getLeftY(),
-                        () -> driverController.getRightY());
+                        () -> driverController.getLeftX(),
+                        () -> -driverController.getRightX());
+        swerveDriveSubsystem.setDefaultCommand(driveWithGamepad);
     }
 
     /**

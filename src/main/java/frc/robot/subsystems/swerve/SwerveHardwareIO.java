@@ -9,7 +9,6 @@ import frc.robot.constants.SwerveConstants;
 import java.io.File;
 import java.io.IOException;
 import swervelib.SwerveDrive;
-import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 
 public class SwerveHardwareIO implements SwerveIO {
@@ -18,8 +17,9 @@ public class SwerveHardwareIO implements SwerveIO {
 
     public SwerveHardwareIO() {
         try {
-            swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"))
-                    .createSwerveDrive(Units.feetToMeters(SwerveConstants.MAX_SPEED));
+            swerveDrive =
+                    new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"))
+                            .createSwerveDrive(Units.feetToMeters(SwerveConstants.MAX_SPEED));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -27,6 +27,12 @@ public class SwerveHardwareIO implements SwerveIO {
         swerveDrive.setHeadingCorrection(false);
         swerveDrive.setCosineCompensator(false);
     }
+
+    @Override
+    public void updateInputs(SwerveInputs inputs) {}
+
+    @Override
+    public void updateOutputs() {}
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
         swerveDrive.drive(
@@ -70,10 +76,5 @@ public class SwerveHardwareIO implements SwerveIO {
 
     public double getDriveBaseRadiusMeters() {
         return swerveDrive.swerveDriveConfiguration.getDriveBaseRadiusMeters();
-    }
-
-    @Override
-    public SwerveDriveConfiguration getSwerveDriveConfiguration() {
-        return swerveDrive.swerveDriveConfiguration;
     }
 }

@@ -3,33 +3,29 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import swervelib.parser.SwerveDriveConfiguration;
 
 public interface SwerveIO {
 
+    public static class SwerveInputs {}
+
+    public void updateInputs(SwerveInputs inputs);
+
+    public void updateOutputs();
+
     /**
-     * The primary method for controlling the drivebase. Takes a
-     * {@link Translation2d} and a
-     * rotation rate, and calculates and commands module states accordingly. Can use
-     * either
-     * open-loop or closed-loop velocity control for the wheel velocities. Also has
-     * field- and
+     * The primary method for controlling the drivebase. Takes a {@link Translation2d} and a
+     * rotation rate, and calculates and commands module states accordingly. Can use either
+     * open-loop or closed-loop velocity control for the wheel velocities. Also has field- and
      * robot-relative modes, which affect how the translation vector is used.
      *
-     * @param translation   {@link Translation2d} that is the commanded linear
-     *                      velocity of the robot,
-     *                      in meters per second. In robot-relative mode, positive x
-     *                      is torwards the bow (front) and
-     *                      positive y is torwards port (left). In field-relative
-     *                      mode, positive x is away from the
-     *                      alliance wall (field North) and positive y is torwards
-     *                      the left wall when looking through
-     *                      the driver station glass (field West).
-     * @param rotation      Robot angular rate, in radians per second. CCW positive.
-     *                      Unaffected by
-     *                      field/robot relativity.
-     * @param fieldRelative Drive mode. True for field-relative, false for
-     *                      robot-relative.
+     * @param translation {@link Translation2d} that is the commanded linear velocity of the robot,
+     *     in meters per second. In robot-relative mode, positive x is torwards the bow (front) and
+     *     positive y is torwards port (left). In field-relative mode, positive x is away from the
+     *     alliance wall (field North) and positive y is torwards the left wall when looking through
+     *     the driver station glass (field West).
+     * @param rotation Robot angular rate, in radians per second. CCW positive. Unaffected by
+     *     field/robot relativity.
+     * @param fieldRelative Drive mode. True for field-relative, false for robot-relative.
      */
     public void drive(Translation2d translation, double rotation, boolean fieldRelative);
 
@@ -41,10 +37,8 @@ public interface SwerveIO {
     public void driveFieldOriented(ChassisSpeeds velocity);
 
     /**
-     * Resets odometry to the given pose. Gyro angle and module positions do not
-     * need to be reset
-     * when calling this method. However, if either gyro angle or module position is
-     * reset, this
+     * Resets odometry to the given pose. Gyro angle and module positions do not need to be reset
+     * when calling this method. However, if either gyro angle or module position is reset, this
      * must be called in order for odometry to keep working.
      *
      * @param initialHolonomicPose The pose to set the odometry to
@@ -52,8 +46,7 @@ public interface SwerveIO {
     public void resetOdometry(Pose2d initialHolonomicPose);
 
     /**
-     * Gets the current pose (position and rotation) of the robot, as reported by
-     * odometry.
+     * Gets the current pose (position and rotation) of the robot, as reported by odometry.
      *
      * @return The robot's pose
      */
@@ -67,8 +60,7 @@ public interface SwerveIO {
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds);
 
     /**
-     * Resets the gyro angle to zero and resets odometry to the same position, but
-     * facing toward 0.
+     * Resets the gyro angle to zero and resets odometry to the same position, but facing toward 0.
      */
     public void zeroGyro();
 
@@ -99,12 +91,4 @@ public interface SwerveIO {
      * @return The robot's drive base radius in meters.
      */
     public double getDriveBaseRadiusMeters();
-
-    /**
-     * Gets the configuration of the swerve drive.
-     * 
-     * @return A {@link SwerveDriveConfiguration} object with the current
-     *         configuration.
-     */
-    public SwerveDriveConfiguration getSwerveDriveConfiguration();
 }
