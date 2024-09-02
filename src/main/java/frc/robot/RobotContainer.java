@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveWithGamepad;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
+import frc.robot.subsystems.swerve.SwerveHardwareIO;
+import frc.robot.subsystems.swerve.SwerveSimIO;
 
 public class RobotContainer {
 
@@ -30,17 +32,17 @@ public class RobotContainer {
         switch (Constants.BotConstants.botMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                swerveDriveSubsystem = new SwerveDriveSubsystem();
+                swerveDriveSubsystem = new SwerveDriveSubsystem(new SwerveHardwareIO());
                 break;
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
-                swerveDriveSubsystem = new SwerveDriveSubsystem();
+                swerveDriveSubsystem = new SwerveDriveSubsystem(new SwerveSimIO());
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
-                swerveDriveSubsystem = new SwerveDriveSubsystem();
+                swerveDriveSubsystem = new SwerveDriveSubsystem(new SwerveSimIO());
                 break;
         }
     }
