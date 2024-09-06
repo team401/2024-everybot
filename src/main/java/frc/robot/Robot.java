@@ -7,9 +7,9 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.shooter_intake.ShooterIntakeSubsystem;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -28,17 +28,13 @@ public class Robot extends LoggedRobot {
 
     private RobotContainer robotContainer;
 
-    Pose2d pose2d = new Pose2d(0.0, 0.0, new Rotation2d(0.0, 0.0));
-    Transform2d transform2d =
-            new Transform2d(new Translation2d(0.02, 0.0), new Rotation2d(0.0, 0.0));
-    int count = 0;
-
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
      */
     @Override
     public void robotInit() {
+        enableLiveWindowInTest(true);
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
         Logger.recordMetadata("ProjectName", "2024 - 401 Comp Robot");
@@ -61,7 +57,6 @@ public class Robot extends LoggedRobot {
         }
 
         Logger.start();
-        Logger.recordOutput("randomTesting", new Pose2d(0.0, 0.0, new Rotation2d(0.0, 0.0)));
 
         robotContainer = new RobotContainer();
     }
@@ -81,12 +76,7 @@ public class Robot extends LoggedRobot {
         // block in order for anything in the Command-based framework to work.
 
         CommandScheduler.getInstance().run();
-        Logger.recordOutput("randomCount", pose2d);
-        Transform2d modifier = transform2d.times(Math.sin(count / 100.0));
-        pose2d = pose2d.transformBy(modifier);
-        Logger.recordOutput("joystickExpected", Math.sin(count / 100.0));
 
-        count++;
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
