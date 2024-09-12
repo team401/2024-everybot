@@ -1,14 +1,23 @@
 package frc.robot.subsystems.shooter_intake;
 
+import static frc.robot.Constants.ShooterIntakeConstants.ShooterIntakeSimConstants;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 
 public class ShooterIntakeIOSim implements ShooterIntakeIO {
 
-    FlywheelSim flywheelSim = new FlywheelSim(DCMotor.getCIM(2), 1.0, 1.0);
-    PIDController controller = new PIDController(0.75, 0.1, 0.0);
+    FlywheelSim flywheelSim =
+            new FlywheelSim(
+                    ShooterIntakeSimConstants.FLYWHEEL_DC_MOTOR,
+                    ShooterIntakeSimConstants.FLYWHEEL_GEARING,
+                    ShooterIntakeSimConstants.FLYWHEEL_jKg_METERS_SQUARED);
+    PIDController controller =
+            new PIDController(
+                    ShooterIntakeSimConstants.FLYWHEEL_KP,
+                    ShooterIntakeSimConstants.FLYWHEEL_KI,
+                    ShooterIntakeSimConstants.FLYWHEEL_KD);
     ShooterIntakeIOInputsAutoLogged shooterIntakeIOInputs;
 
     @Override
@@ -24,7 +33,6 @@ public class ShooterIntakeIOSim implements ShooterIntakeIO {
         flywheelSim.setInputVoltage(calculatedVoltage);
         shooterIntakeIOInputs.flywheelMotorVoltage = calculatedVoltage;
         shooterIntakeIOInputs.flywheelSpeed = flywheelSim.getAngularVelocityRPM();
-        
     }
 
     @Override

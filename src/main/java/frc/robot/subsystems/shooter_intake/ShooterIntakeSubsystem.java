@@ -1,14 +1,10 @@
 package frc.robot.subsystems.shooter_intake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterIntakeSubsystem extends SubsystemBase {
-
-    // Move to constants later
-    private double intakeTargetRPM = -100.0;
-    private double shootingTargetRPM = 300.0;
-    //
 
     protected State currentState = State.IDLE;
     protected State targetState = State.IDLE;
@@ -63,7 +59,7 @@ public class ShooterIntakeSubsystem extends SubsystemBase {
             @Override
             protected void periodic(ShooterIntakeSubsystem subsystem) {
                 super.periodic(subsystem);
-                subsystem.shooterIntakeIO.setTargetSpeed(subsystem.intakeTargetRPM);
+                subsystem.shooterIntakeIO.setTargetSpeed(Constants.ShooterIntakeConstants.intakeTargetRPM);
             }
         },
 
@@ -72,7 +68,7 @@ public class ShooterIntakeSubsystem extends SubsystemBase {
             @Override
             protected void onStart(ShooterIntakeSubsystem subsystem) {
                 subsystem.shooterIntakeIO.setFlywheelPowered(true);
-                subsystem.shooterIntakeIO.setTargetSpeed(subsystem.shootingTargetRPM);
+                subsystem.shooterIntakeIO.setTargetSpeed(Constants.ShooterIntakeConstants.shootingTargetRPM);
             }
 
             @Override
@@ -92,7 +88,7 @@ public class ShooterIntakeSubsystem extends SubsystemBase {
             @Override
             protected void periodic(ShooterIntakeSubsystem subsystem) {
                 super.periodic(subsystem);
-                subsystem.shooterIntakeIO.setTargetSpeed(subsystem.shootingTargetRPM);
+                subsystem.shooterIntakeIO.setTargetSpeed(Constants.ShooterIntakeConstants.shootingTargetRPM);
             }
         },
 
@@ -105,7 +101,7 @@ public class ShooterIntakeSubsystem extends SubsystemBase {
             @Override
             protected void periodic(ShooterIntakeSubsystem subsystem) {
                 super.periodic(subsystem);
-                subsystem.shooterIntakeIO.setTargetSpeed(subsystem.shootingTargetRPM);
+                subsystem.shooterIntakeIO.setTargetSpeed(Constants.ShooterIntakeConstants.shootingTargetRPM);
             }
         };
 
