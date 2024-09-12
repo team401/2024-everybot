@@ -12,9 +12,11 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import java.io.IOException;
 import java.util.Collections;
+import swervelib.math.Matter;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -26,22 +28,11 @@ import java.util.Collections;
  */
 public final class Constants {
 
-    public static enum DriveTrainState {
-        /*Manual control */
-        MANUAL,
+    public static final double LOOP_TIME = 0.02;
 
-        /*Aiming to shot */
-        AIM,
-
-        /*Auto pathfollowing */
-        PATHFOLLOW,
-    }
-
-    public static enum AlignState {
-        SPEAKER,
-        AMP,
-        ENDGAME,
-    }
+    public static final double ROBOT_MASS = 50.0;
+    public static final Matter CHASSIS =
+            new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
 
     public static final int pigeonID = 0; // placeholder
 
@@ -115,31 +106,5 @@ public final class Constants {
             layout = new AprilTagFieldLayout(Collections.emptyList(), 0.0, 0.0);
         }
         return layout;
-    }
-
-    public static class DriveConstants {
-        public static final double TRACK_WIDTH = 0.0; // placeholder
-        public static final int frontLeftID = 0; // placeholder
-        public static final int backLeftID = 0; // placeholder
-        public static final int frontRightID = 0; // placeholder
-        public static final int backRightID = 0; // placeholder
-        public static final int pigeonID = 0; // placeholder
-
-        public static final double GEAR_RATIO = 10.0;
-
-        public static final double autoDrivePercent = 0.0; // placeholder
-
-        public static final double WHEEL_RADIUS = 1.0; // placeholder
-
-        public static final double kP = 1.5;
-        public static final double kI = 0.01;
-        public static final double kD = 0.15;
-
-        public static final double alignToleranceRadians = 0.01;
-    }
-
-    public static class SimConstants {
-        public static final double KP = 0.2; // placeholder
-        public static final double KD = 0.0; // placeholder
     }
 }
