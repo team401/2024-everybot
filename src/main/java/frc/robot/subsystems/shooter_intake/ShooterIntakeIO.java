@@ -8,6 +8,7 @@ public interface ShooterIntakeIO {
     public static class ShooterIntakeIOInputs {
         public double flywheelTargetSpeed = 0.0;
         public double flywheelSpeed = 0.0;
+        public double flywheelMotorVoltage = 0.0;
         public boolean flywheelPowered = false;
     }
 

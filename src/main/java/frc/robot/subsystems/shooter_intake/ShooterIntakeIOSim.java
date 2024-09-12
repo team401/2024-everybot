@@ -4,7 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import org.littletonrobotics.junction.Logger;
 
 public class ShooterIntakeIOSim implements ShooterIntakeIO {
 
@@ -23,8 +22,9 @@ public class ShooterIntakeIOSim implements ShooterIntakeIO {
         double calculatedVoltage = controller.calculate(getSpeed());
         calculatedVoltage = MathUtil.clamp(calculatedVoltage, -12, 12);
         flywheelSim.setInputVoltage(calculatedVoltage);
-        Logger.recordOutput("Shooter.flyWheel.appliedVolts", calculatedVoltage);
+        shooterIntakeIOInputs.flywheelMotorVoltage = calculatedVoltage;
         shooterIntakeIOInputs.flywheelSpeed = flywheelSim.getAngularVelocityRPM();
+        
     }
 
     @Override

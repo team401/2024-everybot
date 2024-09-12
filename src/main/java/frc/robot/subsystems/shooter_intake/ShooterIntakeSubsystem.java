@@ -6,26 +6,26 @@ import org.littletonrobotics.junction.Logger;
 public class ShooterIntakeSubsystem extends SubsystemBase {
 
     // Move to constants later
-    double intakeTargetRPM = -100.0;
-    double shootingTargetRPM = 300.0;
+    private double intakeTargetRPM = -100.0;
+    private double shootingTargetRPM = 300.0;
     //
 
     protected State currentState = State.IDLE;
     protected State targetState = State.IDLE;
-    ShooterIntakeIO io;
+    protected ShooterIntakeIO shooterIntakeIO;
     static ShooterIntakeIOInputsAutoLogged shooterIntakeIOInputs =
             new ShooterIntakeIOInputsAutoLogged();
 
-    public ShooterIntakeSubsystem(ShooterIntakeIO io) {
-        this.io = io;
-        io.setInputs(shooterIntakeIOInputs);
+    public ShooterIntakeSubsystem(ShooterIntakeIO shooterIntakeIO) {
+        this.shooterIntakeIO = shooterIntakeIO;
+        shooterIntakeIO.setInputs(shooterIntakeIOInputs);
     }
 
     public void periodic() {
         currentState.periodic(this);
-        io.periodic();
-        Logger.recordOutput("Shooter.flyWheel.CurrentState", currentState);
-        Logger.recordOutput("Shooter.flyWheel.speed", io.getSpeed());
+        shooterIntakeIO.periodic();
+        Logger.recordOutput("ShooterIntake.CurrentState", currentState);
+        Logger.processInputs("shooterIntake", shooterIntakeIOInputs);
     }
 
     public void setTargetState(State target) {
@@ -35,102 +35,85 @@ public class ShooterIntakeSubsystem extends SubsystemBase {
     // spotless:off
     public enum State {
         IDLE {
-
             @Override
-            void handleStateChanges(ShooterIntakeSubsystem subsystem) {
-                if (subsystem.targetState == this) return;
-                switch (subsystem.targetState){
-                    case SHOOTING:
-                        if (!SHOOTING_PREP.canStart(subsystem)) return;
-                        this.transitionToState(subsystem, SHOOTING_PREP);
-                        break;
-                    default:
-                        if (!subsystem.targetState.canStart(subsystem)) return;
-                        this.transitionToState(subsystem, subsystem.targetState);
-                }
+            protected void periodic(ShooterIntakeSubsystem subsystem) {
+                subsystem.shooterIntakeIO.setFlywheelPowered(false);
             }
 
             @Override
-            void onStart(ShooterIntakeSubsystem subsystem) {
-                subsystem.io.setFlywheelPowered(false);
+            protected void handleStateChanges(ShooterIntakeSubsystem subsystem) {
+                if (subsystem.targetState == this) return;
+                if (subsystem.targetState == SHOOTING){
+                    if (!SHOOTING_PREP.canStart(subsystem)) return;
+                    this.transitionToState(subsystem, SHOOTING_PREP);
+                    return;
+                }
+                if (!subsystem.targetState.canStart(subsystem)) return;
+                this.transitionToState(subsystem, subsystem.targetState);
             }
         },
 
         INTAKING {
 
             @Override
-            void onStart(ShooterIntakeSubsystem subsystem) {
-                subsystem.io.setFlywheelPowered(true);
+            protected void onStart(ShooterIntakeSubsystem subsystem) {
+                subsystem.shooterIntakeIO.setFlywheelPowered(true);
             }
             
             @Override
-            void periodic(ShooterIntakeSubsystem subsystem) {
+            protected void periodic(ShooterIntakeSubsystem subsystem) {
                 super.periodic(subsystem);
-                subsystem.io.setTargetSpeed(subsystem.intakeTargetRPM);
+                subsystem.shooterIntakeIO.setTargetSpeed(subsystem.intakeTargetRPM);
             }
         },
 
         SHOOTING_PREP {
 
             @Override
-            void onStart(ShooterIntakeSubsystem subsystem) {
-                subsystem.io.setFlywheelPowered(true);
-                subsystem.io.setTargetSpeed(subsystem.shootingTargetRPM);
+            protected void onStart(ShooterIntakeSubsystem subsystem) {
+                subsystem.shooterIntakeIO.setFlywheelPowered(true);
+                subsystem.shooterIntakeIO.setTargetSpeed(subsystem.shootingTargetRPM);
             }
 
             @Override
-            void handleStateChanges(ShooterIntakeSubsystem subsystem) {
+            protected void handleStateChanges(ShooterIntakeSubsystem subsystem) {
                 switch (subsystem.targetState){
                     case SHOOTING:
                         if (!SHOOTING.canStart(subsystem)) return;
-                        if (!subsystem.io.atSpeed()) return;
+                        if (!subsystem.shooterIntakeIO.atSpeed()) return;
                         this.transitionToState(subsystem, SHOOTING);
                         break;
                     default:
-                        if (!subsystem.targetState.canStart(subsystem)) return;
-
-                        this.transitionToState(subsystem, subsystem.targetState);
+                        if (!IDLE.canStart(subsystem)) return;
+                        this.transitionToState(subsystem, IDLE);
                 }
             }
 
             @Override
-            void periodic(ShooterIntakeSubsystem subsystem) {
+            protected void periodic(ShooterIntakeSubsystem subsystem) {
                 super.periodic(subsystem);
-                subsystem.io.setTargetSpeed(subsystem.shootingTargetRPM);
+                subsystem.shooterIntakeIO.setTargetSpeed(subsystem.shootingTargetRPM);
             }
         },
 
         SHOOTING {
+            @Override
+            protected boolean canStart(ShooterIntakeSubsystem subsystem){
+                return (subsystem.currentState == SHOOTING_PREP);
+            }
 
             @Override
-            void periodic(ShooterIntakeSubsystem subsystem) {
+            protected void periodic(ShooterIntakeSubsystem subsystem) {
                 super.periodic(subsystem);
-                subsystem.io.setTargetSpeed(subsystem.shootingTargetRPM);
-            }
-            
-            @Override
-            boolean canStart(ShooterIntakeSubsystem subsystem){
-                return (subsystem.currentState == SHOOTING_PREP);
+                subsystem.shooterIntakeIO.setTargetSpeed(subsystem.shootingTargetRPM);
             }
         };
 
-        void periodic(ShooterIntakeSubsystem subsystem) {
-            this.handleStateChanges(subsystem);
-            Logger.processInputs("shooterintake", shooterIntakeIOInputs);
-        }
+        protected void onStart(ShooterIntakeSubsystem subsystem) {}
 
-        void handleStateChanges(ShooterIntakeSubsystem subsystem) {
-            if (this != subsystem.targetState) {
-                if (!IDLE.canStart(subsystem)) return;
-                this.transitionToState(subsystem, IDLE);
-            }
-        }
-
-        void onStart(ShooterIntakeSubsystem subsystem) {}
-
-        void onEnd(ShooterIntakeSubsystem subsystem) {}
+        protected void onEnd(ShooterIntakeSubsystem subsystem) {}
         
-        boolean canStart(ShooterIntakeSubsystem subsystem) {
+        protected boolean canStart(ShooterIntakeSubsystem subsystem) {
             return true;
         }
 
@@ -138,6 +121,17 @@ public class ShooterIntakeSubsystem extends SubsystemBase {
             this.onEnd(subsystem);
             subsystem.currentState = newState;
             newState.onStart(subsystem);
+        }
+
+        protected void handleStateChanges(ShooterIntakeSubsystem subsystem) {
+            if (this != subsystem.targetState) {
+                if (!IDLE.canStart(subsystem)) return;
+                this.transitionToState(subsystem, IDLE);
+            }
+        }
+
+        protected void periodic(ShooterIntakeSubsystem subsystem) {
+            this.handleStateChanges(subsystem);
         }
     }
     // spotless:on
