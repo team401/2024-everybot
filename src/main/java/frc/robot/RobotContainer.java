@@ -4,15 +4,27 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveWithGamepad;
+import frc.robot.subsystems.shooter_intake.ShooterIntakeIOSim;
+import frc.robot.subsystems.shooter_intake.ShooterIntakeSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.swerve.SwerveHardwareIO;
 import frc.robot.subsystems.swerve.SwerveSimIO;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 public class RobotContainer {
+
+    private DoubleSupplier leftDistanceSupplier;
+    private DoubleSupplier rightDistanceSupplier;
+    private Supplier<Rotation2d> gyroSupplier;
+    private Supplier<Pose2d> simulatedPoseSupplier;
+    ShooterIntakeSubsystem intakeSubsystem = new ShooterIntakeSubsystem(new ShooterIntakeIOSim());
 
     private final CommandXboxController driverController =
             new CommandXboxController(OperatorConstants.kDriverControllerPort);

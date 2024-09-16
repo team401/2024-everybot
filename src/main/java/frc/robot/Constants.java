@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import java.io.IOException;
@@ -63,6 +64,20 @@ public final class Constants {
         public static Mode botMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
         public static iMode inputMode =
                 iMode.Stick; // my puny brain can't think of how to set inputMode automatically
+    }
+
+    public static class ShooterIntakeConstants {
+        public static final double intakeTargetRPM = -100.0;
+        public static final double shootingTargetRPM = 300.0;
+
+        public static class ShooterIntakeSimConstants {
+            public static final DCMotor FLYWHEEL_DC_MOTOR = DCMotor.getCIM(2);
+            public static final double FLYWHEEL_GEARING = 1.0;
+            public static final double FLYWHEEL_jKg_METERS_SQUARED = 1.0;
+            public static final double FLYWHEEL_KP = 0.75;
+            public static final double FLYWHEEL_KI = 0.01;
+            public static final double FLYWHEEL_KD = 0.0;
+        }
     }
 
     public static class VisionConstants { // ALL PLACEHOLDERS

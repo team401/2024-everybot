@@ -32,6 +32,8 @@ public class Robot extends LoggedRobot {
     public void robotInit() {
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our
+        enableLiveWindowInTest(true);
+        // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
         Logger.recordMetadata("ProjectName", "2024 - 401 Comp Robot");
 
@@ -53,6 +55,7 @@ public class Robot extends LoggedRobot {
         }
 
         Logger.start();
+
         robotContainer = new RobotContainer();
     }
 
@@ -72,6 +75,7 @@ public class Robot extends LoggedRobot {
         // and running subsystem periodic() methods. This must be called from the
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
+
         CommandScheduler.getInstance().run();
     }
 
