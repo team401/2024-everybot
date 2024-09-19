@@ -45,6 +45,6 @@ public class DriveWithGamepad extends Command {
         SmartDashboard.putString("Translation", translation.toString());
 
         // Make the robot move
-        swerveDriveSubsystem.drive(translation, desiredSpeeds.omegaRadiansPerSecond, true);
+        swerveDriveSubsystem.drive(translation, desiredSpeeds.omegaRadiansPerSecond, false);
     }
 }
