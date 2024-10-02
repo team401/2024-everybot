@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.9787696594026727,
+      "y": 6.832582112369194
+    },
+    "rotation": 57.4499965078066
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "SHOOTING"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "H1-R11"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "INTAKING"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SHOOTING_PREP"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SHOOTING"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveWithGamepad;
@@ -38,6 +40,7 @@ public class RobotContainer {
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         setupSubsystems();
+        setupAutonomous();
         setupCommands();
     }
 
@@ -70,13 +73,32 @@ public class RobotContainer {
         swerveDriveSubsystem.setDefaultCommand(driveWithGamepad);
     }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    public Command getAutonomousCommand() {
-        // An example command will be run in autonomous
-        return new Command() {};
+    public void autoInit() {
+        new PathPlannerAuto("H1-R11").schedule();
+    }
+
+    public void setupAutonomous() {
+        NamedCommands.registerCommand(
+                "IDLE",
+                new InstantCommand(
+                        () -> intakeSubsystem.setTargetState(ShooterIntakeSubsystem.State.IDLE)));
+        NamedCommands.registerCommand(
+                "INTAKING",
+                new InstantCommand(
+                        () ->
+                                intakeSubsystem.setTargetState(
+                                        ShooterIntakeSubsystem.State.INTAKING)));
+        NamedCommands.registerCommand(
+                "SHOOTING_PREP",
+                new InstantCommand(
+                        () ->
+                                intakeSubsystem.setTargetState(
+                                        ShooterIntakeSubsystem.State.SHOOTING_PREP)));
+        NamedCommands.registerCommand(
+                "SHOOTING",
+                new InstantCommand(
+                        () ->
+                                intakeSubsystem.setTargetState(
+                                        ShooterIntakeSubsystem.State.SHOOTING)));
     }
 }
