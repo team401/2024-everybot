@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -49,11 +48,14 @@ public class RobotContainer {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
                 swerveDriveSubsystem = new SwerveDriveSubsystem(new SwerveHardwareIO());
+                // why is there no hardware for shooter? intakeSubsystem = new
+                // ShooterIntakeSubsystem(new ShooterIntakeIO());
                 break;
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 swerveDriveSubsystem = new SwerveDriveSubsystem(new SwerveSimIO());
+                intakeSubsystem = new ShooterIntakeSubsystem(new ShooterIntakeIOSim());
                 break;
 
             default:
@@ -74,7 +76,12 @@ public class RobotContainer {
     }
 
     public void autoInit() {
-        new PathPlannerAuto("H1-R11").schedule();
+
+        swerveDriveSubsystem.getAutonomousCommand("H1-R11").schedule();
+
+        // tbh this seems repetitive
+        // new PathPlannerAuto("H1-R11").schedule();
+        // works as well
     }
 
     public void setupAutonomous() {
