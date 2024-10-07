@@ -58,6 +58,7 @@ public final class Constants {
 
     public static class OperatorConstants {
         public static final int kDriverControllerPort = 0;
+        public static final int kIntakeControllerPort = 1;
     }
 
     public static class BotConstants {

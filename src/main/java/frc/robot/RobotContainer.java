@@ -13,6 +13,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveWithGamepad;
 import frc.robot.subsystems.shooter_intake.ShooterIntakeIOSim;
 import frc.robot.subsystems.shooter_intake.ShooterIntakeSubsystem;
+import frc.robot.subsystems.shooter_intake.ShooterIntakeSubsystem.State;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.swerve.SwerveHardwareIO;
 import frc.robot.subsystems.swerve.SwerveSimIO;
@@ -29,6 +30,9 @@ public class RobotContainer {
 
     private final CommandXboxController driverController =
             new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+    private final CommandXboxController intakeController =
+            new CommandXboxController(OperatorConstants.kIntakeControllerPort);
 
     // Subsystems
     SwerveDriveSubsystem swerveDriveSubsystem;
@@ -73,15 +77,15 @@ public class RobotContainer {
                         () -> driverController.getLeftX(),
                         () -> -driverController.getRightX());
         swerveDriveSubsystem.setDefaultCommand(driveWithGamepad);
+
+        intakeController
+                .b()
+                .whileTrue(new InstantCommand(() -> intakeSubsystem.setTargetState(State.INTAKING)))
+                .whileFalse(new InstantCommand(() -> intakeSubsystem.setTargetState(State.IDLE)));
     }
 
     public void autoInit() {
-
-        swerveDriveSubsystem.getAutonomousCommand("H1-R11").schedule();
-
-        // tbh this seems repetitive
-        // new PathPlannerAuto("H1-R11").schedule();
-        // works as well
+        swerveDriveSubsystem.getAutonomousCommand().schedule();
     }
 
     public void setupAutonomous() {

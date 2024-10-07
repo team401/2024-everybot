@@ -3,10 +3,8 @@ package frc.robot.subsystems.shooter_intake;
 import static frc.robot.Constants.ShooterIntakeConstants.ShooterIntakeSimConstants;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 
 public class ShooterIntakeIOHardware implements ShooterIntakeIO {
 
@@ -29,7 +27,8 @@ public class ShooterIntakeIOHardware implements ShooterIntakeIO {
         calculatedVoltage = MathUtil.clamp(calculatedVoltage, -12, 12);
         flywheel.setVoltage(calculatedVoltage);
         shooterIntakeIOInputs.flywheelMotorVoltage = calculatedVoltage;
-        shooterIntakeIOInputs.flywheelSpeed = flywheel.getVelocity().getValueAsDouble(); //unit conversions
+        shooterIntakeIOInputs.flywheelSpeed =
+                flywheel.getVelocity().getValueAsDouble(); // unit conversions
     }
 
     @Override
@@ -44,7 +43,7 @@ public class ShooterIntakeIOHardware implements ShooterIntakeIO {
 
     @Override
     public double getSpeed() {
-        return flywheel.getVelocity().getValueAsDouble(); //todo unit conversions
+        return flywheel.getVelocity().getValueAsDouble(); // todo unit conversions
     }
 
     @Override

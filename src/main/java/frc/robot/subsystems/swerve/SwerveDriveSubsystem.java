@@ -12,7 +12,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.AutonConstants;
 import frc.robot.constants.SwerveConstants;
@@ -21,6 +24,8 @@ import org.littletonrobotics.junction.Logger;
 public class SwerveDriveSubsystem extends SubsystemBase {
 
     private SwerveIO swerveIO;
+
+    private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
     public SwerveDriveSubsystem(SwerveIO io) {
         swerveIO = io;
@@ -62,6 +67,38 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                 },
                 this // Reference to this subsystem to set requirements
                 );
+
+        autoChooser.setDefaultOption("Default (nothing)", Commands.none()); // S1-W1-W2-W3
+        autoChooser.addOption(
+                "Amp Side - 4 note (2 from center)", new PathPlannerAuto("S1-W1-C1-C2"));
+        autoChooser.addOption(
+                "Amp Side - 5 note (3 from center)", new PathPlannerAuto("S1-W1-C1-C2-C3"));
+        autoChooser.addOption("Amp Side - 3 note", new PathPlannerAuto("S1-W1-W2"));
+        autoChooser.addOption("Amp Side - 4 note (wing)", new PathPlannerAuto("S1-W1-W2-W3"));
+        autoChooser.addOption("Amp Side - 5 note", new PathPlannerAuto("S1-W1-W2-W3-C5"));
+        autoChooser.addOption("Center - 3 note", new PathPlannerAuto("S2-W2-W3"));
+        autoChooser.addOption(
+                "Center - 3 note (2 from center - avoids wing notes)",
+                new PathPlannerAuto("S2-C1-C2"));
+        autoChooser.addOption(
+                "Center - 4 note (source side to center)", new PathPlannerAuto("S2-W2-W3-C5"));
+        autoChooser.addOption("Center - 3 note - special", new PathPlannerAuto("S2-C1-C2-Special"));
+        autoChooser.addOption(
+                "Center - 5 note - 3 from center", new PathPlannerAuto("S2-C1-C2-C3"));
+        autoChooser.addOption("Source Side - 2 note", new PathPlannerAuto("S3-W3"));
+        autoChooser.addOption(
+                "Source Side - 3 note - 2 from center", new PathPlannerAuto("S3-C5-C4"));
+        autoChooser.addOption(
+                "Source Side - 4 note - 3 from center", new PathPlannerAuto("S3-C5-C4-C3"));
+        autoChooser.addOption(
+                "Source Side - 5 note (across)", new PathPlannerAuto("S3-W3-W2-W1-C1"));
+        autoChooser.addOption(
+                "Source Side - 6 note (across)", new PathPlannerAuto("S3-W3-W2-W1-C1-C2"));
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+    }
+
+    public Command getAutonomousCommand() {
+        return autoChooser.getSelected();
     }
 
     /**
