@@ -12,6 +12,7 @@
       "/LiveWindow/ShooterIntakeSubsystem": "Subsystem",
       "/LiveWindow/ShooterIntakeSubsystem/testMaxMotor": "Motor Controller",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/VisionSystemSim-/Sim Field": "Field2d"
     },
     "windows": {

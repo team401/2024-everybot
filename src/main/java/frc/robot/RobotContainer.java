@@ -100,13 +100,13 @@ public class RobotContainer {
                                 intakeSubsystem.setTargetState(
                                         ShooterIntakeSubsystem.State.INTAKING)));
         NamedCommands.registerCommand(
-                "SHOOTING_PREP",
+                "Aim Scoring",
                 new InstantCommand(
                         () ->
                                 intakeSubsystem.setTargetState(
                                         ShooterIntakeSubsystem.State.SHOOTING_PREP)));
         NamedCommands.registerCommand(
-                "SHOOTING",
+                "Shoot Scoring",
                 new InstantCommand(
                         () ->
                                 intakeSubsystem.setTargetState(

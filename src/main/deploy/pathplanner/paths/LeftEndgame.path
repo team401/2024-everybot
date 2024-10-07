@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Endgame",
+  "folder": null,
   "previewStartingState": {
     "rotation": -55.30484646876609,
     "velocity": 0
