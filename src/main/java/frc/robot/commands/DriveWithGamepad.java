@@ -34,8 +34,8 @@ public class DriveWithGamepad extends Command {
     @Override
     public void execute() {
         // Get the desired chassis speeds in ft/s, ft/s, and rad/s.
-        double vx = this.forwardAxis.getAsDouble() * SwerveConstants.MAX_SPEED;
-        double vy = this.strafeAxis.getAsDouble() * SwerveConstants.MAX_SPEED;
+        double vx = Math.pow(this.forwardAxis.getAsDouble(), 3) * SwerveConstants.MAX_SPEED;
+        double vy = Math.pow(this.strafeAxis.getAsDouble(), 3) * SwerveConstants.MAX_SPEED;
         double omega = this.rotationAxis.getAsDouble() * SwerveConstants.MAX_ANGULAR_VELOCITY;
 
         ChassisSpeeds desiredSpeeds = new ChassisSpeeds(vx, vy, omega);
