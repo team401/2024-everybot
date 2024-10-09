@@ -5,7 +5,7 @@
       "x": 0.7071301441350655,
       "y": 4.376333332273105
     },
-    "rotation": 120.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot Scoring"
+            "name": "SHOOTING_PREP"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SHOOTING"
           }
         },
         {

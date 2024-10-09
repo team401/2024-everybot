@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.765872873427322,
-      "y": 6.726042503963363
+      "x": 1.441414260288271,
+      "y": 5.463073824179848
     },
-    "rotation": -120.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot Scoring"
+            "name": "SHOOTING_PREP"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SHOOTING"
           }
         },
         {
@@ -26,19 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "S1-W1"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "W1-W2"
+            "pathName": "S2-W2"
           }
         }
       ]
