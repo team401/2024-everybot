@@ -21,6 +21,7 @@ public class ShooterIntakeSubsystem extends SubsystemBase {
         currentState.periodic(this);
         shooterIntakeIO.periodic();
         Logger.recordOutput("ShooterIntake.CurrentState", currentState);
+        Logger.recordOutput("ShooterIntake.TargetState", targetState);
         Logger.processInputs("shooterIntake", shooterIntakeIOInputs);
     }
 

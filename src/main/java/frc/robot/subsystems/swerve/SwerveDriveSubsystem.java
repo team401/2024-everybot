@@ -12,7 +12,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.AutonConstants;
 import frc.robot.constants.SwerveConstants;
@@ -21,6 +24,8 @@ import org.littletonrobotics.junction.Logger;
 public class SwerveDriveSubsystem extends SubsystemBase {
 
     private SwerveIO swerveIO;
+
+    private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
     public SwerveDriveSubsystem(SwerveIO io) {
         swerveIO = io;
@@ -62,6 +67,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                 },
                 this // Reference to this subsystem to set requirements
                 );
+
+        autoChooser.setDefaultOption("Default (nothing)", Commands.none());
+        autoChooser.addOption("Amp Side", new PathPlannerAuto("S1-W1"));
+        autoChooser.addOption("Center", new PathPlannerAuto("S2-W2"));
+        autoChooser.addOption("Far Side", new PathPlannerAuto("S3-W3"));
+
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+    }
+
+    public Command getAutonomousCommand() {
+        return autoChooser.getSelected();
     }
 
     /**
