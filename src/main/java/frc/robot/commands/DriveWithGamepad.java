@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import coppercore.math.Deadband;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,9 +35,14 @@ public class DriveWithGamepad extends Command {
     @Override
     public void execute() {
         // Get the desired chassis speeds in ft/s, ft/s, and rad/s.
-        double vx = this.forwardAxis.getAsDouble() * SwerveConstants.MAX_SPEED;
-        double vy = this.strafeAxis.getAsDouble() * SwerveConstants.MAX_SPEED;
-        double omega = this.rotationAxis.getAsDouble() * SwerveConstants.MAX_ANGULAR_VELOCITY;
+        double[] axis1 =
+                Deadband.twoAxisDeadband(
+                        this.forwardAxis.getAsDouble(), this.strafeAxis.getAsDouble(), 0.1);
+        double vx = Math.pow(axis1[0], 3) * SwerveConstants.MAX_SPEED;
+        double vy = Math.pow(axis1[1], 3) * SwerveConstants.MAX_SPEED;
+        double omega =
+                Deadband.oneAxisDeadband(this.rotationAxis.getAsDouble(), 0.1)
+                        * SwerveConstants.MAX_ANGULAR_VELOCITY;
 
         ChassisSpeeds desiredSpeeds = new ChassisSpeeds(vx, vy, omega);
         Translation2d translation = SwerveController.getTranslation2d(desiredSpeeds);
@@ -45,6 +51,6 @@ public class DriveWithGamepad extends Command {
         SmartDashboard.putString("Translation", translation.toString());
 
         // Make the robot move
-        swerveDriveSubsystem.drive(translation, desiredSpeeds.omegaRadiansPerSecond, true);
+        swerveDriveSubsystem.drive(translation, desiredSpeeds.omegaRadiansPerSecond, false);
     }
 }
