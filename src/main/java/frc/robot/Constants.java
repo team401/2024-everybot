@@ -78,6 +78,14 @@ public final class Constants {
             public static final double FLYWHEEL_KI = 0.01;
             public static final double FLYWHEEL_KD = 0.0;
         }
+
+        public static class ShooterIntakeHardwareConstants {
+            public static final int motor1ID = 0;
+            public static final int motor2ID = 0;
+            public static final double FLYWHEEL_KP = 0.75;
+            public static final double FLYWHEEL_KI = 0.01;
+            public static final double FLYWHEEL_KD = 0.0;
+        }
     }
 
     public static class VisionConstants { // ALL PLACEHOLDERS

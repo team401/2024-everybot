@@ -26,7 +26,7 @@ public class RobotContainer {
     private Supplier<Pose2d> simulatedPoseSupplier;
     ShooterIntakeSubsystem intakeSubsystem = new ShooterIntakeSubsystem(new ShooterIntakeIOSim());
 
-    private final CommandXboxController driverController =
+    final CommandXboxController driverController =
             new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
     // Subsystems

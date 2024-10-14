@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class ShooterIntakeSubsystem extends SubsystemBase {
 
-    protected State currentState = State.IDLE;
+    public State currentState = State.IDLE;
     protected State targetState = State.IDLE;
     protected ShooterIntakeIO shooterIntakeIO;
     static ShooterIntakeIOInputsAutoLogged shooterIntakeIOInputs =
@@ -18,14 +18,27 @@ public class ShooterIntakeSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
-        currentState.periodic(this);
-        shooterIntakeIO.periodic();
+        if (this.currentState != this.targetState) {
+            if (this.currentState == State.IDLE) {
+                this.currentState = targetState;
+            } else {
+                this.currentState = State.IDLE;
+            }
+        }
+        // currentState.periodic(this);
+        // shooterIntakeIO.periodic();
         Logger.recordOutput("ShooterIntake.CurrentState", currentState);
+        Logger.recordOutput("ShooterIntake.TargetState", targetState);
+
         Logger.processInputs("shooterIntake", shooterIntakeIOInputs);
     }
 
     public void setTargetState(State target) {
         this.targetState = target;
+    }
+
+    public State getTargetState() {
+        return this.targetState;
     }
 
     // spotless:off
