@@ -25,8 +25,17 @@ public class ShooterIntakeSubsystem extends SubsystemBase {
                 this.currentState = State.IDLE;
             }
         }
+        this.shooterIntakeIO.setFlywheelPowered(this.currentState != State.IDLE);
+        // this.shooterIntakeIO.setFlywheelPowered(true);
+
+        if (this.currentState == State.SHOOTING)
+            this.shooterIntakeIO.setTargetSpeed(Constants.ShooterIntakeConstants.shootingTargetRPM);
+        else if (this.currentState == State.INTAKING)
+            this.shooterIntakeIO.setTargetSpeed(Constants.ShooterIntakeConstants.intakeTargetRPM);
+        else this.shooterIntakeIO.setTargetSpeed(0.0);
+
         // currentState.periodic(this);
-        // shooterIntakeIO.periodic();
+        shooterIntakeIO.periodic();
         Logger.recordOutput("ShooterIntake.CurrentState", currentState);
         Logger.recordOutput("ShooterIntake.TargetState", targetState);
 
@@ -140,7 +149,7 @@ public class ShooterIntakeSubsystem extends SubsystemBase {
         }
 
         protected void periodic(ShooterIntakeSubsystem subsystem) {
-            this.handleStateChanges(subsystem);
+            //this.handleStateChanges(subsystem);
         }
     }
     // spotless:on
