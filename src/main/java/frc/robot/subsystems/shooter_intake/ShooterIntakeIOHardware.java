@@ -21,11 +21,6 @@ public class ShooterIntakeIOHardware implements ShooterIntakeIO {
                     ShooterIntakeSimConstants.FLYWHEEL_KP,
                     ShooterIntakeSimConstants.FLYWHEEL_KI,
                     ShooterIntakeSimConstants.FLYWHEEL_KD);
-    PIDController rightController =
-            new PIDController(
-                    ShooterIntakeSimConstants.FLYWHEEL_KP,
-                    ShooterIntakeSimConstants.FLYWHEEL_KI,
-                    ShooterIntakeSimConstants.FLYWHEEL_KD);
 
     ShooterIntakeIOInputsAutoLogged shooterIntakeIOInputs;
 
@@ -36,21 +31,18 @@ public class ShooterIntakeIOHardware implements ShooterIntakeIO {
         } else {
             leftController.setSetpoint(0.0);
         }
-        if (shooterIntakeIOInputs.flywheelPowered) {
-            rightController.setSetpoint(shooterIntakeIOInputs.flywheelTargetSpeed);
-        } else {
-            rightController.setSetpoint(0.0);
-        }
         double calculatedLeftVoltage =
                 leftController.calculate(leftIntake.getEncoder().getVelocity());
-        double calculatedRightVoltage =
-                rightController.calculate(rightIntake.getEncoder().getVelocity());
 
         calculatedLeftVoltage = MathUtil.clamp(calculatedLeftVoltage, -12, 12);
-        calculatedLeftVoltage = MathUtil.clamp(calculatedRightVoltage, -12, 12);
 
-        leftIntake.set(calculatedLeftVoltage / 12);
-        rightIntake.set(calculatedRightVoltage / 12);
+        if (shooterIntakeIOInputs.flywheelPowered) {
+            leftIntake.set(calculatedLeftVoltage / 12);
+            rightIntake.set(calculatedLeftVoltage / 12);
+        } else {
+            leftIntake.set(0.0);
+            rightIntake.set(0.0);
+        }
         // flywheelSim.setInputVoltage(calculatedVoltage);
 
         shooterIntakeIOInputs.flywheelMotorVoltage = calculatedLeftVoltage;

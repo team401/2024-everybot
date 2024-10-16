@@ -67,8 +67,8 @@ public final class Constants {
     }
 
     public static class ShooterIntakeConstants {
-        public static final double intakeTargetRPM = -500.0;
-        public static final double shootingTargetRPM = 1000.0;
+        public static final double intakeTargetRPM = 1000.0;
+        public static final double shootingTargetRPM = -10000.0;
 
         public static class ShooterIntakeSimConstants {
             public static final DCMotor FLYWHEEL_DC_MOTOR = DCMotor.getCIM(2);
@@ -82,8 +82,8 @@ public final class Constants {
         public static class ShooterIntakeHardwareConstants {
             public static final int topIntakeMotorID = 12;
             public static final int bottomIntakeMotorID = 11;
-            public static final double FLYWHEEL_KP = 0.005;
-            public static final double FLYWHEEL_KI = 0.0;
+            public static final double FLYWHEEL_KP = 0.75;
+            public static final double FLYWHEEL_KI = 0.01;
             public static final double FLYWHEEL_KD = 0.0;
         }
     }
