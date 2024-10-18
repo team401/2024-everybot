@@ -79,9 +79,9 @@ public class Robot extends LoggedRobot {
         robotContainer.intakeSubsystem.periodic();
         CommandScheduler.getInstance().run();
 
-        if (robotContainer.driverController.b().getAsBoolean()) {
+        if (robotContainer.masherController.y().getAsBoolean()) {
             robotContainer.intakeSubsystem.setTargetState(State.SHOOTING);
-        } else if (robotContainer.driverController.x().getAsBoolean()) {
+        } else if (robotContainer.masherController.b().getAsBoolean()) {
             robotContainer.intakeSubsystem.setTargetState(State.INTAKING);
         } else {
             robotContainer.intakeSubsystem.setTargetState(State.IDLE);
