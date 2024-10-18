@@ -91,12 +91,7 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void autonomousInit() {
-        // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-        // schedule the autonomous command (example)
-        if (autonomousCommand != null) {
-            autonomousCommand.schedule();
-        }
+        robotContainer.autoInit();
     }
 
     /** This function is called periodically during autonomous. */
