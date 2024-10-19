@@ -30,7 +30,6 @@ public class RobotContainer {
     double climberSpeed = 0;
 
     CANSparkMax climberMotor = new CANSparkMax(9, MotorType.kBrushed);    
-    climberMotor.setSecondaryCurrentLimit(40);
 
 
     ShooterIntakeSubsystem intakeSubsystem =
