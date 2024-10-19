@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class ShooterIntakeSubsystem extends SubsystemBase {
 
-    protected State currentState = State.IDLE;
+    public State currentState = State.IDLE;
     protected State targetState = State.IDLE;
     protected ShooterIntakeIO shooterIntakeIO;
     static ShooterIntakeIOInputsAutoLogged shooterIntakeIOInputs =
@@ -18,14 +18,36 @@ public class ShooterIntakeSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
-        currentState.periodic(this);
+        if (this.currentState != this.targetState) {
+            if (this.currentState == State.IDLE) {
+                this.currentState = targetState;
+            } else {
+                this.currentState = State.IDLE;
+            }
+        }
+        this.shooterIntakeIO.setFlywheelPowered(this.currentState != State.IDLE);
+        // this.shooterIntakeIO.setFlywheelPowered(true);
+
+        if (this.currentState == State.SHOOTING)
+            this.shooterIntakeIO.setTargetSpeed(Constants.ShooterIntakeConstants.shootingTargetRPM);
+        else if (this.currentState == State.INTAKING)
+            this.shooterIntakeIO.setTargetSpeed(Constants.ShooterIntakeConstants.intakeTargetRPM);
+        else this.shooterIntakeIO.setTargetSpeed(0.0);
+
+        // currentState.periodic(this);
         shooterIntakeIO.periodic();
         Logger.recordOutput("ShooterIntake.CurrentState", currentState);
+        Logger.recordOutput("ShooterIntake.TargetState", targetState);
+
         Logger.processInputs("shooterIntake", shooterIntakeIOInputs);
     }
 
     public void setTargetState(State target) {
         this.targetState = target;
+    }
+
+    public State getTargetState() {
+        return this.targetState;
     }
 
     // spotless:off
@@ -127,7 +149,7 @@ public class ShooterIntakeSubsystem extends SubsystemBase {
         }
 
         protected void periodic(ShooterIntakeSubsystem subsystem) {
-            this.handleStateChanges(subsystem);
+            //this.handleStateChanges(subsystem);
         }
     }
     // spotless:on

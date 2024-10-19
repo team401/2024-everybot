@@ -10,13 +10,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveWithGamepad;
-import frc.robot.subsystems.shooter_intake.ShooterIntakeIOSim;
+import frc.robot.subsystems.shooter_intake.ShooterIntakeIOHardware;
 import frc.robot.subsystems.shooter_intake.ShooterIntakeSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
-import frc.robot.subsystems.swerve.SwerveHardwareIO;
 import frc.robot.subsystems.swerve.SwerveSimIO;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class RobotContainer {
 
@@ -24,11 +26,19 @@ public class RobotContainer {
     private DoubleSupplier rightDistanceSupplier;
     private Supplier<Rotation2d> gyroSupplier;
     private Supplier<Pose2d> simulatedPoseSupplier;
-    ShooterIntakeSubsystem intakeSubsystem = new ShooterIntakeSubsystem(new ShooterIntakeIOSim());
 
-    private final CommandXboxController driverController =
+    double climberSpeed = 0;
+
+    CANSparkMax climberMotor = new CANSparkMax(9, MotorType.kBrushed);    
+
+
+    ShooterIntakeSubsystem intakeSubsystem =
+            new ShooterIntakeSubsystem(new ShooterIntakeIOHardware());
+
+    final CommandXboxController driverController =
             new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+    final CommandXboxController masherController = new CommandXboxController(1);
     // Subsystems
     SwerveDriveSubsystem swerveDriveSubsystem;
 
@@ -45,7 +55,7 @@ public class RobotContainer {
         switch (Constants.BotConstants.botMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
-                swerveDriveSubsystem = new SwerveDriveSubsystem(new SwerveHardwareIO());
+                // swerveDriveSubsystem = new SwerveDriveSubsystem(new SwerveHardwareIO());
                 break;
 
             case SIM:
@@ -61,13 +71,13 @@ public class RobotContainer {
     }
 
     public void setupCommands() {
-        driveWithGamepad =
+        /*driveWithGamepad =
                 new DriveWithGamepad(
                         swerveDriveSubsystem,
                         () -> driverController.getLeftY(),
                         () -> driverController.getLeftX(),
                         () -> -driverController.getRightX());
-        swerveDriveSubsystem.setDefaultCommand(driveWithGamepad);
+        swerveDriveSubsystem.setDefaultCommand(driveWithGamepad);*/
     }
 
     /**

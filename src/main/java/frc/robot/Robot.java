@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.shooter_intake.ShooterIntakeSubsystem.State;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -75,8 +76,23 @@ public class Robot extends LoggedRobot {
         // and running subsystem periodic() methods. This must be called from the
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
-
+        robotContainer.intakeSubsystem.periodic();
         CommandScheduler.getInstance().run();
+
+        if (robotContainer.masherController.y().getAsBoolean()) {
+            robotContainer.intakeSubsystem.setTargetState(State.SHOOTING);
+        } else if (robotContainer.masherController.b().getAsBoolean()) {
+            robotContainer.intakeSubsystem.setTargetState(State.INTAKING);
+        } else {
+            robotContainer.intakeSubsystem.setTargetState(State.IDLE);
+        }
+
+        if (robotContainer.masherController.leftBumper().getAsBoolean()){
+            robotContainer.climberMotor.set(robotContainer.climberSpeed);
+        }
+        else{
+            robotContainer.climberMotor.set(0);
+        }
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
