@@ -16,6 +16,8 @@ public interface ShooterIntakeIO {
 
     public void setTargetSpeed(double rpm);
 
+    public void setVoltage(double volts);
+
     public void setFlywheelPowered(boolean powered);
 
     public double getSpeed();
