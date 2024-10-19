@@ -86,6 +86,13 @@ public class Robot extends LoggedRobot {
         } else {
             robotContainer.intakeSubsystem.setTargetState(State.IDLE);
         }
+
+        if (robotContainer.masherController.leftBumper().getAsBoolean()){
+            robotContainer.climberMotor.set(robotContainer.climberSpeed);
+        }
+        else{
+            robotContainer.climberMotor.set(0);
+        }
     }
 
     /** This function is called once each time the robot enters Disabled mode. */

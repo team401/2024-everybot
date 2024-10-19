@@ -16,6 +16,9 @@ import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.swerve.SwerveSimIO;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class RobotContainer {
 
@@ -23,6 +26,13 @@ public class RobotContainer {
     private DoubleSupplier rightDistanceSupplier;
     private Supplier<Rotation2d> gyroSupplier;
     private Supplier<Pose2d> simulatedPoseSupplier;
+
+    double climberSpeed = 0;
+
+    CANSparkMax climberMotor = new CANSparkMax(9, MotorType.kBrushed);    
+    climberMotor.setSecondaryCurrentLimit(40);
+
+
     ShooterIntakeSubsystem intakeSubsystem =
             new ShooterIntakeSubsystem(new ShooterIntakeIOHardware());
 
