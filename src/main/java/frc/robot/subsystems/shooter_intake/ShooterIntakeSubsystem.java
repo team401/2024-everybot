@@ -17,8 +17,25 @@ public class ShooterIntakeSubsystem extends SubsystemBase {
         shooterIntakeIO.setInputs(shooterIntakeIOInputs);
     }
 
+    @Override
     public void periodic() {
-        currentState.periodic(this);
+        // currentState.periodic(this);
+
+        switch (this.targetState) {
+            case INTAKING:
+                shooterIntakeIO.setVoltage(12.0);
+                shooterIntakeIO.setFlywheelPowered(true);
+                break;
+            case SHOOTING:
+                shooterIntakeIO.setVoltage(-12.0);
+                shooterIntakeIO.setFlywheelPowered(true);
+                break;
+            default:
+                shooterIntakeIO.setVoltage(0.0);
+                shooterIntakeIO.setFlywheelPowered(false);
+                break;
+        }
+
         shooterIntakeIO.periodic();
         Logger.recordOutput("ShooterIntake.CurrentState", currentState);
         Logger.processInputs("shooterIntake", shooterIntakeIOInputs);

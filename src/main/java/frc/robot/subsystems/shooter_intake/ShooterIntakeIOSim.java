@@ -1,10 +1,9 @@
 package frc.robot.subsystems.shooter_intake;
 
-import static frc.robot.Constants.ShooterIntakeConstants.ShooterIntakeSimConstants;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import frc.robot.Constants.ShooterIntakeConstants.ShooterIntakeSimConstants;
 
 public class ShooterIntakeIOSim implements ShooterIntakeIO {
 
@@ -61,5 +60,10 @@ public class ShooterIntakeIOSim implements ShooterIntakeIO {
     @Override
     public void setInputs(ShooterIntakeIOInputsAutoLogged shooterIntakeIOInputs) {
         this.shooterIntakeIOInputs = shooterIntakeIOInputs;
+    }
+
+    @Override
+    public void setVoltage(double volts) {
+        // Don't do anything here.
     }
 }
