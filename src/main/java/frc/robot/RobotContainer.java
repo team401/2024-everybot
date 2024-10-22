@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,6 +25,8 @@ import java.util.function.Supplier;
 
 public class RobotContainer {
 
+    CANSparkMax climberMotor = new CANSparkMax(9, CANSparkLowLevel.MotorType.kBrushed);
+
     private DoubleSupplier leftDistanceSupplier;
     private DoubleSupplier rightDistanceSupplier;
     private Supplier<Rotation2d> gyroSupplier;
@@ -38,6 +42,14 @@ public class RobotContainer {
     // Commands
     DriveWithGamepad driveWithGamepad;
     ShooterIntakeSubsystem intakeSubsystem;
+
+    public boolean leftBumperPressed() {
+        return masherController.leftBumper().getAsBoolean();
+    }
+
+    public boolean leftTriggerPressed() {
+        return masherController.leftTrigger().getAsBoolean();
+    }
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {

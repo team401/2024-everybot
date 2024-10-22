@@ -20,6 +20,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * project.
  */
 public class Robot extends LoggedRobot {
+
     private Command autonomousCommand;
 
     private RobotContainer robotContainer;
@@ -68,6 +69,11 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void robotPeriodic() {
+
+        if (robotContainer.leftBumperPressed()) robotContainer.climberMotor.set(0.85);
+        else if (robotContainer.leftTriggerPressed()) robotContainer.climberMotor.set(-0.85);
+        else robotContainer.climberMotor.set(0);
+
         // Runs the Scheduler. This is responsible for polling buttons, adding
         // newly-scheduled
         // commands, running already-scheduled commands, removing finished or
